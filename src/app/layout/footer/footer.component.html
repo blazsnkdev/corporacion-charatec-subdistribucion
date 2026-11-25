@@ -1,0 +1,341 @@
+
+<footer class="footer">
+
+  <div class="container footer-main">
+
+    <!-- COLUMNA IZQUIERDA: MAPA -->
+    <section class="footer-map-card">
+
+      <h3 class="footer-title">
+        Ubicación de nuestra tienda
+      </h3>
+
+      <div class="map-wrapper">
+
+        <iframe
+          title="Ubicación Corporación Charatec"
+          loading="lazy"
+          allowfullscreen
+          referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps?q=Stand%20206,%20Av.%20Garcilaso%20de%20la%20Vega%201236,%20Lima%2015001,%20Per%C3%BA&amp;z=17&amp;output=embed">
+        </iframe>
+
+      </div>
+
+      <div class="map-address">
+
+        <p class="store-name">
+          CORPORACIÓN CHARATEC
+        </p>
+
+        <p>
+          Stand 206, Av. Garcilaso de la Vega 1236
+        </p>
+
+        <p>Galería Maxiplaza</p>
+
+        <p>Lima 15001, Perú</p>
+
+        <a
+          class="map-link"
+          href="https://www.google.com/maps/search/?api=1&amp;query=Stand+206,+Av.+Garcilaso+de+la+Vega+1236,+Lima,+Peru"
+          target="_blank"
+          rel="noopener noreferrer">
+
+          Ver en Google Maps
+
+        </a>
+
+      </div>
+
+    </section>
+
+    <!-- COLUMNA DERECHA -->
+    <section class="footer-side">
+
+      <div class="footer-grid">
+
+        <!-- EMPRESA -->
+        <div class="footer-column">
+
+          <h3>Corporación Charatec</h3>
+
+          <p>
+            Tecnología, innovación y nuevas
+            oportunidades para tu negocio.
+          </p>
+
+          <p>
+            Plataforma exclusiva de subdistribución
+            para tiendas y distribuidores de tecnología.
+          </p>
+
+          <p>
+            Envíos a nivel nacional.
+          </p>
+
+        </div>
+
+        <!-- ENLACES -->
+        <div class="footer-column">
+
+          <h3>Enlaces</h3>
+
+          @if (authService.allowed()) {
+
+            <a routerLink="/catalogo">
+              Catálogo mayorista
+            </a>
+
+          }
+
+          <a
+            href="https://www.charatec.com.pe/"
+            target="_blank"
+            rel="noopener noreferrer">
+
+            Tienda virtual
+
+          </a>
+
+          <a
+            href="https://wa.me/51943771361"
+            target="_blank"
+            rel="noopener noreferrer">
+
+            Atención comercial
+
+          </a>
+
+          <span>
+            Envíos a todo el Perú
+          </span>
+
+        </div>
+
+        <!-- CUENTA -->
+        <div class="footer-column">
+
+          <h3>Tu cuenta</h3>
+
+          @if (!authService.autenticado()) {
+
+            <a routerLink="/registro">
+              Registrar mi tienda
+            </a>
+
+            <a routerLink="/login">
+              Iniciar sesión
+            </a>
+
+          } @else {
+
+            @if (authService.allowed()) {
+
+              <a routerLink="/catalogo">
+                Acceder al catálogo
+              </a>
+
+            } @else {
+
+              <a routerLink="/pendiente">
+                Estado de mi cuenta
+              </a>
+
+            }
+
+          }
+
+          @if (authService.admin()) {
+
+            <a routerLink="/admin/productos">
+              Gestión de productos
+            </a>
+
+            <a routerLink="/admin/distribuidores">
+              Gestión de distribuidores
+            </a>
+
+          }
+
+          <a
+            href="https://wa.me/51943771361"
+            target="_blank"
+            rel="noopener noreferrer">
+
+            Soporte al distribuidor
+
+          </a>
+
+        </div>
+
+        <!-- CONTACTO -->
+        <div class="footer-column">
+
+          <h3>Contáctanos</h3>
+
+          <p class="label">WhatsApp</p>
+
+          <a
+            href="https://wa.me/51943771361"
+            target="_blank"
+            rel="noopener noreferrer">
+
+            +51 943 771 361
+
+          </a>
+
+          <p class="label">Correo</p>
+
+          <a href="mailto:gerenciacharatec@gmail.com">
+
+            gerenciacharatec@gmail.com
+
+          </a>
+
+          <p class="label">Horario</p>
+
+          <p>
+            Lunes a sábado:
+            10:00 a. m. - 7:30 p. m.
+          </p>
+
+          <p>
+            Domingos: previa coordinación
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- REDES + PAGOS + ATENCIÓN -->
+      <div class="footer-extras">
+
+        <!-- REDES SOCIALES -->
+        <div class="footer-box">
+
+          <h3>Redes sociales</h3>
+
+          <div class="social-links">
+
+            <!-- FACEBOOK -->
+            <a
+              href="https://www.facebook.com/p/Charatec-100063862340094/?locale=es_LA"
+              aria-label="Facebook"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-icon">
+
+              <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true">
+
+                <path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5h1.7V5c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.3V11H8v3h2.7v8h2.8z"/>
+
+              </svg>
+
+            </a>
+
+            <!-- INSTAGRAM -->
+            <a
+              href="https://www.instagram.com/charatecoficial/"
+              aria-label="Instagram"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-icon">
+
+              <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true">
+
+                <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2C5.9 4 5 4.9 5 6v12c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H7zm5 3.2A4.8 4.8 0 1 1 7.2 12 4.8 4.8 0 0 1 12 7.2zm0 2A2.8 2.8 0 1 0 14.8 12 2.8 2.8 0 0 0 12 9.2zm5-3.3a1.1 1.1 0 1 1-1.1 1.1A1.1 1.1 0 0 1 17 5.9z"/>
+
+              </svg>
+
+            </a>
+
+            <!-- TIKTOK -->
+            <a
+              href="https://www.tiktok.com/@charateceirl"
+              aria-label="TikTok"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-icon">
+
+              <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true">
+
+                <path d="M14 3c.4 2 1.8 3.6 3.8 4.1v2.6c-1.4-.1-2.7-.6-3.8-1.4v6.2a5.5 5.5 0 1 1-5.5-5.5c.3 0 .6 0 .9.1v2.8a2.8 2.8 0 1 0 1.8 2.6V3H14z"/>
+
+              </svg>
+
+            </a>
+
+          </div>
+
+        </div>
+
+        <!-- MÉTODOS DE PAGO -->
+        <div class="footer-box">
+
+          <h3>Métodos de pago</h3>
+
+          <div class="payment-badges">
+
+            <span class="payment-badge bcp">
+              BCP
+            </span>
+
+            <span class="payment-badge yape">
+              Yape
+            </span>
+
+            <span class="payment-badge plin">
+              Plin
+            </span>
+
+          </div>
+
+        </div>
+
+        <!-- ATENCIÓN COMERCIAL -->
+        <div class="footer-box">
+
+          <h3>Atención al distribuidor</h3>
+
+          <a
+            class="whatsapp-button"
+            href="https://wa.me/51943771361?text=Hola%2C%20deseo%20informaci%C3%B3n%20sobre%20subdistribuci%C3%B3n."
+            target="_blank"
+            rel="noopener noreferrer">
+
+            Contactar con un asesor
+
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- BARRA INFERIOR -->
+  <div class="footer-bottom">
+
+    <div class="container bottom-content">
+
+      <span>
+        © {{ anioActual }} Corporación Charatec.
+        Todos los derechos reservados.
+      </span>
+
+      <span>blazsnkdev</span>
+
+    </div>
+
+  </div>
+
+</footer>

@@ -1,0 +1,178 @@
+
+<section class="exchange-page">
+
+  <div class="page-heading">
+
+    <span class="eyebrow">
+      ADMINISTRACIÓN / CONFIGURACIÓN
+    </span>
+
+    <h1>Tipo de cambio</h1>
+
+    <p>
+      Administra el valor de conversión entre dólares y soles.
+    </p>
+
+  </div>
+
+  @if (mensaje()) {
+
+    <div
+      class="notice"
+      [class.error]="error()"
+      role="status">
+
+      {{ mensaje() }}
+
+    </div>
+
+  }
+
+  @if (cargando()) {
+
+    <p>Cargando configuración...</p>
+
+  } @else {
+
+    <div class="exchange-grid">
+
+      <!-- CONFIGURACIÓN -->
+      <section class="panel">
+
+        <div class="current-rate">
+
+          <span>TIPO DE CAMBIO ACTUAL</span>
+
+          <strong>
+
+            US$ 1 = S/
+            {{ actual() | number:'1.4-4' }}
+
+          </strong>
+
+          <small>
+            Corporación Charatec B2B
+          </small>
+
+        </div>
+
+        <h2>Configurar tipo de cambio</h2>
+
+        <form
+          #rateForm="ngForm"
+          (ngSubmit)="guardar()">
+
+          <label for="rate">
+
+            Valor de un dólar en soles
+
+          </label>
+
+          <div class="input-wrapper">
+
+            <span>S/</span>
+
+            <input
+              id="rate"
+              name="rate"
+              type="number"
+              min="0.0001"
+              max="999999.9999"
+              step="0.0001"
+              [(ngModel)]="nuevoTipoCambio"
+              [disabled]="busy()"
+              required
+            />
+
+          </div>
+
+          <p class="help">
+
+            Este valor se utilizará para convertir los
+            precios del catálogo. No modifica el precio
+            base registrado de cada producto.
+
+          </p>
+
+          <div class="actions">
+
+            <button
+              class="btn-primary"
+              type="submit"
+              [disabled]="busy() || rateForm.invalid">
+
+              {{ busy()
+                ? 'Guardando...'
+                : 'Guardar tipo de cambio' }}
+
+            </button>
+
+            <button
+              class="btn-secondary"
+              type="button"
+              [disabled]="busy()"
+              (click)="restablecer()">
+
+              Restablecer
+
+            </button>
+
+          </div>
+
+        </form>
+
+      </section>
+
+      <!-- SIMULADOR -->
+      <section class="panel">
+
+        <h2>Simulación de conversión</h2>
+
+        <p class="help">
+
+          Vista previa con el nuevo tipo de cambio.
+
+        </p>
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Dólares (USD)</th>
+              <th>Soles (PEN)</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            @for (monto of ejemplos; track monto) {
+
+              <tr>
+
+                <td>
+                  US$ {{ monto | number:'1.2-2' }}
+                </td>
+
+                <td class="converted">
+
+                  S/ {{ convertir(monto) | number:'1.2-2' }}
+
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </section>
+
+    </div>
+
+  }
+
+</section>

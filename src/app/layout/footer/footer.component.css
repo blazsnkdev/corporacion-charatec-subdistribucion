@@ -1,0 +1,330 @@
+
+/* =====================================
+   FOOTER CORPORACIÓN CHARATEC B2B
+===================================== */
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.footer {
+  width: 100%;
+  background: #080c14;
+  color: #ffffff;
+  font-family: 'Montserrat', Arial, sans-serif;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.container {
+  width: 100%;
+  max-width: 1500px;
+  padding-left: 28px;
+  padding-right: 28px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* ESTRUCTURA PRINCIPAL */
+
+.footer-main {
+  display: grid;
+  grid-template-columns: minmax(0, 32%) minmax(0, 1fr);
+  gap: 35px;
+  padding-top: 30px;
+  padding-bottom: 22px;
+  align-items: start;
+}
+
+/* QUITAR CAJAS Y BORDES */
+
+.footer-map-card,
+.footer-column,
+.footer-box {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  min-width: 0;
+}
+
+/* TÍTULOS */
+
+.footer-title,
+.footer-column h3,
+.footer-box h3 {
+  margin: 0 0 13px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* GOOGLE MAPS */
+
+.map-wrapper {
+  width: 100%;
+  height: 165px;
+  overflow: hidden;
+  border-radius: 5px;
+}
+
+.map-wrapper iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.map-address {
+  margin-top: 10px;
+}
+
+.map-address p {
+  margin: 0 0 3px;
+  color: #b9c6d7;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.map-address .store-name {
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.map-link {
+  display: inline-block;
+  margin-top: 6px;
+  color: #7793ff;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* COLUMNAS DERECHAS */
+
+.footer-side {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+}
+
+.footer-column p,
+.footer-column a,
+.footer-column span {
+  margin: 0;
+  color: #b9c6d7;
+  font-size: 11px;
+  line-height: 1.6;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.footer-column a:hover,
+.map-link:hover {
+  color: #ffffff;
+}
+
+.footer-column .label {
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 5px;
+}
+
+/* REDES, PAGOS Y ATENCIÓN */
+
+.footer-extras {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.2fr;
+  gap: 22px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* REDES SOCIALES */
+
+.social-links {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+
+.social-icon {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: 1px solid #495368;
+  border-radius: 50%;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.social-icon:hover {
+  background: #003bff;
+  border-color: #003bff;
+}
+
+.social-icon svg {
+  width: 16px;
+  height: 16px;
+  fill: #ffffff;
+}
+
+/* MÉTODOS DE PAGO */
+
+.payment-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.payment-badge {
+  min-width: 48px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  color: #ffffff;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 800;
+  box-sizing: border-box;
+}
+
+.payment-badge.bcp {
+  background: #005aaa;
+}
+
+.payment-badge.yape {
+  background: #742384;
+}
+
+.payment-badge.plin {
+  background: #00a7b5;
+}
+
+/* ATENCIÓN COMERCIAL */
+
+.whatsapp-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 7px 12px;
+  background: #168543;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.whatsapp-button:hover {
+  background: #116a35;
+}
+
+/* BARRA INFERIOR */
+
+.footer-bottom {
+  background: #003bff;
+}
+
+.bottom-content {
+  min-height: 43px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+}
+
+.bottom-content span {
+  color: #ffffff;
+  font-size: 10px;
+}
+
+/* TABLET */
+
+@media (max-width: 1100px) {
+
+  .footer-main {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .footer-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+}
+
+/* MÓVIL */
+
+@media (max-width: 700px) {
+
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .footer-main {
+    padding-top: 25px;
+  }
+
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  .footer-extras {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .map-wrapper {
+    height: 175px;
+  }
+
+  .bottom-content {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: 4px;
+  }
+
+}
+
+@media (max-width: 400px) {
+
+  .footer-extras {
+    grid-template-columns: 1fr;
+  }
+
+}

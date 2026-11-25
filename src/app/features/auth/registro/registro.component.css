@@ -1,0 +1,43 @@
+
+.register-card {
+  max-width: 1100px;
+}
+
+.register-card .auth-panel {
+  padding: 35px 45px;
+}
+
+.register-card .form-group {
+  margin-bottom: 14px;
+}
+
+.register-card .auth-intro h1 {
+  font-size: 40px;
+}
+
+.benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 25px 0;
+  font-size: 13px;
+  color: #ffffff;
+}
+
+.alert.success {
+  background: #ecfdf3;
+  border-left-color: #16a34a;
+  color: #166534;
+}
+
+@media (max-width: 800px) {
+
+  .register-card .auth-panel {
+    padding: 25px;
+  }
+
+  .register-card .auth-intro h1 {
+    font-size: 30px;
+  }
+
+}

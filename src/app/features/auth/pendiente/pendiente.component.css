@@ -1,0 +1,91 @@
+
+:host {
+  display: block;
+}
+
+.pending-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 500px;
+  padding: 40px 20px;
+}
+
+.pending-card {
+  width: 100%;
+  max-width: 520px;
+  padding: 40px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 10px 35px #080c140d;
+}
+
+.status-icon {
+  display: grid;
+  place-items: center;
+  width: 75px;
+  height: 75px;
+  margin: 0 auto 25px;
+  border-radius: 50%;
+  background: #eaf0ff;
+  color: #003bff;
+}
+
+.eyebrow {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #003bff;
+}
+
+.pending-card h1 {
+  font-size: 25px;
+  margin: 15px 0;
+}
+
+.pending-card p {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.8;
+}
+
+.pending-card .account {
+  font-weight: 700;
+  color: #080c14;
+  overflow-wrap: anywhere;
+}
+
+.whatsapp,
+.pending-card button {
+  width: 100%;
+  display: block;
+  padding: 13px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.whatsapp {
+  background: #168543;
+}
+
+.pending-card button {
+  background: #003bff;
+}
+
+.pending-card button:disabled {
+  opacity: .5;
+}
+
+@media (max-width: 480px) {
+  .pending-card {
+    padding: 25px;
+  }
+}

@@ -1,0 +1,305 @@
+
+<section class="distributors-page">
+
+  <div class="page-heading">
+
+    <div>
+
+      <span class="eyebrow">
+        ADMINISTRACIÓN / USUARIOS
+      </span>
+
+      <h1>Gestión de distribuidores</h1>
+
+      <p>
+        Verifica las tiendas registradas y administra
+        sus permisos de acceso al catálogo.
+      </p>
+
+    </div>
+
+    <button
+      class="btn-primary"
+      [disabled]="busy() || cargando()"
+      (click)="cargarDistribuidores()">
+
+      Actualizar solicitudes
+
+    </button>
+
+  </div>
+
+  <!-- INDICADORES -->
+  <div class="stats-grid">
+
+    <button
+      class="stat-card"
+      [class.selected]="filtro() === ''"
+      (click)="filtro.set('')">
+
+      <span>Total registrados</span>
+      <strong>{{ total() }}</strong>
+
+    </button>
+
+    <button
+      class="stat-card"
+      [class.selected]="filtro() === 'pending'"
+      (click)="filtro.set('pending')">
+
+      <span>Pendientes</span>
+      <strong class="yellow">{{ pendientes() }}</strong>
+
+    </button>
+
+    <button
+      class="stat-card"
+      [class.selected]="filtro() === 'approved'"
+      (click)="filtro.set('approved')">
+
+      <span>Aprobados</span>
+      <strong class="green">{{ aprobados() }}</strong>
+
+    </button>
+
+    <button
+      class="stat-card"
+      [class.selected]="filtro() === 'blocked'"
+      (click)="filtro.set('blocked')">
+
+      <span>Bloqueados</span>
+      <strong class="red">{{ bloqueados() }}</strong>
+
+    </button>
+
+  </div>
+
+  @if (mensaje()) {
+
+    <div
+      class="notice"
+      [class.error]="error()"
+      role="status">
+
+      {{ mensaje() }}
+
+    </div>
+
+  }
+
+  <section class="panel">
+
+    <div class="panel-heading">
+
+      <div>
+
+        <h2>Tiendas registradas</h2>
+
+        <p>
+          {{ filtrados().length }} resultados.
+        </p>
+
+      </div>
+
+      <div class="filters">
+
+        <input
+          type="search"
+          placeholder="Buscar RUC, empresa o teléfono..."
+          [ngModel]="busqueda()"
+          (ngModelChange)="busqueda.set($event)"
+        />
+
+        <select
+          [ngModel]="filtro()"
+          (ngModelChange)="filtro.set($event)">
+
+          <option value="">Todos los estados</option>
+          <option value="pending">Pendientes</option>
+          <option value="approved">Aprobados</option>
+          <option value="blocked">Bloqueados</option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+    @if (cargando()) {
+
+      <div class="empty-state">
+
+        Cargando distribuidores...
+
+      </div>
+
+    } @else {
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Empresa / Razón social</th>
+              <th>RUC</th>
+              <th>Teléfono</th>
+              <th>Estado</th>
+              <th>Verificación</th>
+              <th>Acciones</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            @for (d of filtrados(); track d.id) {
+
+              <tr>
+
+                <td>
+
+                  <div class="company-cell">
+
+                    <div class="company-avatar">
+
+                      {{ d.company.charAt(0).toUpperCase() }}
+
+                    </div>
+
+                    <strong>{{ d.company }}</strong>
+
+                  </div>
+
+                </td>
+
+                <td class="ruc">
+
+                  {{ d.ruc }}
+
+                </td>
+
+                <td>
+
+                  <a
+                    class="phone-link"
+                    [href]="whatsapp(d)"
+                    target="_blank"
+                    rel="noopener noreferrer">
+
+                    {{ d.phone }}
+
+                  </a>
+
+                </td>
+
+                <td>
+
+                  <span
+                    class="status"
+                    [class.pending]="d.status === 'pending'"
+                    [class.approved]="d.status === 'approved'"
+                    [class.blocked]="d.status === 'blocked'">
+
+                    {{ nombreEstado(d.status) }}
+
+                  </span>
+
+                </td>
+
+                <td>
+
+                  <a
+                    class="sunat-link"
+                    href="https://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias"
+                    target="_blank"
+                    rel="noopener noreferrer">
+
+                    Consultar SUNAT ↗
+
+                  </a>
+
+                </td>
+
+                <td>
+
+                  <div class="row-actions">
+
+                    @if (d.status !== 'approved') {
+
+                      <button
+                        class="btn-approve"
+                        [disabled]="busy()"
+                        (click)="cambiarEstado(d, 'approved')">
+
+                        Aprobar
+
+                      </button>
+
+                    }
+
+                    @if (d.status !== 'pending') {
+
+                      <button
+                        class="btn-pending"
+                        [disabled]="busy()"
+                        (click)="cambiarEstado(d, 'pending')">
+
+                        Desaprobar
+
+                      </button>
+
+                    }
+
+                    @if (d.status !== 'blocked') {
+
+                      <button
+                        class="btn-block"
+                        [disabled]="busy()"
+                        (click)="cambiarEstado(d, 'blocked')">
+
+                        Bloquear
+
+                      </button>
+
+                    }
+
+                  </div>
+
+                </td>
+
+              </tr>
+
+            } @empty {
+
+              <tr>
+
+                <td colspan="6" class="empty-state">
+
+                  No se encontraron distribuidores.
+
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    }
+
+    <div class="information">
+
+      Verifica el RUC y la razón social en SUNAT
+      antes de aprobar el acceso de una tienda.
+
+    </div>
+
+  </section>
+
+</section>

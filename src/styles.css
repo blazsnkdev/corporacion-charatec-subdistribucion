@@ -1,1 +1,93 @@
-:root{font-family:Inter,Arial,sans-serif;color:#101114;background:#f1f4f8;--blue:#0645ed}*{box-sizing:border-box}body{margin:0}header{background:#101114;color:white;border-bottom:4px solid var(--blue)}.header-inner{max-width:1500px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:12px 28px}.identity{display:flex;align-items:center;gap:14px;color:white;text-decoration:none;font-weight:900;font-size:18px;letter-spacing:.5px}.identity img{width:68px;height:68px;border-radius:8px}.identity small,.record small{display:block;font-size:11px;letter-spacing:1px;color:#aab6ce;margin-top:5px}main{max-width:1500px;margin:auto;padding:24px}button,.wa{border:0;background:var(--blue);color:white;padding:11px 17px;border-radius:7px;font-weight:700;cursor:pointer;font-size:14px;text-decoration:none;display:inline-block;text-align:center}button:disabled{opacity:.45;cursor:not-allowed}.outline{background:white;color:#0645ed;border:1px solid #b4c6ed}input,select,textarea{font:inherit;padding:11px;border:1px solid #cbd3e0;border-radius:7px;background:white;width:100%;min-width:0}label{display:grid;gap:6px;font-weight:700;font-size:13px;margin:12px 0}form>button{margin:5px 4px 5px 0}.check{display:flex;align-items:center}.check input{width:auto}.login{display:grid;grid-template-columns:1.15fr 1fr;min-height:570px;max-width:1080px;margin:35px auto;box-shadow:0 12px 50px #10111412;border-radius:18px;overflow:hidden}.intro{background:linear-gradient(145deg,#0645ed,#07236e);color:white;padding:65px 45px;display:flex;flex-direction:column;justify-content:center}.intro h1{font-size:48px;line-height:1.06;margin:20px 0}.intro p{line-height:1.7}.intro a{color:white}.panel{background:white;border:1px solid #dce2ed;border-radius:12px;padding:25px}.login .panel{border-radius:0;padding:40px}.notice{padding:14px;background:#e1ebff;border-left:4px solid var(--blue)}nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:20px}nav button{background:white;color:#222}nav button.selected{background:var(--blue);color:white}nav span{margin-left:auto;font-size:13px}.banner{background:linear-gradient(110deg,#101114 10%,#0645ed);color:white;padding:26px 34px;border-radius:12px;display:flex;align-items:center;justify-content:space-between}.banner h1{font-size:36px;margin:8px 0}.banner>span{font-size:32px;font-weight:900;line-height:1;opacity:.75}.filters{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;margin:18px 0}.book{background:white;border:1px solid #d4dce9;border-radius:10px;padding:18px;box-shadow:0 8px 28px #18213b10}.book-title{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:#33415e;padding:8px 4px 20px;border-bottom:2px solid #0645ed;margin-bottom:18px}.catalog{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;position:relative}.product{display:grid;grid-template-columns:37% 63%;min-height:245px;border:1px solid #dce2ed;border-radius:11px;overflow:hidden;background:#fff}.photo{position:relative;display:flex;align-items:center;justify-content:center;padding:20px 8px;background:#fff}.photo img{width:100%;max-height:180px;object-fit:contain}.number{position:absolute;top:10px;left:9px;background:#101114;color:white;border-radius:50%;min-width:36px;height:36px;display:grid;place-items:center;font-weight:900}.offer{position:absolute;right:3px;top:12px;color:#0645ed;font-size:10px;font-weight:900}.info{background:linear-gradient(140deg,#0645ed,#092878);color:white;padding:15px;display:flex;flex-direction:column}.info small{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#d4e2ff}.info h2{font-size:18px;margin:5px 0 8px}.info ul{padding-left:17px;margin:0 0 12px;font-size:12px;line-height:1.5}.bottom{display:flex;align-items:end;justify-content:space-between;gap:8px;margin-top:auto}.price{text-align:right;background:#101114;border-radius:7px;padding:8px 12px;white-space:nowrap}.price strong,.price b,.price del{display:block}.price strong{font-size:23px}.price b{font-size:14px;color:#c9d8ff}.price del{font-size:12px;color:#b7bed0}.stock{font-size:11px;font-weight:bold}.zero{color:#ffd9ab}.wa{background:#fff;color:#063bae;font-size:12px;margin-top:10px;border:1px solid #dbe4fa}.pagination{display:flex;justify-content:center;align-items:center;gap:20px;padding:22px 0 0}.admin-grid{display:grid;grid-template-columns:1fr 1.35fr;gap:20px}.record{display:flex;gap:8px;align-items:center;border-bottom:1px solid #e1e6ef;padding:14px 0;flex-wrap:wrap}.record>div{flex:1;min-width:150px}.record small{color:#5c677a;letter-spacing:0}.record a{font-size:12px}.narrow{max-width:550px}.preview{max-width:180px;max-height:150px}.muted{font-size:12px;color:#65718a}footer{text-align:center;background:#101114;color:#d7deeb;padding:22px;font-size:13px}footer a{color:white}.empty{padding:20px}@media(max-width:1000px){.catalog{grid-template-columns:1fr}.admin-grid{grid-template-columns:1fr}}@media(max-width:650px){main{padding:12px}.header-inner{padding:10px}.identity{font-size:12px}.identity img{width:48px;height:48px}.login{grid-template-columns:1fr;margin:12px auto}.intro{padding:25px}.intro h1{font-size:32px}.login .panel{padding:22px}.banner{padding:20px}.banner h1{font-size:25px}.banner>span{display:none}.filters{grid-template-columns:1fr 1fr}.filters input{grid-column:span 2}.book{padding:8px}.product{grid-template-columns:32% 68%}.info{padding:10px}.price strong{font-size:18px}.book-title{font-size:11px}.bottom{flex-wrap:wrap}.price{margin-left:auto}nav span{margin-left:0;width:100%}}
+/* ==========================================
+   ESTILOS GLOBALES
+   CORPORACIÓN CHARATEC B2B
+========================================== */
+
+:root {
+  --primary: #003bff;
+  --primary-dark: #002dca;
+  --dark: #080c14;
+  --white: #ffffff;
+  --background: #eff2f7;
+  --text: #101114;
+  --muted: #64748b;
+  --border: #d5dce7;
+
+  font-family: 'Montserrat', Arial, sans-serif;
+  color: var(--text);
+  background: var(--background);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+app-root {
+  display: block;
+  width: 100%;
+  min-height: 100dvh;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+img {
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: #003bff;
+  color: #ffffff;
+}
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eff2f7;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bdc8d9;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8494ac;
+}

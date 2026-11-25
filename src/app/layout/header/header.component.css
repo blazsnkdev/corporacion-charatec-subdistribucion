@@ -1,0 +1,350 @@
+
+/* ==========================================
+   HEADER CORPORACIÓN CHARATEC B2B
+========================================== */
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.site-header {
+  position: relative;
+  z-index: 20;
+  width: 100%;
+  font-family: 'Montserrat', Arial, sans-serif;
+  border: none;
+  padding: 0;
+}
+
+.container {
+  width: 100%;
+  max-width: 1500px;
+  padding: 0 28px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* BARRA NEGRA SUPERIOR */
+
+.main-header {
+  width: 100%;
+  background: #080c14;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 43px;
+}
+
+.header-tag {
+  color: #c5d1e0;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+/* NAVBAR AZUL */
+
+.navbar {
+  display: block;
+  width: 100%;
+  background: #003bff;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  min-height: 83px;
+}
+
+/* LOGO */
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.logo-image {
+  display: block;
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  border-radius: 0;
+  border: none;
+  background: transparent;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.brand-name {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+}
+
+.brand-subtitle {
+  color: #d1dfff;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* NAVEGACIÓN CENTRAL */
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  gap: 3px;
+}
+
+.nav-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 45px;
+  padding: 0 11px;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  text-decoration: none;
+  text-transform: uppercase;
+  border-radius: 5px;
+  transition: background-color 0.2s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  background: rgba(0, 0, 0, 0.18);
+  color: #ffffff;
+}
+
+/* ACCIONES DERECHAS */
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  gap: 10px;
+}
+
+.nav-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  color: #ffffff;
+  background: transparent;
+  border: none;
+  border-radius: 7px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.nav-icon-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.nav-icon-button:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}
+
+.nav-icon-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  max-width: 160px;
+}
+
+.user-role {
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.user-email {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #cbd8ff;
+  font-size: 9px;
+}
+
+.menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 7px;
+  color: #ffffff;
+  font-size: 23px;
+  cursor: pointer;
+}
+
+.header-error {
+  padding: 10px 20px;
+  background: #fee2e2;
+  color: #991b1b;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* TABLET */
+
+@media (max-width: 1200px) {
+
+  .nav-content {
+    gap: 12px;
+  }
+
+  .nav-links a {
+    padding: 0 8px;
+    font-size: 9px;
+  }
+
+  .logo-image {
+    width: 60px;
+    height: 60px;
+  }
+
+  .user-info {
+    display: none;
+  }
+
+}
+
+@media (max-width: 1000px) {
+
+  .brand-text {
+    display: none;
+  }
+
+}
+
+/* MÓVILES */
+
+@media (max-width: 850px) {
+
+  .container {
+    padding: 0 16px;
+  }
+
+  .nav-content {
+    position: relative;
+    min-height: 72px;
+  }
+
+  .logo-image {
+    width: 55px;
+    height: 55px;
+  }
+
+  .brand-text {
+    display: flex;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    padding: 10px;
+    background: #003bff;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 3px;
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .nav-links.nav-open {
+    display: flex;
+  }
+
+  .nav-links a {
+    width: 100%;
+    min-height: 43px;
+    justify-content: flex-start;
+    padding: 12px;
+    font-size: 11px;
+    box-sizing: border-box;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .header-content {
+    min-height: 36px;
+  }
+
+  .header-tag {
+    font-size: 9px;
+  }
+
+  .nav-content {
+    min-height: 66px;
+  }
+
+  .logo-image {
+    width: 48px;
+    height: 48px;
+  }
+
+  .brand-text {
+    display: none;
+  }
+
+  .nav-actions {
+    gap: 4px;
+  }
+
+  .nav-icon-button {
+    width: 36px;
+    height: 36px;
+  }
+
+}
