@@ -1,0 +1,329 @@
+:host {
+  display: contents;
+}
+
+/* VENTANA PRINCIPAL */
+
+.payment-dialog {
+  width: calc(100% - 30px);
+  max-width: 440px;
+  max-height: calc(100dvh - 30px);
+  padding: 0;
+  border: none;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #101114;
+  overflow-y: auto;
+  box-shadow: 0 20px 70px #00000035;
+}
+
+.payment-dialog::backdrop {
+  background: rgba(8, 12, 20, .65);
+  backdrop-filter: blur(4px);
+}
+
+.payment-dialog[open] {
+  animation: payment-in .2s ease-out;
+}
+
+.payment-content {
+  --payment-color: #005aaa;
+
+  position: relative;
+  padding: 30px 25px 25px;
+  text-align: center;
+}
+
+/* COLORES POR MÉTODO DE PAGO */
+
+.payment-content[data-method="bcp"] {
+  --payment-color: #005aaa;
+}
+
+.payment-content[data-method="yape"] {
+  --payment-color: #742384;
+}
+
+.payment-content[data-method="plin"] {
+  --payment-color: #00a7b5;
+}
+
+/* CERRAR */
+
+.close-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f1f5f9;
+  border-radius: 50%;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.close-button:hover {
+  background: #e2e8f0;
+}
+
+/* LOGO */
+
+.payment-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 110px;
+  min-height: 55px;
+  padding: 12px 25px;
+  margin-bottom: 16px;
+  background: var(--payment-color);
+  color: #ffffff;
+  border-radius: 9px;
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -.8px;
+}
+
+.payment-content h2 {
+  font-size: 22px;
+  margin: 0 0 8px;
+}
+
+.subtitle {
+  font-size: 11px;
+  color: #64748b;
+  margin: 0 0 22px;
+}
+
+/* TITULAR */
+
+.holder {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 14px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  margin: 12px 0;
+}
+
+.holder span {
+  font-size: 9px;
+  color: #64748b;
+  font-weight: 700;
+  letter-spacing: .8px;
+}
+
+.holder strong {
+  font-size: 13px;
+  color: #101114;
+  overflow-wrap: anywhere;
+}
+
+/* CUENTAS BANCARIAS */
+
+.bank-accounts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.account-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 13px;
+  border: 1px solid #dce2ed;
+  background: #ffffff;
+  border-radius: 7px;
+  text-align: left;
+}
+
+.account-information {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.account-label {
+  font-size: 10px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.account-number {
+  font-size: 13px;
+  font-weight: 800;
+  color: #101114;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.copy-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  padding: 9px;
+  border: none;
+  border-radius: 5px;
+  background: #edf2ff;
+  color: #005aaa;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.copy-button:hover {
+  background: #dce6ff;
+}
+
+.copied {
+  color: #15803d;
+}
+
+/* CÓDIGO QR */
+
+.qr-instructions {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 15px;
+}
+
+.qr-container {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 280px;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid #dce2ed;
+  border-radius: 10px;
+}
+
+.qr-container img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.qr-container p {
+  font-size: 12px;
+  color: #64748b;
+}
+
+/* NÚMERO DE YAPE Y PLIN */
+
+.phone-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 0 12px;
+}
+
+.phone-container span {
+  font-size: 10px;
+  color: #64748b;
+  font-weight: 700;
+  letter-spacing: .7px;
+}
+
+.phone-container strong {
+  font-size: 27px;
+  font-weight: 800;
+  color: var(--payment-color);
+  user-select: all;
+}
+
+.copy-phone {
+  padding: 9px 18px;
+  border: 1px solid var(--payment-color);
+  border-radius: 5px;
+  background: #ffffff;
+  color: var(--payment-color);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* AVISOS */
+
+.payment-notice {
+  background: #f8fafc;
+  color: #64748b;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 10px;
+  line-height: 1.7;
+  margin: 18px 0;
+}
+
+.copy-error {
+  color: #b91c1c;
+  font-size: 11px;
+}
+
+/* BOTÓN FINAL */
+
+.finish-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  color: #ffffff;
+  background: var(--payment-color);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  filter: brightness(.95);
+}
+
+@keyframes payment-in {
+  from {
+    opacity: 0;
+    transform: scale(.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 480px) {
+
+  .payment-content {
+    padding: 25px 17px 20px;
+  }
+
+  .account-number {
+    font-size: 11px;
+  }
+
+  .qr-container {
+    max-width: 250px;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .payment-dialog[open] {
+    animation: none;
+  }
+
+}

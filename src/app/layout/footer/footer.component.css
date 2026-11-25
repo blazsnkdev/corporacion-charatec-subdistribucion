@@ -328,3 +328,56 @@
   }
 
 }
+/* BOTONES INTERACTIVOS DE PAGO */
+
+.payment-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.payment-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 55px;
+  min-height: 33px;
+  padding: 8px 13px;
+  border: 1px solid #ffffff20;
+  border-radius: 5px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    filter .2s ease;
+}
+
+.payment-badge.bcp {
+  background: #005aaa;
+}
+
+.payment-badge.yape {
+  background: #742384;
+}
+
+.payment-badge.plin {
+  background: #00a7b5;
+}
+
+.payment-badge:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px #00000030;
+  filter: brightness(1.15);
+}
+
+.payment-badge:active {
+  transform: translateY(0);
+}
+
+.payment-badge:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}

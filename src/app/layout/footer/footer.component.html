@@ -253,17 +253,24 @@
 
           <div class="payment-badges">
 
-            <span class="payment-badge bcp">
+            <button type="button" class="payment-badge bcp" title="Ver cuentas bancarias BCP"
+              (click)="abrirPago('bcp')">
+
               BCP
-            </span>
 
-            <span class="payment-badge yape">
+            </button>
+
+            <button type="button" class="payment-badge yape" title="Ver código QR de Yape" (click)="abrirPago('yape')">
+
               Yape
-            </span>
 
-            <span class="payment-badge plin">
+            </button>
+
+            <button type="button" class="payment-badge plin" title="Ver código QR de Plin" (click)="abrirPago('plin')">
+
               Plin
-            </span>
+
+            </button>
 
           </div>
 
@@ -307,3 +314,8 @@
   </div>
 
 </footer>
+
+<app-payment-popup
+  [method]="paymentMethod()"
+  (closed)="cerrarPago()">
+</app-payment-popup>

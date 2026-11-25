@@ -1,0 +1,226 @@
+<dialog
+  #dialog
+  class="payment-dialog"
+  aria-labelledby="payment-title"
+  (cancel)="cancelar($event)">
+
+  @if (method()) {
+
+    <div
+      class="payment-content"
+      [attr.data-method]="method()">
+
+      <!-- BOTÓN CERRAR -->
+
+      <button
+        type="button"
+        class="close-button"
+        aria-label="Cerrar métodos de pago"
+        (click)="cerrar()">
+
+        ✕
+
+      </button>
+
+      <!-- LOGO DEL MÉTODO DE PAGO -->
+
+      <div class="payment-logo">
+
+        {{ nombre() }}
+
+      </div>
+
+      <h2 id="payment-title">
+
+        Paga con {{ nombre() }}
+
+      </h2>
+
+      <p class="subtitle">
+
+        Métodos de pago de Corporación Charatec
+
+      </p>
+
+      <!-- =============================
+           CUENTAS BANCARIAS BCP
+      ============================== -->
+
+      @if (method() === 'bcp') {
+
+        <div class="holder">
+
+          <span>TITULAR DE LA CUENTA</span>
+
+          <strong>{{ config.bcp.titular }}</strong>
+
+        </div>
+
+        <div class="bank-accounts">
+
+          @for (cuenta of config.bcp.cuentas; track cuenta.label) {
+
+            <div class="account-card">
+
+              <div class="account-information">
+
+                <span class="account-label">
+
+                  {{ cuenta.label }}
+
+                </span>
+
+                <strong class="account-number">
+
+                  {{ cuenta.number || 'Por configurar' }}
+
+                </strong>
+
+              </div>
+
+              <button
+                type="button"
+                class="copy-button"
+                [disabled]="!cuenta.number"
+                (click)="copiar(cuenta.number, cuenta.label)">
+
+                @if (copiado() === cuenta.label) {
+
+                  <span class="copied">✓ Copiado</span>
+
+                } @else {
+
+                  <svg
+                    width="17"
+                    height="17"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8">
+
+                    <rect
+                      x="8"
+                      y="8"
+                      width="12"
+                      height="12"
+                      rx="2"/>
+
+                    <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>
+
+                  </svg>
+
+                  Copiar
+
+                }
+
+              </button>
+
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+      <!-- =============================
+           YAPE Y PLIN
+      ============================== -->
+
+      @if (billetera(); as datos) {
+
+        <div class="qr-instructions">
+
+          Escanea el código QR desde tu aplicación.
+
+        </div>
+
+        <div class="qr-container">
+
+          @if (!qrError()) {
+
+            <img
+              [src]="datos.qr"
+              [alt]="'Código QR de ' + nombre()"
+              (error)="qrError.set(true)"
+            />
+
+          } @else {
+
+            <p>Código QR pendiente de configurar.</p>
+
+          }
+
+        </div>
+
+        <div class="phone-container">
+
+          <span>NÚMERO DE CELULAR</span>
+
+          <strong>
+
+            {{ datos.telefono || 'Por configurar' }}
+
+          </strong>
+
+          <button
+            type="button"
+            class="copy-phone"
+            [disabled]="!datos.telefono"
+            (click)="copiar(datos.telefono, 'telefono')">
+
+            {{ copiado() === 'telefono'
+              ? '✓ Número copiado'
+              : 'Copiar número' }}
+
+          </button>
+
+        </div>
+
+        <div class="holder">
+
+          <span>TITULAR DE LA CUENTA</span>
+
+          <strong>
+
+            {{ datos.titular || 'Por configurar' }}
+
+          </strong>
+
+        </div>
+
+      }
+
+      @if (errorCopia()) {
+
+        <p class="copy-error" role="alert">
+
+          {{ errorCopia() }}
+
+        </p>
+
+      }
+
+      <!-- MENSAJE DE SEGURIDAD -->
+
+      <div class="payment-notice">
+
+        Verifica el nombre del titular y el monto
+        antes de realizar cualquier transferencia.
+
+      </div>
+
+      <button
+        type="button"
+        class="finish-button"
+        (click)="cerrar()">
+
+        Cerrar
+
+      </button>
+
+    </div>
+
+  }
+
+</dialog>
