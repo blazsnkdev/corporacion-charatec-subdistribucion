@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "projects": {
+    "catalogo": {
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "src",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/main.ts",
+            "index": "src/index.html",
+            "tsConfig": "tsconfig.json",
+            "outputPath": "dist/catalogo",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              "src/styles.css"
+            ],
+            "polyfills": [
+              "zone.js"
+            ]
+          }
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "options": {
+            "buildTarget": "catalogo:build"
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": "a57783a8-52a0-4c55-a44f-922f9ca594f3"
+  }
+}

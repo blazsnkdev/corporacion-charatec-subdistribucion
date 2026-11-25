@@ -1,0 +1,8 @@
+export interface Product {id:number; name:string; brand:string; category:string; price:number; image:string; specs:string; active:boolean; offer:boolean;}
+export const demo:Product[] = [
+{id:90,name:'HP Victus 15-fa2033la',brand:'HP',category:'Gaming',price:3450,image:'/img/90.webp',specs:'Intel Core i5-13420H\n16 GB DDR4\n512 GB SSD\nRTX 3050 6 GB · 60 W\n15.6” FHD IPS\nFreeDOS',active:true,offer:false},
+{id:91,name:'ASUS TUF Gaming F16',brand:'ASUS',category:'Gaming',price:3590,image:'/img/91.webp',specs:'Intel Core 5 210H\n16 GB DDR5\n512 GB SSD\nRTX 3050 6 GB · 65 W\n16” WUXGA IPS 144 Hz\nFreeDOS · Mochila + mouse',active:true,offer:true},
+{id:92,name:'ASUS TUF Gaming A15',brand:'ASUS',category:'Gaming',price:3790,image:'/img/92.webp',specs:'AMD Ryzen 7 170\n16 GB DDR5\n512 GB SSD\nRTX 3050 4 GB · 75 W\n15.6” FHD 144 Hz\nWindows 11',active:true,offer:false},
+{id:93,name:'HP Victus 15-fa2018la',brand:'HP',category:'Gaming',price:3990,image:'/img/93.webp',specs:'Intel Core i5-13420H\n8 GB DDR4\n512 GB SSD\nRTX 4050 6 GB · 60 W\n15.6” FHD IPS\nFreeDOS',active:true,offer:false},
+{id:94,name:'HP Victus 15-fa2032la',brand:'HP',category:'Gaming',price:4090,image:'/img/94.webp',specs:'Intel Core i5-13420H\n16 GB DDR4\n512 GB SSD\nRTX 4050 6 GB · 60 W\n15.6” FHD IPS 144 Hz\nFreeDOS',active:true,offer:false},
+{id:95,name:'HP Victus 15-fb3022la',brand:'HP',category:'Gaming',price:4090,image:'/img/95.webp',specs:'AMD Ryzen 7 7445HS\n16 GB DDR5\n512 GB SSD\nRTX 4050 6 GB · 60 W\n15.6” FHD IPS\nFreeDOS',active:true,offer:false}];
