@@ -25,6 +25,9 @@ import {
 } from '../../../core/models/product.model';
 
 import {
+  PopupService
+} from '../../../core/services/popup.service';
+import {
   convertirPrecio,
   calcularPrecioReferencial
 } from '../../../shared/utils/price.utils';
@@ -48,7 +51,7 @@ export class ProductosComponent implements OnInit {
     inject(ConfiguracionService);
 
   readonly authService = inject(AuthService);
-
+  private readonly popupService = inject(PopupService);
   readonly productos = signal<Product[]>([]);
 
   readonly cargando = signal(true);
@@ -298,102 +301,139 @@ export class ProductosComponent implements OnInit {
 
   }
 
-  async guardar(): Promise<void> {
+ 
+async guardar(): Promise<void> {
 
-    if (
-      this.busy() ||
-      !this.authService.admin()
-    ) {
-      return;
-    }
-
-    this.busy.set(true);
-    this.mensaje.set('');
-    this.error.set(false);
-
-    try {
-
-      const editando = this.form.id > 0;
-
-      await this.productosService.guardar(
-        this.form,
-        this.archivo
-      );
-
-      this.nuevoProducto();
-
-      await this.cargarDatos();
-
-      if (!this.error()) {
-
-        this.mensaje.set(
-          editando
-            ? 'Producto actualizado correctamente.'
-            : 'Producto registrado correctamente.'
-        );
-
-      }
-
-    } catch (error) {
-
-      this.mostrarError(error);
-
-    } finally {
-
-      this.busy.set(false);
-
-    }
-
+  if (
+    this.busy() ||
+    !this.authService.admin()
+  ) {
+    return;
   }
 
-  async eliminar(producto: Product): Promise<void> {
+  this.busy.set(true);
+  this.mensaje.set('');
+  this.error.set(false);
 
-    if (
-      this.busy() ||
-      !this.authService.admin()
-    ) {
-      return;
-    }
+  try {
 
-    const confirmar = window.confirm(
-      `¿Deseas eliminar el producto ${producto.name}?`
+    const editando = this.form.id > 0;
+
+    await this.productosService.guardar(
+      this.form,
+      this.archivo
     );
 
-    if (!confirmar) {
-      return;
-    }
+    this.nuevoProducto();
 
-    this.busy.set(true);
-    this.mensaje.set('');
-    this.error.set(false);
+    await this.cargarDatos();
 
-    try {
+    if (this.error()) {
 
-      await this.productosService.eliminar(
-        producto.id
+      await this.popupService.warning(
+        'Producto guardado',
+        'El producto fue guardado, pero no se pudo actualizar el listado.'
       );
 
-      if (this.form.id === producto.id) {
-        this.nuevoProducto();
-      }
+    } else {
 
-      await this.cargarDatos();
-
-      if (!this.error()) {
-        this.mensaje.set('Producto eliminado correctamente.');
-      }
-
-    } catch (error) {
-
-      this.mostrarError(error);
-
-    } finally {
-
-      this.busy.set(false);
+      await this.popupService.success(
+        editando
+          ? '¡Producto actualizado!'
+          : '¡Producto registrado!',
+        'Los datos se guardaron correctamente.'
+      );
 
     }
 
+  } catch (error) {
+
+    this.mostrarError(error);
+
+    await this.popupService.error(
+      'Error al guardar',
+      (error as { message?: string })?.message ||
+      'Revisa los datos del producto.'
+    );
+
+  } finally {
+
+    this.busy.set(false);
+
   }
+
+}
+
+
+ 
+async eliminar(producto: Product): Promise<void> {
+
+  if (
+    this.busy() ||
+    !this.authService.admin()
+  ) {
+    return;
+  }
+
+  this.busy.set(true);
+  this.mensaje.set('');
+  this.error.set(false);
+
+  try {
+
+    const confirmar =
+      await this.popupService.confirm(
+        '¿Eliminar producto?',
+        `Se eliminará "${producto.name}" del inventario. Esta acción no se puede deshacer.`,
+        'Eliminar'
+      );
+
+    if (!confirmar) return;
+
+    await this.productosService.eliminar(
+      producto.id
+    );
+
+    if (this.form.id === producto.id) {
+      this.nuevoProducto();
+    }
+
+    await this.cargarDatos();
+
+    if (this.error()) {
+
+      await this.popupService.warning(
+        'Producto eliminado',
+        'El producto se eliminó, pero no se pudo actualizar el listado.'
+      );
+
+    } else {
+
+      await this.popupService.success(
+        '¡Producto eliminado!',
+        'El producto fue retirado del inventario.'
+      );
+
+    }
+
+  } catch (error) {
+
+    this.mostrarError(error);
+
+    await this.popupService.error(
+      'Error',
+      (error as { message?: string })?.message ||
+      'No se pudo eliminar el producto.'
+    );
+
+  } finally {
+
+    this.busy.set(false);
+
+  }
+
+}
+
 
   async cambiarPublicacion(
     producto: Product
@@ -457,11 +497,13 @@ export class ProductosComponent implements OnInit {
       return;
     }
 
-    if (!window.confirm(
-      '¿Importar los seis productos de ejemplo como ocultos y con stock cero?'
-    )) {
-      return;
-    }
+    const confirmar = await this.popupService.confirm(
+  '¿Importar productos de ejemplo?',
+  'Los seis productos serán registrados como ocultos y con stock cero.',
+  'Importar'
+);
+
+if (!confirmar) return;
 
     this.busy.set(true);
     this.mensaje.set('');

@@ -1,4 +1,3 @@
-
 <section class="admin-page">
 
   <!-- ENCABEZADO -->
@@ -10,11 +9,7 @@
       <p>Gestiona el catálogo mayorista de Corporación Charatec.</p>
     </div>
 
-    <button
-      type="button"
-      class="btn-primary"
-      [disabled]="busy()"
-      (click)="nuevoProducto()">
+    <button type="button" class="btn-primary" [disabled]="busy()" (click)="nuevoProducto()">
 
       + Nuevo producto
 
@@ -54,14 +49,11 @@
   <!-- MENSAJES -->
   @if (mensaje()) {
 
-    <div
-      class="notice"
-      [class.error]="error()"
-      role="status">
+  <div class="notice" [class.error]="error()" role="status">
 
-      {{ mensaje() }}
+    {{ mensaje() }}
 
-    </div>
+  </div>
 
   }
 
@@ -74,17 +66,15 @@
 
         <h2>
           {{ form.id
-            ? 'Editar producto #' + form.id
-            : 'Registrar producto' }}
+          ? 'Editar producto #' + form.id
+          : 'Registrar producto' }}
         </h2>
 
         <p>Completa la información del equipo.</p>
 
       </div>
 
-      <form
-        #productoForm="ngForm"
-        (ngSubmit)="guardar()">
+      <form #productoForm="ngForm" (ngSubmit)="guardar()">
 
         <fieldset [disabled]="busy() || cargando()">
 
@@ -92,13 +82,7 @@
 
             <label for="name">Nombre o modelo</label>
 
-            <input
-              id="name"
-              name="name"
-              placeholder="Ej. Lenovo LOQ 15IRX10"
-              [(ngModel)]="form.name"
-              required
-            />
+            <input id="name" name="name" placeholder="Ej. Lenovo LOQ 15IRX10" [(ngModel)]="form.name" required />
 
           </div>
 
@@ -108,13 +92,7 @@
 
               <label for="brand">Marca</label>
 
-              <input
-                id="brand"
-                name="brand"
-                placeholder="Ej. LENOVO"
-                [(ngModel)]="form.brand"
-                required
-              />
+              <input id="brand" name="brand" placeholder="Ej. LENOVO" [(ngModel)]="form.brand" required />
 
             </div>
 
@@ -122,13 +100,7 @@
 
               <label for="category">Categoría</label>
 
-              <input
-                id="category"
-                name="category"
-                list="categorias"
-                [(ngModel)]="form.category"
-                required
-              />
+              <input id="category" name="category" list="categorias" [(ngModel)]="form.category" required />
 
               <datalist id="categorias">
 
@@ -156,18 +128,14 @@
 
               <label for="currency">Moneda base</label>
 
-              <select
-                id="currency"
-                name="currency"
-                [(ngModel)]="form.currency"
-                required>
+              <select id="currency" name="currency" [(ngModel)]="form.currency" required>
 
                 <option value="USD">
-                  Dólares (USD)
+                  Dólares (USD) sin IGV
                 </option>
 
                 <option value="PEN">
-                  Soles (PEN)
+                  Soles (PEN) incluido IGV
                 </option>
 
               </select>
@@ -178,15 +146,7 @@
 
               <label for="price">Precio final</label>
 
-              <input
-                id="price"
-                name="price"
-                type="number"
-                min="0"
-                step="0.01"
-                [(ngModel)]="form.price"
-                required
-              />
+              <input id="price" name="price" type="number" min="0" step="0.01" [(ngModel)]="form.price" required />
 
             </div>
 
@@ -250,15 +210,8 @@
 
             </label>
 
-            <input
-              id="reference"
-              name="reference"
-              type="number"
-              min="0"
-              step="0.01"
-              placeholder="Precio anterior verificable"
-              [(ngModel)]="form.reference_price"
-            />
+            <input id="reference" name="reference" type="number" min="0" step="0.01"
+              placeholder="Precio anterior verificable" [(ngModel)]="form.reference_price" />
 
             <small class="help">
 
@@ -273,15 +226,7 @@
 
             <label for="stock">Stock disponible</label>
 
-            <input
-              id="stock"
-              name="stock"
-              type="number"
-              min="0"
-              step="1"
-              [(ngModel)]="form.stock"
-              required
-            />
+            <input id="stock" name="stock" type="number" min="0" step="1" [(ngModel)]="form.stock" required />
 
           </div>
 
@@ -297,11 +242,7 @@
 
             </label>
 
-            <textarea
-              id="specs"
-              name="specs"
-              rows="7"
-              [(ngModel)]="form.specs"
+            <textarea id="specs" name="specs" rows="7" [(ngModel)]="form.specs"
               placeholder="Procesador&#10;Memoria RAM&#10;Almacenamiento SSD&#10;Tarjeta gráfica&#10;Pantalla&#10;Sistema operativo">
             </textarea>
 
@@ -318,28 +259,19 @@
 
             @if (imagenPreview) {
 
-              <img
-                [src]="imagenPreview"
-                alt="Vista previa del producto"
-              />
+            <img [src]="imagenPreview" alt="Vista previa del producto" />
 
             } @else {
 
-              <svg
-                width="40"
-                height="40"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
 
-                <rect x="3" y="3" width="18" height="18" rx="3"/>
-                <circle cx="8.5" cy="8.5" r="1.5"/>
-                <path d="m21 15-5-5L5 21"/>
+              <rect x="3" y="3" width="18" height="18" rx="3" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <path d="m21 15-5-5L5 21" />
 
-              </svg>
+            </svg>
 
-              <strong>Fotografía del producto</strong>
+            <strong>Fotografía del producto</strong>
 
             }
 
@@ -347,11 +279,7 @@
 
               Seleccionar imagen
 
-              <input
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                (change)="seleccionarImagen($event)"
-              />
+              <input type="file" accept="image/jpeg,image/png,image/webp" (change)="seleccionarImagen($event)" />
 
             </label>
 
@@ -359,7 +287,7 @@
 
             @if (archivo) {
 
-              <small>{{ archivo.name }}</small>
+            <small>{{ archivo.name }}</small>
 
             }
 
@@ -370,11 +298,7 @@
 
             <label>
 
-              <input
-                name="active"
-                type="checkbox"
-                [(ngModel)]="form.active"
-              />
+              <input name="active" type="checkbox" [(ngModel)]="form.active" />
 
               Publicar en el catálogo
 
@@ -382,11 +306,7 @@
 
             <label>
 
-              <input
-                name="offer"
-                type="checkbox"
-                [(ngModel)]="form.offer"
-              />
+              <input name="offer" type="checkbox" [(ngModel)]="form.offer" />
 
               Marcar como destacado
 
@@ -396,23 +316,17 @@
 
           <div class="form-actions">
 
-            <button
-              type="submit"
-              class="btn-primary"
-              [disabled]="busy() || productoForm.invalid">
+            <button type="submit" class="btn-primary" [disabled]="busy() || productoForm.invalid">
 
               {{ busy()
-                ? 'Guardando...'
-                : form.id
-                  ? 'Actualizar producto'
-                  : 'Guardar producto' }}
+              ? 'Guardando...'
+              : form.id
+              ? 'Actualizar producto'
+              : 'Guardar producto' }}
 
             </button>
 
-            <button
-              type="button"
-              class="btn-secondary"
-              (click)="nuevoProducto()">
+            <button type="button" class="btn-secondary" (click)="nuevoProducto()">
 
               Limpiar
 
@@ -441,16 +355,10 @@
 
       <div class="inventory-filters">
 
-        <input
-          type="search"
-          placeholder="Buscar modelo, marca o código..."
-          [ngModel]="busqueda()"
-          (ngModelChange)="cambiarBusqueda($event)"
-        />
+        <input type="search" placeholder="Buscar modelo, marca o código..." [ngModel]="busqueda()"
+          (ngModelChange)="cambiarBusqueda($event)" />
 
-        <select
-          [ngModel]="filtroEstado()"
-          (ngModelChange)="cambiarFiltro($event)">
+        <select [ngModel]="filtroEstado()" (ngModelChange)="cambiarFiltro($event)">
 
           <option value="">Todos</option>
           <option value="active">Publicados</option>
@@ -463,21 +371,13 @@
 
       <div class="inventory-actions">
 
-        <button
-          type="button"
-          class="btn-secondary"
-          [disabled]="busy() || cargando()"
-          (click)="cargarDatos()">
+        <button type="button" class="btn-secondary" [disabled]="busy() || cargando()" (click)="cargarDatos()">
 
           Actualizar
 
         </button>
 
-        <button
-          type="button"
-          class="btn-secondary"
-          [disabled]="busy() || cargando()"
-          (click)="importarEjemplos()">
+        <button type="button" class="btn-secondary" [disabled]="busy() || cargando()" (click)="importarEjemplos()">
 
           Importar ejemplos ocultos
 
@@ -487,198 +387,173 @@
 
       @if (cargando()) {
 
-        <div class="empty-state">
+      <div class="empty-state">
 
-          Cargando inventario...
+        Cargando inventario...
 
-        </div>
+      </div>
 
       } @else {
 
-        <div class="table-wrapper">
+      <div class="table-wrapper">
 
-          <table>
+        <table>
 
-            <thead>
+          <thead>
 
-              <tr>
-                <th>Producto</th>
-                <th>Precio</th>
-                <th>Stock</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-              </tr>
+            <tr>
+              <th>Producto</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
 
-            </thead>
+          </thead>
 
-            <tbody>
+          <tbody>
 
-              @for (p of productosPaginados(); track p.id) {
+            @for (p of productosPaginados(); track p.id) {
 
-                <tr>
+            <tr>
 
-                  <td>
+              <td>
 
-                    <div class="product-cell">
+                <div class="product-cell">
 
-                      <div class="product-thumbnail">
+                  <div class="product-thumbnail">
 
-                        @if (p.photo) {
+                    @if (p.photo) {
 
-                          <img
-                            [src]="p.photo"
-                            [alt]="p.name"
-                            loading="lazy"
-                          />
+                    <img [src]="p.photo" [alt]="p.name" loading="lazy" />
 
-                        } @else {
+                    } @else {
 
-                          <span>Sin foto</span>
+                    <span>Sin foto</span>
 
-                        }
+                    }
 
-                      </div>
+                  </div>
 
-                      <div class="product-description">
+                  <div class="product-description">
 
-                        <strong>{{ p.name }}</strong>
-
-                        <small>
-                          #{{ p.id }} · {{ p.brand }}
-                        </small>
-
-                        <small>{{ p.category }}</small>
-
-                      </div>
-
-                    </div>
-
-                  </td>
-
-                  <td class="price-cell">
-
-                    <strong>
-                      US$ {{ money(p, 'USD') | number:'1.2-2' }}
-                    </strong>
+                    <strong>{{ p.name }}</strong>
 
                     <small>
-                      S/ {{ money(p, 'PEN') | number:'1.2-2' }}
+                      #{{ p.id }} · {{ p.brand }}
                     </small>
 
-                  </td>
+                    <small>{{ p.category }}</small>
 
-                  <td>
+                  </div>
 
-                    <span
-                      class="stock"
-                      [class.stock-zero]="p.stock === 0">
+                </div>
 
-                      {{ p.stock }}
+              </td>
 
-                    </span>
+              <td class="price-cell">
 
-                  </td>
+                <strong>
+                  US$ {{ money(p, 'USD') | number:'1.2-2' }}
+                </strong>
 
-                  <td>
+                <small>
+                  S/ {{ money(p, 'PEN') | number:'1.2-2' }}
+                </small>
 
-                    <span
-                      class="status"
-                      [class.published]="p.active">
+              </td>
 
-                      {{ p.active
-                        ? 'Publicado'
-                        : 'Oculto' }}
+              <td>
 
-                    </span>
+                <span class="stock" [class.stock-zero]="p.stock === 0">
 
-                  </td>
+                  {{ p.stock }}
 
-                  <td>
+                </span>
 
-                    <div class="row-actions">
+              </td>
 
-                      <button
-                        class="btn-edit"
-                        [disabled]="busy()"
-                        (click)="editar(p)">
+              <td>
 
-                        Editar
+                <span class="status" [class.published]="p.active">
 
-                      </button>
+                  {{ p.active
+                  ? 'Publicado'
+                  : 'Oculto' }}
 
-                      <button
-                        class="btn-hide"
-                        [disabled]="busy()"
-                        (click)="cambiarPublicacion(p)">
+                </span>
 
-                        {{ p.active
-                          ? 'Ocultar'
-                          : 'Publicar' }}
+              </td>
 
-                      </button>
+              <td>
 
-                      <button
-                        class="btn-delete"
-                        [disabled]="busy()"
-                        (click)="eliminar(p)">
+                <div class="row-actions">
 
-                        Eliminar
+                  <button class="btn-edit" [disabled]="busy()" (click)="editar(p)">
 
-                      </button>
+                    Editar
 
-                    </div>
+                  </button>
 
-                  </td>
+                  <button class="btn-hide" [disabled]="busy()" (click)="cambiarPublicacion(p)">
 
-                </tr>
+                    {{ p.active
+                    ? 'Ocultar'
+                    : 'Publicar' }}
 
-              } @empty {
+                  </button>
 
-                <tr>
+                  <button class="btn-delete" [disabled]="busy()" (click)="eliminar(p)">
 
-                  <td colspan="5" class="empty-state">
+                    Eliminar
 
-                    No hay productos para mostrar.
+                  </button>
 
-                  </td>
+                </div>
 
-                </tr>
+              </td>
 
-              }
+            </tr>
 
-            </tbody>
+            } @empty {
 
-          </table>
+            <tr>
 
-        </div>
+              <td colspan="5" class="empty-state">
 
-        <div class="pagination">
+                No hay productos para mostrar.
 
-          <button
-            type="button"
-            class="btn-secondary"
-            [disabled]="pagina() <= 1"
-            (click)="anterior()">
+              </td>
 
-            Anterior
+            </tr>
 
-          </button>
+            }
 
-          <span>
-            {{ pagina() }} / {{ totalPaginas() }}
-          </span>
+          </tbody>
 
-          <button
-            type="button"
-            class="btn-secondary"
-            [disabled]="pagina() >= totalPaginas()"
-            (click)="siguiente()">
+        </table>
 
-            Siguiente
+      </div>
 
-          </button>
+      <div class="pagination">
 
-        </div>
+        <button type="button" class="btn-secondary" [disabled]="pagina() <= 1" (click)="anterior()">
+
+          Anterior
+
+        </button>
+
+        <span>
+          {{ pagina() }} / {{ totalPaginas() }}
+        </span>
+
+        <button type="button" class="btn-secondary" [disabled]="pagina() >= totalPaginas()" (click)="siguiente()">
+
+          Siguiente
+
+        </button>
+
+      </div>
 
       }
 

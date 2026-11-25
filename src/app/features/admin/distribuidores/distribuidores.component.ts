@@ -1,4 +1,3 @@
-
 import {
   Component,
   OnInit,
@@ -9,18 +8,14 @@ import {
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { DistribuidoresService } from '../../../core/services/distribuidores.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { Distributor } from '../../../core/models/distributor.model';
 import {
-  DistribuidoresService
-} from '../../../core/services/distribuidores.service';
+  PopupService
+} from '../../../core/services/popup.service';
 
-import {
-  AuthService
-} from '../../../core/services/auth.service';
 
-import {
-  Distributor
-} from '../../../core/models/distributor.model';
 
 type DistributorStatus =
   | 'pending'
@@ -44,7 +39,7 @@ export class DistribuidoresComponent implements OnInit {
 
   private readonly authService =
     inject(AuthService);
-
+  private readonly popupService = inject(PopupService);
   readonly distribuidores = signal<Distributor[]>([]);
 
   readonly cargando = signal(true);
@@ -149,6 +144,7 @@ export class DistribuidoresComponent implements OnInit {
 
   }
 
+
   async cambiarEstado(
     distribuidor: Distributor,
     status: DistributorStatus
@@ -164,52 +160,59 @@ export class DistribuidoresComponent implements OnInit {
 
     const accion =
       status === 'approved'
-        ? 'aprobar'
+        ? 'Aprobar'
         : status === 'blocked'
-          ? 'bloquear'
-          : 'devolver a pendiente';
+          ? 'Bloquear'
+          : 'Desaprobar';
 
-    const confirmar = window.confirm(
-
-      `¿Deseas ${accion} a ${distribuidor.company}?`
-
-    );
-
-    if (!confirmar) {
-      return;
-    }
+    const descripcion =
+      status === 'approved'
+        ? 'podrá acceder al catálogo mayorista.'
+        : 'perderá el acceso al catálogo mayorista.';
 
     this.busy.set(true);
+
     this.mensaje.set('');
     this.error.set(false);
 
     try {
 
-      await this.distribuidoresService
-        .actualizarEstado(
-          distribuidor.id,
-          status
+      const confirmar =
+        await this.popupService.confirm(
+          `¿${accion} distribuidor?`,
+          `${distribuidor.company} ${descripcion}`,
+          accion
         );
 
+      if (!confirmar) return;
+
+      await this.distribuidoresService.actualizarEstado(
+        distribuidor.id,
+        status
+      );
+
       this.distribuidores.update(lista =>
-
         lista.map(d =>
-
           d.id === distribuidor.id
             ? { ...d, status }
             : d
-
         )
-
       );
 
-      this.mensaje.set(
-        `Estado actualizado: ${this.nombreEstado(status)}.`
+      await this.popupService.success(
+        '¡Estado actualizado!',
+        `${distribuidor.company}: ${this.nombreEstado(status)}.`
       );
 
     } catch (error) {
 
       this.mostrarError(error);
+
+      await this.popupService.error(
+        'Error al actualizar',
+        (error as { message?: string })?.message ||
+        'No se pudo actualizar el distribuidor.'
+      );
 
     } finally {
 
@@ -218,6 +221,7 @@ export class DistribuidoresComponent implements OnInit {
     }
 
   }
+
 
   whatsapp(distribuidor: Distributor): string {
 

@@ -1,9 +1,11 @@
 
-import { Product } from '../../core/models/product.model';
+import {
+  Product
+} from '../../core/models/product.model';
 
-import { convertirPrecio } from './price.utils';
-
-const WHATSAPP_NUMBER = '51943771361';
+import {
+  convertirPrecio
+} from './price.utils';
 
 export function generarWhatsApp(
   product: Product,
@@ -11,26 +13,29 @@ export function generarWhatsApp(
 ): string {
 
   const usd = convertirPrecio(
-    product,
-    'USD',
-    rate
+    product, 'USD', rate
   ).toFixed(2);
 
   const pen = convertirPrecio(
-    product,
-    'PEN',
-    rate
+    product, 'PEN', rate
   ).toFixed(2);
 
-  const message =
-    `Hola Corporación Charatec, ` +
-    `soy distribuidor y deseo consultar por ` +
-    `${product.name} (código ${product.id}). ` +
-    `Precio: USD ${usd} / S/ ${pen}. ` +
-    `¿Disponibilidad?`;
+  const message = [
+    'Hola Corporación Charatec B2B.',
+    '',
+    'Deseo cotizar el siguiente producto:',
+    '',
+    `Producto: ${product.name}`,
+    `Código: ${product.id}`,
+    `Marca: ${product.brand}`,
+    `Precio USD sin IGV: US$ ${usd}`,
+    `Precio PEN incluido IGV: S/ ${pen}`,
+    `Stock publicado: ${product.stock}`,
+    '',
+    '¿Podrían confirmarme disponibilidad?'
+  ].join('\n');
 
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${
-    encodeURIComponent(message)
-  }`;
+  return 'https://wa.me/51943771361?text=' +
+    encodeURIComponent(message);
+
 }
-

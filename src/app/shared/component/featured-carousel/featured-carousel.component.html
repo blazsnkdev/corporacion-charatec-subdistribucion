@@ -1,0 +1,107 @@
+<section class="carousel" aria-label="Productos destacados" (mouseenter)="pausado.set(true)"
+    (mouseleave)="pausado.set(false)" (focusin)="pausado.set(true)" (focusout)="pausado.set(false)">
+
+    @if (destacado(); as product) {
+
+    <div class="slide">
+
+        <div class="slide-content">
+
+            <span class="eyebrow">
+                PRODUCTOS DESTACADOS / CHARATEC B2B
+            </span>
+
+            <span class="brand">
+                {{ product.brand }}
+            </span>
+
+            <h1>{{ product.name }}</h1>
+
+            <div class="slide-specs">
+                {{ product.specs.split('\n').slice(0, 3).join(' · ') }}
+            </div>
+
+            <div class="slide-price">
+
+                <strong>
+                    US$ {{ precio(product) | number:'1.2-2' }}
+                </strong>
+
+                <small>Sin IGV</small>
+
+            </div>
+
+            <a [href]="whatsapp(product)" target="_blank" rel="noopener noreferrer" class="btn-quote">
+
+                Solicitar cotización →
+
+            </a>
+
+        </div>
+
+        <div class="slide-image">
+
+            @if (product.photo) {
+
+            <img [src]="product.photo" [alt]="product.name" />
+
+            }
+
+        </div>
+
+    </div>
+
+    @if (productos().length > 1) {
+
+    <button type="button" class="arrow prev" aria-label="Producto anterior" (click)="anterior()">
+
+        ‹
+
+    </button>
+
+    <button type="button" class="arrow next" aria-label="Producto siguiente" (click)="siguiente()">
+
+        ›
+
+    </button>
+
+    <div class="carousel-controls">
+
+        @for (p of productos(); track p.id; let i = $index) {
+
+        <button type="button" class="dot" [class.active]="indice() % productos().length === i"
+            [attr.aria-label]="'Ver producto ' + (i + 1)" (click)="seleccionar(i)">
+        </button>
+
+        }
+
+        <button class="pause-button" type="button" (click)="pausado.set(!pausado())">
+
+            {{ pausado() ? 'Reproducir' : 'Pausar' }}
+
+        </button>
+
+    </div>
+
+    }
+
+    } @else {
+
+    <div class="welcome-banner">
+
+        <span class="eyebrow">
+            CATÁLOGO MAYORISTA / B2B
+        </span>
+
+        <h1>Equipos para tu negocio.</h1>
+
+        <p>
+            Tecnología, precios exclusivos y
+            atención especializada para distribuidores.
+        </p>
+
+    </div>
+
+    }
+
+</section>
