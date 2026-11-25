@@ -80,27 +80,27 @@
           #registroForm="ngForm"
           (ngSubmit)="registrar()">
 
-          <div class="form-group">
+<div class="form-group">
 
-            <label for="ruc">
-              Número de RUC
-            </label>
+  <label for="ruc">
+    Número de RUC
+  </label>
 
-            <input
-              id="ruc"
-              name="ruc"
-              type="text"
-              inputmode="numeric"
-              maxlength="11"
-              minlength="11"
-              pattern="[0-9]{11}"
-              placeholder="RUC de 11 dígitos"
-              [(ngModel)]="ruc"
-              required
-            />
+  <input
+    id="ruc"
+    name="ruc"
+    type="text"
+    inputmode="numeric"
+    maxlength="11"
+    minlength="11"
+    pattern="(10|20)[0-9]{9}"
+    placeholder="RUC iniciado en 10 o 20"
+    [(ngModel)]="ruc"
+    (input)="validarEntradaRuc($event)"
+    required
+  />
 
-          </div>
-
+</div>
           <div class="form-group">
 
             <label for="company">

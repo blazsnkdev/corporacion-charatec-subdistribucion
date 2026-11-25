@@ -56,7 +56,28 @@ export class RegistroComponent {
   alternarPassword(): void {
     this.mostrarPassword.update(value => !value);
   }
+validarEntradaRuc(event: Event): void {
 
+  const input = event.target as HTMLInputElement;
+
+  let valor = input.value.replace(/\D/g, '');
+
+  // Solo permitir 1 o 2 como primer dígito.
+  if (valor.length >= 1 && !/^[12]/.test(valor)) {
+    valor = '';
+  }
+
+  // Solo permitir 10 o 20 como prefijo.
+  if (valor.length >= 2 && !/^(10|20)/.test(valor)) {
+    valor = valor.charAt(0);
+  }
+
+  valor = valor.slice(0, 11);
+
+  this.ruc = valor;
+  input.value = valor;
+
+}
   async registrar(): Promise<void> {
 
     if (this.busy()) {

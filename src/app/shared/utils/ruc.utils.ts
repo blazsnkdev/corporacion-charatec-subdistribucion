@@ -1,7 +1,7 @@
 
 export function validarRuc(ruc: string): boolean {
 
-  if (!/^(10|15|16|17|20)\d{9}$/.test(ruc)) {
+  if (!/^(10|20)\d{9}$/.test(ruc)) {
     return false;
   }
 
