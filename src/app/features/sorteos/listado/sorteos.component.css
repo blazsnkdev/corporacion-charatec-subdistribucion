@@ -797,3 +797,18 @@ button:disabled {
   }
 
 }
+/* ==========================================
+   BUSCADOR SIN FILTROS PARA CLIENTES
+========================================== */
+
+.filters-bar.search-only {
+  display: flex;
+  width: 100%;
+}
+
+.filters-bar.search-only .search-input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+}

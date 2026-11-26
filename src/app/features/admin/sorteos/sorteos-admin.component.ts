@@ -247,6 +247,60 @@ export class SorteosAdminComponent
   });
 
 
+  // PAGINACION DEL CATALOGO
+  readonly pagina = signal(1);
+  readonly tamanioPagina = signal(10);
+  readonly opcionesPagina = [10, 20, 50];
+
+  readonly totalPaginas = computed(() => Math.max(1,
+    Math.ceil(this.sorteosFiltrados().length / this.tamanioPagina())));
+
+  readonly sorteosPaginados = computed(() => {
+    const inicio = (this.pagina() - 1) * this.tamanioPagina();
+    return this.sorteosFiltrados().slice(inicio, inicio + this.tamanioPagina());
+  });
+
+  readonly primerRegistro = computed(() => this.sorteosFiltrados().length
+    ? (this.pagina() - 1) * this.tamanioPagina() + 1 : 0);
+
+  readonly ultimoRegistro = computed(() => Math.min(
+    this.pagina() * this.tamanioPagina(), this.sorteosFiltrados().length));
+
+  cambiarBusqueda(valor: string): void {
+    this.busqueda.set(valor);
+    this.pagina.set(1);
+  }
+
+  cambiarFiltro(valor: 'all' | RaffleStatus): void {
+    this.filtroEstado.set(valor);
+    this.pagina.set(1);
+  }
+
+  limpiarFiltros(): void {
+    this.busqueda.set('');
+    this.filtroEstado.set('all');
+    this.pagina.set(1);
+  }
+
+  cambiarTamanioPagina(valor: number): void {
+    const cantidad = Number(valor);
+    if (!this.opcionesPagina.includes(cantidad)) return;
+    this.tamanioPagina.set(cantidad);
+    this.pagina.set(1);
+  }
+
+  paginaAnterior(): void {
+    if (this.pagina() > 1) this.pagina.update(p => p - 1);
+  }
+
+  paginaSiguiente(): void {
+    if (this.pagina() < this.totalPaginas()) this.pagina.update(p => p + 1);
+  }
+
+  private ajustarPagina(): void {
+    this.pagina.set(Math.min(this.pagina(), this.totalPaginas()));
+  }
+
   // ==========================================
   // INICIALIZACION
   // ==========================================
@@ -288,6 +342,8 @@ export class SorteosAdminComponent
         await this.rafflesService.listarAdmin()
 
       );
+
+      this.ajustarPagina();
 
     } catch (error) {
 
@@ -930,6 +986,8 @@ export class SorteosAdminComponent
 
       // LIMPIAR FORMULARIO
 
+      if (id === null) this.limpiarFiltros();
+      this.ajustarPagina();
       this.reiniciarFormulario();
 
 

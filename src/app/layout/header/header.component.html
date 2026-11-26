@@ -1,4 +1,3 @@
-
 <header class="site-header">
 
   <!-- ======================================
@@ -24,28 +23,18 @@
        NAVBAR AZUL
   ======================================= -->
 
-  <nav
-    class="navbar"
-    aria-label="Navegación principal">
+  <nav class="navbar" aria-label="Navegación principal">
 
     <div class="container nav-content">
 
 
       <!-- ==================================
-           LOGO
+           LOGO CORPORATIVO
       =================================== -->
 
-      <a
-        [routerLink]="rutaLogo()"
-        class="logo"
-        aria-label="Corporación Charatec"
-        (click)="cerrarMenu()">
+      <a [routerLink]="rutaLogo()" class="logo" aria-label="Corporación Charatec" (click)="cerrarMenu()">
 
-        <img
-          src="/logo.png"
-          alt="Corporación Charatec"
-          class="logo-image"
-        />
+        <img src="/logo.png" alt="Corporación Charatec" class="logo-image" />
 
         <div class="brand-text">
 
@@ -70,25 +59,215 @@
            NAVEGACION CENTRAL
       =================================== -->
 
-      <div
-        id="main-navigation"
-        class="nav-links"
-        [class.nav-open]="menuAbierto()">
+      <div id="main-navigation" class="nav-links" [class.nav-open]="menuAbierto()">
 
-        @for (item of menuItems(); track item.route) {
+        @for (item of menuItems(); track item.id) {
 
-          <a
-            [routerLink]="item.route"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{
-              exact: item.exact ?? false
-            }"
-            ariaCurrentWhenActive="page"
-            (click)="cerrarMenu()">
+        <div class="nav-item" [class.nav-item-active]="esMenuActivo(item)"
+          [class.dropdown-open]="esSubmenuAbierto(item.id)">
 
-            {{ item.label }}
+
+          <!-- ==================================
+                 MENU CON SUBMENU
+            =================================== -->
+
+          @if (item.children?.length) {
+
+          <button type="button" class="nav-link dropdown-toggle" [class.active]="esMenuActivo(item)"
+            [attr.aria-expanded]="esSubmenuAbierto(item.id)" [attr.aria-controls]="'submenu-' + item.id"
+            (click)="alternarSubmenu(item.id)">
+
+            <span class="nav-label">
+
+              {{ item.label }}
+
+            </span>
+
+            <svg class="dropdown-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+              <path d="m6 9 6 6 6-6" />
+
+            </svg>
+
+          </button>
+
+
+          <!-- ==================================
+                   CONTENEDOR DESPLEGABLE
+              =================================== -->
+
+          <div class="dropdown-menu" [id]="'submenu-' + item.id" [hidden]="!esSubmenuAbierto(item.id)">
+
+            <div class="dropdown-heading">
+
+              {{ item.label }}
+
+            </div>
+
+
+            @for (
+            hijo of item.children;
+            track hijo.route
+            ) {
+
+            <a class="dropdown-link" [routerLink]="hijo.route" routerLinkActive="active" [routerLinkActiveOptions]="{
+                      exact: hijo.exact ?? false
+                    }" ariaCurrentWhenActive="page" (click)="cerrarMenu()">
+
+
+              <!-- ICONO DEL SUBMENU -->
+
+              <span class="dropdown-icon">
+
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                  stroke-linecap="round" stroke-linejoin="round">
+
+                  @switch (hijo.icon) {
+
+                  @case ('grid') {
+
+                  <rect x="3" y="3" width="7" height="7" rx="1" />
+
+                  <rect x="14" y="3" width="7" height="7" rx="1" />
+
+                  <rect x="3" y="14" width="7" height="7" rx="1" />
+
+                  <rect x="14" y="14" width="7" height="7" rx="1" />
+
+                  }
+
+                  @case ('package') {
+
+                  <path d="m12 3 9 5-9 5-9-5 9-5z" />
+
+                  <path d="M3 8v8l9 5 9-5V8" />
+
+                  <path d="M12 13v8" />
+
+                  <path d="m7.5 5.5 9 5" />
+
+                  }
+
+                  @case ('building') {
+
+                  <rect x="4" y="3" width="16" height="18" rx="2" />
+
+                  <path d="M9 21v-4h6v4" />
+
+                  <path d="M8 7h2M14 7h2" />
+
+                  <path d="M8 12h2M14 12h2" />
+
+                  }
+
+                  @case ('user') {
+
+                  <circle cx="12" cy="8" r="4" />
+
+                  <path d="M5 21v-2a7 7 0 0 1 14 0v2" />
+
+                  }
+
+                  @case ('gift') {
+
+                  <rect x="3" y="8" width="18" height="4" rx="1" />
+
+                  <path d="M5 12v9h14v-9" />
+
+                  <path d="M12 8v13" />
+
+                  <path d="M12 8H8a2.5 2.5 0 1 1
+                              2.5-2.5L12 8z" />
+
+                  <path d="M12 8h4a2.5 2.5 0 1 0
+                              -2.5-2.5L12 8z" />
+
+                  }
+
+                  @case ('clipboard') {
+
+                  <rect x="5" y="4" width="14" height="17" rx="2" />
+
+                  <rect x="9" y="2" width="6" height="4" rx="1" />
+
+                  <path d="M9 11h6M9 15h6" />
+
+                  }
+
+                  @case ('exchange') {
+
+                  <path d="M3 7h18" />
+
+                  <path d="m17 3 4 4-4 4" />
+
+                  <path d="M21 17H3" />
+
+                  <path d="m7 13-4 4 4 4" />
+
+                  }
+
+                  @default {
+
+                  <circle cx="12" cy="12" r="8" />
+
+                  <path d="m10 8 4 4-4 4" />
+
+                  }
+
+                  }
+
+                </svg>
+
+              </span>
+
+
+              <!-- TEXTO DEL SUBMENU -->
+
+              <span class="dropdown-link-label">
+
+                {{ hijo.label }}
+
+              </span>
+
+
+              <!-- FLECHA LATERAL -->
+
+              <svg class="dropdown-link-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+
+                <path d="m9 18 6-6-6-6" />
+
+              </svg>
+
+            </a>
+
+            }
+
+          </div>
+
+
+          <!-- ==================================
+                 ENLACES DIRECTOS
+            =================================== -->
+
+          } @else if (item.route; as ruta) {
+
+          <a class="nav-link" [routerLink]="ruta" routerLinkActive="active" [routerLinkActiveOptions]="{
+                  exact: item.exact ?? false
+                }" ariaCurrentWhenActive="page" (click)="cerrarMenu()">
+
+            <span class="nav-label">
+
+              {{ item.label }}
+
+            </span>
 
           </a>
+
+          }
+
+        </div>
 
         }
 
@@ -104,30 +283,18 @@
 
         <!-- WHATSAPP -->
 
-        <a
-          href="https://wa.me/51943771361"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="nav-icon-button whatsapp-button"
-          aria-label="Atención comercial"
-          title="Atención comercial">
+        <a href="https://wa.me/51943771361" target="_blank" rel="noopener noreferrer"
+          class="nav-icon-button whatsapp-button" aria-label="Atención comercial" title="Atención comercial">
 
-          <svg
-            viewBox="0 0 24 24"
-            width="22"
-            height="22"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
 
             <path d="M21 11.5a9 9 0 0 1-9 9
               9.5 9.5 0 0 1-4-.9L3 21
-              l1.4-4.6A9 9 0 1 1 21 11.5z"/>
+              l1.4-4.6A9 9 0 1 1 21 11.5z" />
 
             <path d="M8 8c0 4 4 8 8 8l1-3
-              -3-1-1 1-2-2 1-1-1-3z"/>
+              -3-1-1 1-2-2 1-1-1-3z" />
 
           </svg>
 
@@ -137,151 +304,115 @@
         <!-- ==================================
              USUARIO AUTENTICADO
         =================================== -->
+        @if (!authService.ready()) {
 
-        @if (authService.autenticado()) {
+        <span class="header-spinner"></span>
 
-          <div
-            class="user-info"
-            [title]="authService.user()">
+        } @else if (authService.autenticado()) {
 
-            <span class="user-role">
+        <div class="user-info" [title]="authService.user()">
 
-              {{ nombreRol() }}
+          <span class="user-role">
 
-            </span>
+            {{ nombreRol() }}
 
-            <span class="user-email">
+          </span>
 
-              {{ authService.user() }}
+          <span class="user-email">
 
-            </span>
+            {{ authService.user() }}
 
-          </div>
+          </span>
+
+        </div>
 
 
-          <!-- CERRAR SESION -->
+        <!-- ==================================
+               CERRAR SESION
+          =================================== -->
 
-          <button
-            type="button"
-            class="nav-icon-button logout-button"
-            (click)="cerrarSesion()"
-            [disabled]="cerrandoSesion()"
-            title="Cerrar sesión"
-            aria-label="Cerrar sesión">
+        <button type="button" class="nav-icon-button logout-button" (click)="cerrarSesion()"
+          [disabled]="cerrandoSesion()" title="Cerrar sesión" aria-label="Cerrar sesión">
 
-            @if (cerrandoSesion()) {
+          @if (cerrandoSesion()) {
 
-              <span class="header-spinner"></span>
+          <span class="header-spinner"></span>
 
-            } @else {
+          } @else {
 
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
 
-                <path d="M10 17l5-5-5-5"/>
+            <path d="M10 17l5-5-5-5" />
 
-                <path d="M15 12H3"/>
+            <path d="M15 12H3" />
 
-                <path d="M12 3h6a3 3 0 0 1
-                  3 3v12a3 3 0 0 1-3 3h-6"/>
+            <path d="M12 3h6a3 3 0 0 1
+                  3 3v12a3 3 0 0 1-3 3h-6" />
 
-              </svg>
+          </svg>
 
-            }
+          }
 
-          </button>
+        </button>
+
 
         } @else {
 
 
-          <!-- ==================================
+        <!-- ==================================
                USUARIO SIN SESION
           =================================== -->
 
-          <a
-            routerLink="/login"
-            class="nav-icon-button"
-            title="Iniciar sesión"
-            aria-label="Iniciar sesión"
-            (click)="cerrarMenu()">
+        <a routerLink="/login" class="nav-icon-button" title="Iniciar sesión" aria-label="Iniciar sesión"
+          (click)="cerrarMenu()">
 
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
 
-              <circle cx="12" cy="8" r="4"/>
+            <circle cx="12" cy="8" r="4" />
 
-              <path d="M5 21v-2a7 7 0 0 1 14 0v2"/>
+            <path d="M5 21v-2a7 7 0 0 1 14 0v2" />
 
-            </svg>
+          </svg>
 
-          </a>
+        </a>
 
         }
 
 
         <!-- ==================================
-             MENU MOVIL
+             MENU RESPONSIVE
         =================================== -->
 
         @if (menuItems().length > 0) {
 
-          <button
-            type="button"
-            class="menu-toggle"
-            (click)="alternarMenu()"
-            [attr.aria-expanded]="menuAbierto()"
-            [attr.aria-label]="menuAbierto()
+        <button type="button" class="menu-toggle" (click)="alternarMenu()" [attr.aria-expanded]="menuAbierto()"
+          [attr.aria-label]="menuAbierto()
               ? 'Cerrar menú'
-              : 'Abrir menú'"
-            aria-controls="main-navigation">
+              : 'Abrir menú'" aria-controls="main-navigation">
 
-            @if (menuAbierto()) {
+          @if (menuAbierto()) {
 
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round">
 
-                <path d="m6 6 12 12M18 6 6 18"/>
+            <path d="m6 6 12 12M18 6 6 18" />
 
-              </svg>
+          </svg>
 
-            } @else {
+          } @else {
 
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round">
 
-                <path d="M4 6h16M4 12h16M4 18h16"/>
+            <path d="M4 6h16M4 12h16M4 18h16" />
 
-              </svg>
+          </svg>
 
-            }
+          }
 
-          </button>
+        </button>
 
         }
 
@@ -298,13 +429,11 @@
 
   @if (mensajeError()) {
 
-    <div
-      class="header-error"
-      role="alert">
+  <div class="header-error" role="alert">
 
-      {{ mensajeError() }}
+    {{ mensajeError() }}
 
-    </div>
+  </div>
 
   }
 

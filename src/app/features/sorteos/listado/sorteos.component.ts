@@ -8,17 +8,11 @@ import {
   computed
 } from '@angular/core';
 
-import {
-  DatePipe
-} from '@angular/common';
+import { DatePipe } from '@angular/common';
 
-import {
-  FormsModule
-} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
-import {
-  RouterLink
-} from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 import {
   AuthService
@@ -43,11 +37,8 @@ type FiltroSorteo =
 interface TiempoRestante {
 
   dias: string;
-
   horas: string;
-
   minutos: string;
-
   segundos: string;
 
 }
@@ -91,42 +82,101 @@ export class SorteosComponent
 
   readonly ahora = signal(Date.now());
 
-
+  private versionCarga = 0;
 
   private temporizador:
     ReturnType<typeof setInterval> | null = null;
 
 
   // ==========================================
+  // PERMISOS DE VISUALIZACION
+  // ==========================================
+
+  readonly esAdministrador = computed(() =>
+
+    this.authService.puedeAdministrar()
+
+  );
+
+
+  readonly mostrarFiltrosEstado = computed(() =>
+
+    this.esAdministrador()
+
+  );
+
+
+  // ==========================================
   // FILTROS DISPONIBLES
   // ==========================================
 
-  readonly filtros: {
+  readonly filtros = computed<{
     label: string;
     value: FiltroSorteo;
-  }[] = [
+  }[]>(() => {
 
-    {
-      label: 'Todos los sorteos',
-      value: 'all'
-    },
+    if (!this.esAdministrador()) {
 
-    {
-      label: 'Disponibles',
-      value: 'available'
-    },
+      return [];
 
-    {
-      label: 'Cerrados',
-      value: 'closed'
-    },
-
-    {
-      label: 'Finalizados',
-      value: 'finished'
     }
 
-  ];
+    return [
+
+      {
+        label: 'Todos',
+        value: 'all'
+      },
+
+      {
+        label: 'Disponibles',
+        value: 'available'
+      },
+
+      {
+        label: 'Cerrados',
+        value: 'closed'
+      },
+
+      {
+        label: 'Finalizados',
+        value: 'finished'
+      }
+
+    ];
+
+  });
+
+
+  // ==========================================
+  // SORTEOS VISIBLES SEGUN EL ROL
+  // ==========================================
+
+  readonly sorteosVisibles = computed(() => {
+
+    const registros = this.sorteos();
+
+    // ADMINISTRADOR
+
+    if (this.esAdministrador()) {
+
+      return registros.filter(sorteo =>
+
+        sorteo.status !== 'draft'
+
+      );
+
+    }
+
+    // CLIENTES, EMPRESAS Y VISITANTES
+
+    return registros.filter(sorteo =>
+
+      this.estaDisponible(sorteo)
+
+    );
+
+  });
 
 
   // ==========================================
@@ -135,8 +185,10 @@ export class SorteosComponent
 
   readonly totalDisponibles = computed(() =>
 
-    this.sorteos().filter(
+    this.sorteosVisibles().filter(
+
       sorteo => this.estaDisponible(sorteo)
+
     ).length
 
   );
@@ -144,8 +196,10 @@ export class SorteosComponent
 
   readonly totalCerrados = computed(() =>
 
-    this.sorteos().filter(
+    this.sorteosVisibles().filter(
+
       sorteo => this.estaCerrado(sorteo)
+
     ).length
 
   );
@@ -153,8 +207,10 @@ export class SorteosComponent
 
   readonly totalFinalizados = computed(() =>
 
-    this.sorteos().filter(
+    this.sorteosVisibles().filter(
+
       sorteo => sorteo.status === 'finished'
+
     ).length
 
   );
@@ -170,17 +226,28 @@ export class SorteosComponent
       this.normalizar(this.busqueda());
 
     const filtroActual =
-      this.filtro();
 
-    return this.sorteos()
+      this.esAdministrador()
+
+        ? this.filtro()
+
+        : 'available';
+
+
+    return this.sorteosVisibles()
 
       .filter(sorteo => {
 
         const texto = this.normalizar(
 
-          `${sorteo.title} ${sorteo.prize} ${sorteo.description}`
+          `${sorteo.title}
+           ${sorteo.prize}
+           ${sorteo.description}`
 
         );
+
+
+        // FILTRO DE BUSQUEDA
 
         if (
           termino &&
@@ -191,19 +258,25 @@ export class SorteosComponent
 
         }
 
+
+        // FILTRO DE ESTADO
+
         switch (filtroActual) {
 
           case 'available':
 
             return this.estaDisponible(sorteo);
 
+
           case 'closed':
 
             return this.estaCerrado(sorteo);
 
+
           case 'finished':
 
             return sorteo.status === 'finished';
+
 
           default:
 
@@ -213,6 +286,9 @@ export class SorteosComponent
 
       })
 
+
+      // ORDENAR SORTEOS
+
       .sort((a, b) => {
 
         const prioridadA =
@@ -221,20 +297,31 @@ export class SorteosComponent
         const prioridadB =
           this.estaDisponible(b) ? 0 : 1;
 
+
         if (prioridadA !== prioridadB) {
 
           return prioridadA - prioridadB;
 
         }
 
+
+        // DISPONIBLES:
+        // PRIMERO LOS QUE CIERRAN MAS PRONTO
+
         if (prioridadA === 0) {
 
           return new Date(a.ends_at).getTime() -
+
             new Date(b.ends_at).getTime();
 
         }
 
+
+        // RESTANTES:
+        // MAS RECIENTES PRIMERO
+
         return new Date(b.created_at).getTime() -
+
           new Date(a.created_at).getTime();
 
       });
@@ -259,11 +346,19 @@ export class SorteosComponent
   }
 
 
+  // ==========================================
+  // DESTRUIR COMPONENTE
+  // ==========================================
+
   ngOnDestroy(): void {
+
+    this.versionCarga++;
 
     if (this.temporizador !== null) {
 
       clearInterval(this.temporizador);
+
+      this.temporizador = null;
 
     }
 
@@ -274,62 +369,126 @@ export class SorteosComponent
   // CARGAR SORTEOS DESDE SUPABASE
   // ==========================================
 
-async cargarSorteos(): Promise<void> {
+  async cargarSorteos(): Promise<void> {
 
-  this.cargando.set(true);
+    const version = ++this.versionCarga;
 
-  this.mensajeError.set('');
+    this.cargando.set(true);
 
-  try {
+    this.mensajeError.set('');
 
-    const resultado =
-      await this.rafflesService.listarPublicos();
+    try {
 
-    this.sorteos.set(resultado);
+      // RECUPERAR AUTENTICACION INICIAL
 
-    this.ahora.set(Date.now());
+      await this.authService.inicializar();
 
-  } catch (error) {
 
-    this.mensajeError.set(
+      // CONSULTAR SORTEOS
 
-      (error as { message?: string })?.message ||
+      const resultado =
 
-      'No se pudieron cargar los sorteos.'
+        await this.rafflesService
 
-    );
+          .listarPublicos();
 
-  } finally {
 
-    this.cargando.set(false);
+      if (version !== this.versionCarga) {
+
+        return;
+
+      }
+
+
+      this.sorteos.set(resultado);
+
+      this.ahora.set(Date.now());
+
+
+    } catch (error) {
+
+      if (version !== this.versionCarga) {
+
+        return;
+
+      }
+
+      this.sorteos.set([]);
+
+      this.mensajeError.set(
+
+        (error as { message?: string })?.message ||
+
+        'No se pudieron cargar los sorteos.'
+
+      );
+
+    } finally {
+
+      if (version === this.versionCarga) {
+
+        this.cargando.set(false);
+
+      }
+
+    }
 
   }
 
-}
 
-fechaEnMilisegundos(fecha: string | null): number {
-
-  return fecha
-    ? new Date(fecha).getTime()
-    : Number.POSITIVE_INFINITY;
-
-}
   // ==========================================
-  // FILTRAR SORTEOS
+  // CONVERTIR FECHA
+  // ==========================================
+
+  fechaEnMilisegundos(
+    fecha: string | null
+  ): number {
+
+    return fecha
+
+      ? new Date(fecha).getTime()
+
+      : Number.POSITIVE_INFINITY;
+
+  }
+
+
+  // ==========================================
+  // CAMBIAR FILTRO
   // ==========================================
 
   cambiarFiltro(filtro: FiltroSorteo): void {
+
+    if (!this.esAdministrador()) {
+
+      this.filtro.set('available');
+
+      return;
+
+    }
 
     this.filtro.set(filtro);
 
   }
 
 
+  // ==========================================
+  // LIMPIAR FILTROS
+  // ==========================================
+
   limpiarFiltros(): void {
 
     this.busqueda.set('');
 
-    this.filtro.set('all');
+    this.filtro.set(
+
+      this.esAdministrador()
+
+        ? 'all'
+
+        : 'available'
+
+    );
 
   }
 
@@ -341,22 +500,43 @@ fechaEnMilisegundos(fecha: string | null): number {
   estaDisponible(sorteo: Raffle): boolean {
 
     if (
+
       sorteo.status !== 'published' ||
+
       !sorteo.starts_at
+
     ) {
 
       return false;
 
     }
 
+
     const inicio =
+
       new Date(sorteo.starts_at).getTime();
 
+
     const cierre =
+
       new Date(sorteo.ends_at).getTime();
 
-    const fechaActual =
-      this.ahora();
+
+    const fechaActual = this.ahora();
+
+
+    if (
+
+      !Number.isFinite(inicio) ||
+
+      !Number.isFinite(cierre)
+
+    ) {
+
+      return false;
+
+    }
+
 
     return (
 
@@ -369,6 +549,10 @@ fechaEnMilisegundos(fecha: string | null): number {
   }
 
 
+  // ==========================================
+  // VALIDAR SORTEO CERRADO
+  // ==========================================
+
   estaCerrado(sorteo: Raffle): boolean {
 
     return (
@@ -380,6 +564,7 @@ fechaEnMilisegundos(fecha: string | null): number {
         sorteo.status === 'published' &&
 
         this.ahora() >=
+
           new Date(sorteo.ends_at).getTime()
 
       )
@@ -400,37 +585,57 @@ fechaEnMilisegundos(fecha: string | null): number {
       0,
 
       new Date(fecha).getTime() -
+
         this.ahora()
 
     );
 
+
     const segundosTotales =
+
       Math.floor(diferencia / 1000);
 
+
     const dias =
+
       Math.floor(segundosTotales / 86400);
 
+
     const horas =
-      Math.floor((segundosTotales % 86400) / 3600);
+
+      Math.floor(
+        (segundosTotales % 86400) / 3600
+      );
+
 
     const minutos =
-      Math.floor((segundosTotales % 3600) / 60);
+
+      Math.floor(
+        (segundosTotales % 3600) / 60
+      );
+
 
     const segundos =
+
       segundosTotales % 60;
+
 
     return {
 
       dias:
+
         String(dias).padStart(2, '0'),
 
       horas:
+
         String(horas).padStart(2, '0'),
 
       minutos:
+
         String(minutos).padStart(2, '0'),
 
       segundos:
+
         String(segundos).padStart(2, '0')
 
     };
@@ -439,7 +644,7 @@ fechaEnMilisegundos(fecha: string | null): number {
 
 
   // ==========================================
-  // ESTADO VISIBLE
+  // ETIQUETA DEL ESTADO
   // ==========================================
 
   etiquetaEstado(sorteo: Raffle): string {
@@ -468,10 +673,20 @@ fechaEnMilisegundos(fecha: string | null): number {
 
     }
 
+    if (sorteo.status === 'draft') {
+
+      return 'Borrador';
+
+    }
+
     return 'Próximamente';
 
   }
 
+
+  // ==========================================
+  // CLASE DEL ESTADO
+  // ==========================================
 
   claseEstado(sorteo: Raffle): string {
 
@@ -499,25 +714,26 @@ fechaEnMilisegundos(fecha: string | null): number {
 
 
   // ==========================================
-  // DETALLE PROVISIONAL
-  // ==========================================
-
-
-  // ==========================================
   // NAVEGACION
   // ==========================================
-explorarSorteos(): void {
 
-  this.filtro.set('available');
+  explorarSorteos(): void {
 
-  document
-    .getElementById('sorteos-disponibles')
-    ?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start'
-    });
+    this.filtro.set('available');
 
-}
+    document
+
+      .getElementById('sorteos-disponibles')
+
+      ?.scrollIntoView({
+
+        behavior: 'smooth',
+
+        block: 'start'
+
+      });
+
+  }
 
 
   // ==========================================

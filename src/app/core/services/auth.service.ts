@@ -423,197 +423,239 @@ export class AuthService {
   // ==========================================
   // RECUPERAR SESION
   // ==========================================
+refresh(): Promise<void> {
 
-  refresh(): Promise<void> {
+  if (!this.recuperacion) {
 
-    if (!this.recuperacion) {
+    this.recuperacion = this.cargarSesion()
 
-      this.recuperacion = this.cargarSesion()
+      .then(() => {
 
-        .finally(() => {
+        this._ready.set(true);
 
-          this.recuperacion = undefined;
+      })
 
-        });
+      .finally(() => {
 
-    }
+        this.recuperacion = undefined;
 
-    return this.recuperacion;
+      });
 
   }
 
+  return this.recuperacion;
 
-  private async cargarSesion(): Promise<void> {
+}
 
-    this._loading.set(true);
 
-    this.limpiarSesion();
 
-    try {
+private async cargarSesion(): Promise<void> {
 
-      const sessionResult =
-        await this.db.auth.getSession();
+  this._loading.set(true);
 
-      if (sessionResult.error) {
+  try {
 
-        throw sessionResult.error;
+    // ======================================
+    // RECUPERAR SESION
+    // ======================================
 
-      }
+    const sessionResult =
+      await this.db.auth.getSession();
 
-      if (!sessionResult.data.session) {
+    if (sessionResult.error) {
 
-        return;
+      throw sessionResult.error;
 
-      }
+    }
 
-      const { data, error } =
-        await this.db.auth.getUser();
-
-      if (error) {
-
-        throw error;
-
-      }
-
-      const user = data.user;
-
-      if (!user) {
-
-        return;
-
-      }
-
-
-      // ======================================
-      // VERIFICAR CORREO CONFIRMADO
-      // ======================================
-
-      if (!user.email_confirmed_at) {
-
-        this.establecerUsuario(
-          user,
-          'unregistered'
-        );
-
-        return;
-
-      }
-
-
-      // ======================================
-      // CONSULTAR PERFILES EN PARALELO
-      // ======================================
-
-      const [
-
-        esAdmin,
-
-        distribuidor,
-
-        cliente
-
-      ] = await Promise.all([
-
-        this.consultarAdministrador(user.id),
-
-        this.consultarDistribuidor(user.id),
-
-        this.consultarCliente(user.id)
-
-      ]);
-
-
-      // ======================================
-      // EVITAR ROLES CONTRADICTORIOS
-      // ======================================
-
-      const cantidadRoles = [
-
-        esAdmin,
-
-        !!distribuidor,
-
-        !!cliente
-
-      ].filter(Boolean).length;
-
-
-      if (cantidadRoles > 1) {
-
-        throw new Error(
-          'La cuenta tiene perfiles incompatibles. Comunícate con el administrador.'
-        );
-
-      }
-
-
-      // ======================================
-      // ADMINISTRADOR
-      // ======================================
-
-      if (esAdmin) {
-
-        this.establecerUsuario(
-          user,
-          'admin'
-        );
-
-        return;
-
-      }
-
-
-      // ======================================
-      // DISTRIBUIDOR EXISTENTE
-      // ======================================
-
-      if (distribuidor) {
-
-        this.establecerDistribuidor(
-          user,
-          distribuidor
-        );
-
-        return;
-
-      }
-
-
-      // ======================================
-      // CLIENTE PARTICULAR EXISTENTE
-      // ======================================
-
-      if (cliente) {
-
-        this.establecerCliente(
-          user,
-          cliente
-        );
-
-        return;
-
-      }
-
-
-      // ======================================
-      // CREAR PERFIL NUEVO
-      // ======================================
-
-      await this.crearPerfilDesdeMetadata(user);
-
-    } catch (error) {
+    if (!sessionResult.data.session) {
 
       this.limpiarSesion();
 
-      throw error;
-
-    } finally {
-
-      this._loading.set(false);
+      return;
 
     }
 
+
+    // ======================================
+    // VERIFICAR CAMBIO DE USUARIO
+    // ======================================
+
+    if (
+      this._userId() &&
+      this._userId() !== sessionResult.data.session.user.id
+    ) {
+
+      this.limpiarSesion();
+
+    }
+
+
+    // ======================================
+    // VERIFICAR USUARIO
+    // ======================================
+
+    const { data, error } =
+      await this.db.auth.getUser();
+
+    if (error) {
+
+      throw error;
+
+    }
+
+    const user = data.user;
+
+    if (!user) {
+
+      this.limpiarSesion();
+
+      return;
+
+    }
+
+    if (
+      this._userId() &&
+      this._userId() !== user.id
+    ) {
+
+      this.limpiarSesion();
+
+    }
+
+
+    // ======================================
+    // VERIFICAR CORREO CONFIRMADO
+    // ======================================
+
+    if (!user.email_confirmed_at) {
+
+      this.establecerUsuario(
+        user,
+        'unregistered'
+      );
+
+      return;
+
+    }
+
+
+    // ======================================
+    // CONSULTAR PERFILES EN PARALELO
+    // ======================================
+
+    const [
+
+      esAdmin,
+
+      distribuidor,
+
+      cliente
+
+    ] = await Promise.all([
+
+      this.consultarAdministrador(user.id),
+
+      this.consultarDistribuidor(user.id),
+
+      this.consultarCliente(user.id)
+
+    ]);
+
+
+    // ======================================
+    // EVITAR ROLES CONTRADICTORIOS
+    // ======================================
+
+    const cantidadRoles = [
+
+      esAdmin,
+
+      !!distribuidor,
+
+      !!cliente
+
+    ].filter(Boolean).length;
+
+
+    if (cantidadRoles > 1) {
+
+      throw new Error(
+        'La cuenta tiene perfiles incompatibles. Comunícate con el administrador.'
+      );
+
+    }
+
+
+    // ======================================
+    // ADMINISTRADOR
+    // ======================================
+
+    if (esAdmin) {
+
+      this.establecerUsuario(
+        user,
+        'admin'
+      );
+
+      return;
+
+    }
+
+
+    // ======================================
+    // DISTRIBUIDOR EXISTENTE
+    // ======================================
+
+    if (distribuidor) {
+
+      this.establecerDistribuidor(
+        user,
+        distribuidor
+      );
+
+      return;
+
+    }
+
+
+    // ======================================
+    // CLIENTE PARTICULAR EXISTENTE
+    // ======================================
+
+    if (cliente) {
+
+      this.establecerCliente(
+        user,
+        cliente
+      );
+
+      return;
+
+    }
+
+
+    // ======================================
+    // CREAR PERFIL NUEVO
+    // ======================================
+
+    await this.crearPerfilDesdeMetadata(user);
+
+
+  } catch (error) {
+
+    this.limpiarSesion();
+
+    throw error;
+
+  } finally {
+
+    this._loading.set(false);
+
   }
+
+}
+
 
 
   // ==========================================
@@ -924,23 +966,33 @@ export class AuthService {
   // ==========================================
   // ESTABLECER SESION GENERAL
   // ==========================================
+private establecerUsuario(
 
-  private establecerUsuario(
+  user: User,
 
-    user: User,
+  role: RoleCode
 
-    role: RoleCode
+): void {
 
-  ): void {
+  if (role !== 'distributor') {
 
-    this._user.set(user.email || '');
-
-    this._userId.set(user.id);
-
-    this._role.set(role);
+    this._distributorProfile.set(null);
 
   }
 
+  if (role !== 'customer') {
+
+    this._customerProfile.set(null);
+
+  }
+
+  this._user.set(user.email || '');
+
+  this._userId.set(user.id);
+
+  this._role.set(role);
+
+}
 
   // ==========================================
   // ESTABLECER SESION EMPRESARIAL

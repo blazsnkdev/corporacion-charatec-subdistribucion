@@ -24,14 +24,15 @@
       </p>
 
       <div class="hero-actions">
-<button
-  type="button"
-  class="btn-primary"
-  (click)="explorarSorteos()">
 
-  Explorar sorteos
+        <button
+          type="button"
+          class="btn-primary"
+          (click)="explorarSorteos()">
 
-</button>
+          Explorar sorteos
+
+        </button>
 
       </div>
 
@@ -59,8 +60,19 @@
         <h2>Nuestros sorteos</h2>
 
         <p>
-          Encuentra nuestros sorteos disponibles
-          y consulta los eventos finalizados.
+
+          @if (esAdministrador()) {
+
+            Encuentra nuestros sorteos disponibles
+            y consulta los eventos anteriores.
+
+          } @else {
+
+            Explora nuestros sorteos disponibles
+            y descubre los premios tecnológicos.
+
+          }
+
         </p>
 
       </div>
@@ -68,7 +80,13 @@
     </div>
 
 
-    <div class="filters-bar">
+    <!-- ==========================================
+         BUSCADOR Y FILTROS POR ROL
+    =========================================== -->
+
+    <div
+      class="filters-bar"
+      [class.search-only]="!mostrarFiltrosEstado()">
 
       <input
         type="search"
@@ -79,45 +97,30 @@
         (ngModelChange)="busqueda.set($event)"
       />
 
-      <div class="filter-buttons">
 
-        <button
-          type="button"
-          [class.active]="filtro() === 'all'"
-          (click)="filtro.set('all')">
+      <!-- FILTROS EXCLUSIVOS DEL ADMINISTRADOR -->
 
-          Todos
+      @if (mostrarFiltrosEstado()) {
 
-        </button>
+        <div class="filter-buttons">
 
-        <button
-          type="button"
-          [class.active]="filtro() === 'available'"
-          (click)="filtro.set('available')">
+          @for (item of filtros(); track item.value) {
 
-          Disponibles
+            <button
+              type="button"
+              [class.active]="filtro() === item.value"
+              [attr.aria-pressed]="filtro() === item.value"
+              (click)="cambiarFiltro(item.value)">
 
-        </button>
+              {{ item.label }}
 
-        <button
-          type="button"
-          [class.active]="filtro() === 'closed'"
-          (click)="filtro.set('closed')">
+            </button>
 
-          Cerrados
+          }
 
-        </button>
+        </div>
 
-        <button
-          type="button"
-          [class.active]="filtro() === 'finished'"
-          (click)="filtro.set('finished')">
-
-          Finalizados
-
-        </button>
-
-      </div>
+      }
 
     </div>
 
@@ -140,6 +143,11 @@
 
       </div>
 
+
+    <!-- ==========================================
+         MENSAJE DE ERROR
+    =========================================== -->
+
     } @else if (mensajeError()) {
 
       <div class="empty-state" role="alert">
@@ -159,42 +167,91 @@
 
       </div>
 
+
+    <!-- ==========================================
+         SIN RESULTADOS
+    =========================================== -->
+
     } @else if (sorteosFiltrados().length === 0) {
 
       <div class="empty-state">
 
-        <h3>No encontramos sorteos</h3>
+        @if (sorteosVisibles().length === 0) {
 
-        <p>
-          Actualmente no existen sorteos
-          que coincidan con tu búsqueda.
-        </p>
+          <h3>No hay sorteos disponibles</h3>
 
-        <button
-          type="button"
-          class="btn-primary"
-          (click)="busqueda.set(''); filtro.set('all')">
+          <p>
 
-          Ver todos los sorteos
+            Actualmente no tenemos sorteos
+            disponibles para mostrar.
 
-        </button>
+          </p>
+
+          <button
+            type="button"
+            class="btn-primary"
+            (click)="cargarSorteos()">
+
+            Actualizar sorteos
+
+          </button>
+
+        } @else {
+
+          <h3>No encontramos sorteos</h3>
+
+          <p>
+
+            No existen sorteos que coincidan
+            con los filtros seleccionados.
+
+          </p>
+
+          <button
+            type="button"
+            class="btn-primary"
+            (click)="limpiarFiltros()">
+
+            Limpiar búsqueda
+
+          </button>
+
+        }
 
       </div>
+
 
     } @else {
 
 
       <!-- ==========================================
-           LISTADO DE SORTEOS
+           CANTIDAD DE RESULTADOS
       =========================================== -->
 
       <div class="results-info">
 
         {{ sorteosFiltrados().length }}
-        sorteos encontrados
+
+        @if (esAdministrador()) {
+
+          {{ sorteosFiltrados().length === 1
+            ? 'sorteo encontrado'
+            : 'sorteos encontrados' }}
+
+        } @else {
+
+          {{ sorteosFiltrados().length === 1
+            ? 'sorteo disponible'
+            : 'sorteos disponibles' }}
+
+        }
 
       </div>
 
+
+      <!-- ==========================================
+           LISTADO DE SORTEOS
+      =========================================== -->
 
       <div class="sorteos-grid">
 
@@ -206,7 +263,9 @@
           <article class="sorteo-card">
 
 
-            <!-- IMAGEN DEL SORTEO -->
+            <!-- ==================================
+                 IMAGEN DEL SORTEO
+            =================================== -->
 
             <div class="card-image">
 
@@ -234,28 +293,33 @@
               }
 
 
-              <!-- ESTADO -->
+              <!-- ESTADO DEL SORTEO -->
 
-<div class="card-badges">
+              <div class="card-badges">
 
-  <span
-    [class]="'status-badge ' + claseEstado(sorteo)">
+                <span
+                  [class]="'status-badge ' +
+                    claseEstado(sorteo)">
 
-    {{ etiquetaEstado(sorteo) }}
+                  {{ etiquetaEstado(sorteo) }}
 
-  </span>
+                </span>
 
-</div>
+              </div>
 
             </div>
 
 
-            <!-- INFORMACION DEL SORTEO -->
+            <!-- ==================================
+                 INFORMACION DEL SORTEO
+            =================================== -->
 
             <div class="card-content">
 
               <span class="card-category">
+
                 SORTEO TECNOLÓGICO
+
               </span>
 
               <h3>{{ sorteo.title }}</h3>
@@ -267,24 +331,34 @@
               </p>
 
 
-              <!-- PREMIO -->
+              <!-- ==================================
+                   PREMIO PRINCIPAL
+              =================================== -->
 
               <div class="prize-box">
 
                 <span>PREMIO DEL SORTEO</span>
 
-                <strong>{{ sorteo.prize }}</strong>
+                <strong>
+
+                  {{ sorteo.prize }}
+
+                </strong>
 
               </div>
 
 
-              <!-- FECHAS -->
+              <!-- ==================================
+                   FECHAS DEL SORTEO
+              =================================== -->
 
               <div class="card-dates">
 
                 <div class="date-item">
 
-                  <span>Cierre de participaciones</span>
+                  <span>
+                    Cierre de participaciones
+                  </span>
 
                   <strong>
 
@@ -295,9 +369,12 @@
 
                 </div>
 
+
                 <div class="date-item">
 
-                  <span>Fecha del sorteo</span>
+                  <span>
+                    Fecha del sorteo
+                  </span>
 
                   <strong>
 
@@ -311,81 +388,122 @@
               </div>
 
 
-              <!-- MODALIDAD -->
+              <!-- ==================================
+                   CONTADOR REGRESIVO
+              =================================== -->
 
-              <div class="participation-info">
-
-                <span>Modalidad de participación</span>
-
-                <strong>Participación gratuita</strong>
-
-              </div>
               @if (estaDisponible(sorteo)) {
 
-  @if (tiempoRestante(sorteo.ends_at); as tiempo) {
+                @if (
+                  tiempoRestante(sorteo.ends_at);
+                  as tiempo
+                ) {
 
-    <div class="countdown">
+                  <div class="countdown">
 
-      <span class="countdown-title">
-        Tiempo restante para participar
-      </span>
+                    <span class="countdown-title">
 
-      <div class="countdown-grid">
+                      Tiempo restante para participar
 
-        <div class="countdown-item">
-          <strong>{{ tiempo.dias }}</strong>
-          <span>Días</span>
-        </div>
-
-        <div class="countdown-item">
-          <strong>{{ tiempo.horas }}</strong>
-          <span>Horas</span>
-        </div>
-
-        <div class="countdown-item">
-          <strong>{{ tiempo.minutos }}</strong>
-          <span>Minutos</span>
-        </div>
-
-        <div class="countdown-item">
-          <strong>{{ tiempo.segundos }}</strong>
-          <span>Segundos</span>
-        </div>
-
-      </div>
-
-    </div>
-
-  }
-
-}
+                    </span>
 
 
-              <!-- ACCIONES -->
+                    <div class="countdown-grid">
 
-<div class="card-actions">
+                      <div class="countdown-item">
 
-  <a
-    class="btn-primary"
-    [routerLink]="['/sorteos', sorteo.id]">
+                        <strong>
 
-    @if (sorteo.status === 'finished') {
+                          {{ tiempo.dias }}
 
-      Ver resultado
+                        </strong>
 
-    } @else if (estaCerrado(sorteo)) {
+                        <span>Días</span>
 
-      Ver información
+                      </div>
 
-    } @else {
 
-      Ver sorteo
+                      <div class="countdown-item">
 
-    }
+                        <strong>
 
-  </a>
+                          {{ tiempo.horas }}
 
-</div>
+                        </strong>
+
+                        <span>Horas</span>
+
+                      </div>
+
+
+                      <div class="countdown-item">
+
+                        <strong>
+
+                          {{ tiempo.minutos }}
+
+                        </strong>
+
+                        <span>Minutos</span>
+
+                      </div>
+
+
+                      <div class="countdown-item">
+
+                        <strong>
+
+                          {{ tiempo.segundos }}
+
+                        </strong>
+
+                        <span>Segundos</span>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                }
+
+              }
+
+
+              <!-- ==================================
+                   ACCIONES DEL SORTEO
+              =================================== -->
+
+              <div class="card-actions">
+
+                @if (
+                  esAdministrador() ||
+                  estaDisponible(sorteo)
+                ) {
+
+                  <a
+                    class="btn-primary"
+                    [routerLink]="['/sorteos', sorteo.id]">
+
+                    @if (sorteo.status === 'finished') {
+
+                      Ver resultado
+
+                    } @else if (estaCerrado(sorteo)) {
+
+                      Ver información
+
+                    } @else {
+
+                      Ver sorteo
+
+                    }
+
+                  </a>
+
+                }
+
+              </div>
 
             </div>
 
@@ -409,16 +527,21 @@
     <div class="section-heading">
 
       <span class="eyebrow">
+
         CHARATEC SORTEOS
+
       </span>
 
       <h2>¿Cómo participar?</h2>
 
       <p>
+
         Participa siguiendo estos tres sencillos pasos.
+
       </p>
 
     </div>
+
 
     <div class="steps-grid">
 
@@ -429,11 +552,14 @@
         <h3>Crea tu cuenta</h3>
 
         <p>
+
           Regístrate como cliente particular
           o empresa distribuidora.
+
         </p>
 
       </article>
+
 
       <article class="step-card">
 
@@ -442,11 +568,14 @@
         <h3>Selecciona un sorteo</h3>
 
         <p>
+
           Revisa el premio, las condiciones
           y las fechas de participación.
+
         </p>
 
       </article>
+
 
       <article class="step-card">
 
@@ -455,8 +584,10 @@
         <h3>Registra tu participación</h3>
 
         <p>
+
           Envía tu solicitud y espera
           la confirmación correspondiente.
+
         </p>
 
       </article>

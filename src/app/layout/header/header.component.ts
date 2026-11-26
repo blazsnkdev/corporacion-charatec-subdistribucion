@@ -4,14 +4,23 @@ import {
   inject,
   signal,
   computed,
-  HostListener
+  HostListener,
+  ElementRef,
+  DestroyRef
 } from '@angular/core';
 
 import {
   Router,
   RouterLink,
-  RouterLinkActive
+  RouterLinkActive,
+  NavigationEnd
 } from '@angular/router';
+
+import {
+  takeUntilDestroyed
+} from '@angular/core/rxjs-interop';
+
+import { filter } from 'rxjs';
 
 import {
   AuthService
@@ -22,11 +31,27 @@ import {
 } from '../../core/services/popup.service';
 
 
-interface NavItem {
+// ==========================================
+// MODELOS DEL MENU
+// ==========================================
+
+interface NavChild {
 
   label: string;
   route: string;
+  icon?: string;
   exact?: boolean;
+
+}
+
+interface NavItem {
+
+  id: string;
+  label: string;
+  route?: string;
+  icon?: string;
+  exact?: boolean;
+  children?: NavChild[];
 
 }
 
@@ -43,12 +68,23 @@ interface NavItem {
 })
 export class HeaderComponent {
 
+
+  // ==========================================
+  // SERVICIOS
+  // ==========================================
+
   readonly authService = inject(AuthService);
 
   private readonly router = inject(Router);
 
   private readonly popupService =
     inject(PopupService);
+
+  private readonly elementRef =
+    inject(ElementRef<HTMLElement>);
+
+  private readonly destroyRef =
+    inject(DestroyRef);
 
 
   // ==========================================
@@ -57,9 +93,45 @@ export class HeaderComponent {
 
   readonly menuAbierto = signal(false);
 
+  readonly submenuAbierto =
+    signal<string | null>(null);
+
   readonly cerrandoSesion = signal(false);
 
   readonly mensajeError = signal('');
+
+  readonly rutaActual = signal(this.router.url);
+
+
+  // ==========================================
+  // CONSTRUCTOR
+  // ==========================================
+
+  constructor() {
+
+    this.router.events
+
+      .pipe(
+
+        filter(
+          evento => evento instanceof NavigationEnd
+        ),
+
+        takeUntilDestroyed(this.destroyRef)
+
+      )
+
+      .subscribe(evento => {
+
+        this.rutaActual.set(
+          evento.urlAfterRedirects
+        );
+
+        this.cerrarMenu();
+
+      });
+
+  }
 
 
   // ==========================================
@@ -67,7 +139,9 @@ export class HeaderComponent {
   // ==========================================
 
   readonly rutaLogo = computed(() =>
+
     this.authService.rutaInicio()
+
   );
 
 
@@ -76,7 +150,9 @@ export class HeaderComponent {
   // ==========================================
 
   readonly subtitulo = computed(() => {
-
+    if (!this.authService.ready()) {
+      return '';
+    }
     if (this.authService.admin()) {
 
       return 'PORTAL DE ADMINISTRACIÓN';
@@ -121,184 +197,382 @@ export class HeaderComponent {
   // MENU DINAMICO SEGUN EL ROL
   // ==========================================
 
-  readonly menuItems = computed<NavItem[]>(() => {
 
-    const auth = this.authService;
+// ==========================================
+// MENU DINAMICO SEGUN EL ROL
+// ==========================================
 
+readonly menuItems = computed<NavItem[]>(() => {
 
-    // ========================================
-    // USUARIO SIN SESION
-    // ========================================
+  const auth = this.authService;
 
-    if (!auth.autenticado()) {
+  // ESPERAR LA AUTENTICACION
 
-      return [
-
-        {
-          label: 'Sorteos',
-          route: '/sorteos',
-          exact: true
-        },
-
-        {
-          label: 'Iniciar sesión',
-          route: '/login',
-          exact: true
-        },
-
-        {
-          label: 'Crear cuenta',
-          route: '/registro',
-          exact: true
-        }
-
-      ];
-
-    }
+  if (!auth.ready()) {
+    return [];
+  }
 
 
-    // ========================================
-    // CUENTAS BLOQUEADAS O SIN PERFIL
-    // ========================================
+  // ========================================
+  // USUARIO SIN SESION
+  // ========================================
 
-    if (
-      auth.bloqueado() ||
-      auth.sinPerfil()
-    ) {
+  if (!auth.autenticado()) {
 
-      return [];
+    return [
 
-    }
+      {
+        id: 'sorteos',
+        label: 'Sorteos',
+        route: '/sorteos',
+        icon: 'gift'
+      },
 
+      {
+        id: 'login',
+        label: 'Iniciar sesión',
+        route: '/login',
+        icon: 'login',
+        exact: true
+      },
 
-    // ========================================
-    // ADMINISTRADOR
-    // ========================================
-
-    if (auth.admin()) {
-
-      return [
-
-        {
-          label: 'Catálogo',
-          route: '/catalogo'
-        },
-
-        {
-          label: 'Productos y stock',
-          route: '/admin/productos'
-        },
-
-        {
-          label: 'Tipo de cambio',
-          route: '/admin/tipo-cambio'
-        },
-
-        {
-          label: 'Distribuidores',
-          route: '/admin/distribuidores'
-        },
-
-        {
-          label: 'Clientes',
-          route: '/admin/clientes'
-        },
-        {
-          label: 'Administrar sorteos',
-          route: '/admin/sorteos'
-        },
-        {
-          label: 'Sorteos',
-          route: '/sorteos'
-        }
-
-      ];
-
-    }
-
-
-    // ========================================
-    // CLIENTE EMPRESA
-    // ========================================
-
-    // ==========================================
-    // CLIENTE EMPRESA
-    // ==========================================
-
-    if (auth.distributor()) {
-
-      if (auth.allowed()) {
-
-        return [
-
-          {
-            label: 'Catálogo',
-            route: '/catalogo'
-          },
-
-          {
-            label: 'Sorteos',
-            route: '/sorteos'
-          },
-
-          {
-            label: 'Mis participaciones',
-            route: '/mis-participaciones'
-          }
-
-        ];
-
+      {
+        id: 'registro',
+        label: 'Crear cuenta',
+        route: '/registro',
+        icon: 'user-plus',
+        exact: true
       }
 
-      if (auth.pendiente()) {
+    ];
 
-        return [
-
-          {
-            label: 'Sorteos',
-            route: '/sorteos'
-          },
-
-          {
-            label: 'Estado de mi cuenta',
-            route: '/pendiente'
-          }
-
-        ];
-
-      }
-
-    }
+  }
 
 
-    // ========================================
-    // CLIENTE PARTICULAR
-    // ========================================
+  // ========================================
+  // CUENTAS BLOQUEADAS O SIN PERFIL
+  // ========================================
 
-    if (
-      auth.customer() &&
-      auth.puedeParticipar()
-    ) {
-
-      return [
-
-        {
-          label: 'Sorteos',
-          route: '/sorteos'
-        },
-
-        {
-          label: 'Mis participaciones',
-          route: '/mis-participaciones'
-        }
-
-      ];
-
-    }
+  if (
+    auth.bloqueado() ||
+    auth.sinPerfil()
+  ) {
 
     return [];
 
-  });
+  }
+
+
+  // ========================================
+  // ADMINISTRADOR
+  // ========================================
+
+  if (auth.admin()) {
+
+    return [
+
+      // CATALOGO
+
+      {
+        id: 'catalogo',
+        label: 'Catálogo',
+        icon: 'package',
+
+        children: [
+
+          {
+            label: 'Ver catálogo',
+            route: '/catalogo',
+            icon: 'grid'
+          },
+
+          {
+            label: 'Productos y stock',
+            route: '/admin/productos',
+            icon: 'package'
+          }
+
+        ]
+
+      },
+
+
+      // USUARIOS
+
+      {
+        id: 'usuarios',
+        label: 'Usuarios',
+        icon: 'users',
+
+        children: [
+
+          {
+            label: 'Distribuidores',
+            route: '/admin/distribuidores',
+            icon: 'building'
+          },
+
+          {
+            label: 'Clientes particulares',
+            route: '/admin/clientes',
+            icon: 'user'
+          }
+
+        ]
+
+      },
+
+
+      // SORTEOS
+
+      {
+        id: 'sorteos',
+        label: 'Sorteos',
+        icon: 'gift',
+
+        children: [
+
+          {
+            label: 'Ver sorteos',
+            route: '/sorteos',
+            icon: 'gift'
+          },
+
+          {
+            label: 'Administrar sorteos',
+            route: '/admin/sorteos',
+            icon: 'clipboard'
+          }
+
+        ]
+
+      },
+
+
+      // CONFIGURACION
+
+      {
+        id: 'configuracion',
+        label: 'Configuración',
+        icon: 'settings',
+
+        children: [
+
+          {
+            label: 'Tipo de cambio',
+            route: '/admin/tipo-cambio',
+            icon: 'exchange'
+          }
+
+        ]
+
+      }
+
+    ];
+
+  }
+
+
+  // ========================================
+  // CLIENTE EMPRESA
+  // ========================================
+
+  if (auth.distributor()) {
+
+
+    // DISTRIBUIDOR APROBADO
+
+    if (auth.allowed()) {
+
+      return [
+
+        {
+          id: 'catalogo',
+          label: 'Catálogo',
+          route: '/catalogo',
+          icon: 'package'
+        },
+
+        {
+          id: 'sorteos',
+          label: 'Sorteos',
+          icon: 'gift',
+
+          children: [
+
+            {
+              label: 'Ver sorteos',
+              route: '/sorteos',
+              icon: 'gift'
+            },
+
+            {
+              label: 'Mis participaciones',
+              route: '/mis-participaciones',
+              icon: 'clipboard'
+            }
+
+          ]
+
+        }
+
+      ];
+
+    }
+
+
+    // DISTRIBUIDOR PENDIENTE
+
+    if (auth.pendiente()) {
+
+      return [
+
+        {
+          id: 'sorteos',
+          label: 'Sorteos',
+          route: '/sorteos',
+          icon: 'gift'
+        },
+
+        {
+          id: 'estado-cuenta',
+          label: 'Estado de mi cuenta',
+          route: '/pendiente',
+          icon: 'user'
+        }
+
+      ];
+
+    }
+
+  }
+
+
+  // ========================================
+  // CLIENTE PARTICULAR
+  // ========================================
+
+  if (
+    auth.customer() &&
+    auth.puedeParticipar()
+  ) {
+
+    return [
+
+      {
+        id: 'sorteos',
+        label: 'Sorteos',
+        route: '/sorteos',
+        icon: 'gift'
+      },
+
+      {
+        id: 'participaciones',
+        label: 'Mis participaciones',
+        route: '/mis-participaciones',
+        icon: 'clipboard'
+      }
+
+    ];
+
+  }
+
+  return [];
+
+});
+
+
+
+  // ==========================================
+  // VERIFICAR SI UNA RUTA ESTA ACTIVA
+  // ==========================================
+
+  esRutaActiva(
+    ruta: string,
+    exacta = false
+  ): boolean {
+
+    const actual = this.rutaActual()
+
+      .split('?')[0]
+
+      .split('#')[0];
+
+    if (exacta) {
+
+      return actual === ruta;
+
+    }
+
+    return actual === ruta ||
+
+      actual.startsWith(ruta + '/');
+
+  }
+
+
+  // ==========================================
+  // VERIFICAR MENU PRINCIPAL ACTIVO
+  // ==========================================
+
+  esMenuActivo(item: NavItem): boolean {
+
+    if (item.children?.length) {
+
+      return item.children.some(hijo =>
+
+        this.esRutaActiva(
+          hijo.route,
+          hijo.exact
+        )
+
+      );
+
+    }
+
+    return item.route
+
+      ? this.esRutaActiva(
+        item.route,
+        item.exact
+      )
+
+      : false;
+
+  }
+
+
+  // ==========================================
+  // ABRIR / CERRAR SUBMENU
+  // ==========================================
+
+  alternarSubmenu(id: string): void {
+
+    this.submenuAbierto.update(actual =>
+
+      actual === id ? null : id
+
+    );
+
+  }
+
+
+  cerrarSubmenu(): void {
+
+    this.submenuAbierto.set(null);
+
+  }
+
+
+  // ==========================================
+  // VERIFICAR SI EL SUBMENU ESTA ABIERTO
+  // ==========================================
+
+  esSubmenuAbierto(id: string): boolean {
+
+    return this.submenuAbierto() === id;
+
+  }
 
 
   // ==========================================
@@ -311,6 +585,12 @@ export class HeaderComponent {
       valor => !valor
     );
 
+    if (!this.menuAbierto()) {
+
+      this.cerrarSubmenu();
+
+    }
+
   }
 
 
@@ -318,15 +598,46 @@ export class HeaderComponent {
 
     this.menuAbierto.set(false);
 
+    this.cerrarSubmenu();
+
   }
 
 
   // ==========================================
-  // CERRAR MENU CON TECLA ESCAPE
+  // CERRAR AL HACER CLIC FUERA DEL HEADER
+  // ==========================================
+
+  @HostListener('document:click', ['$event'])
+  detectarClickExterior(evento: MouseEvent): void {
+
+    const elemento = evento.target;
+
+    if (
+      elemento instanceof Node &&
+      !this.elementRef.nativeElement.contains(elemento)
+    ) {
+
+      this.cerrarMenu();
+
+    }
+
+  }
+
+
+  // ==========================================
+  // CERRAR CON TECLA ESCAPE
   // ==========================================
 
   @HostListener('document:keydown.escape')
   cerrarMenuEscape(): void {
+
+    if (this.submenuAbierto()) {
+
+      this.cerrarSubmenu();
+
+      return;
+
+    }
 
     this.cerrarMenu();
 
@@ -334,7 +645,7 @@ export class HeaderComponent {
 
 
   // ==========================================
-  // CERRAR MENU AL CAMBIAR A ESCRITORIO
+  // CERRAR MENU AL CAMBIAR RESOLUCION
   // ==========================================
 
   @HostListener('window:resize')
@@ -365,9 +676,12 @@ export class HeaderComponent {
 
     this.mensajeError.set('');
 
+    this.cerrarMenu();
+
     try {
 
       const confirmar =
+
         await this.popupService.confirm(
 
           '¿Cerrar sesión?',
@@ -389,15 +703,19 @@ export class HeaderComponent {
       this.cerrarMenu();
 
       await this.router.navigate(
+
         ['/login'],
+
         {
           replaceUrl: true
         }
+
       );
 
     } catch (error) {
 
       const mensaje =
+
         'No se pudo cerrar la sesión correctamente. Inténtalo nuevamente.';
 
       this.mensajeError.set(mensaje);
