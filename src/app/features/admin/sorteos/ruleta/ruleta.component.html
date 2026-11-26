@@ -1,0 +1,1047 @@
+
+<section class="ruleta-page">
+
+  <!-- ==========================================
+       NAVEGACION
+  =========================================== -->
+
+  <div class="breadcrumb">
+
+    <button
+      type="button"
+      class="back-link"
+      [disabled]="girando()"
+      (click)="volver()">
+
+      Administración de sorteos
+
+    </button>
+
+    <span>/</span>
+
+    <span>Ruleta de participantes</span>
+
+  </div>
+
+
+  <!-- ==========================================
+       CONTENEDOR PRINCIPAL
+  =========================================== -->
+
+  <section id="ruleta-stage" class="ruleta-stage">
+
+
+    <!-- ==========================================
+         INFORMACION DEL SORTEO
+    =========================================== -->
+
+    <div class="stage-heading">
+
+      <div class="stage-heading-content">
+
+        @if (sorteo(); as item) {
+
+          <span class="eyebrow">
+
+            CORPORACIÓN CHARATEC / SORTEO #{{ item.id }}
+
+          </span>
+
+          <h1>{{ item.title }}</h1>
+
+          <p class="raffle-prize">
+
+            PREMIO: {{ item.prize }}
+
+          </p>
+
+          <div class="scheduled-date">
+
+            Fecha programada:
+
+            <strong>
+
+              {{ item.draw_at
+                | date:'dd/MM/yyyy HH:mm':'-0500' }}
+
+            </strong>
+
+          </div>
+
+
+        } @else {
+
+          <span class="eyebrow">
+
+            CORPORACIÓN CHARATEC / SORTEOS
+
+          </span>
+
+          <h1>Ruleta de participantes</h1>
+
+        }
+
+      </div>
+
+
+      <div class="stage-heading-actions">
+
+        <button
+          type="button"
+          class="btn-secondary"
+          [disabled]="cargando() || girando() || modalGanador()"
+          (click)="cargarDatos()">
+
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+
+            <path d="M20 7v5h-5"/>
+
+            <path d="M4 17v-5h5"/>
+
+            <path d="M6 7a7 7 0 0 1 12-1l2 6"/>
+
+            <path d="M18 17a7 7 0 0 1-12 1l-2-6"/>
+
+          </svg>
+
+          {{ cargando()
+            ? 'Actualizando...'
+            : 'Actualizar información' }}
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         CUENTA REGRESIVA
+    =========================================== -->
+
+    @if (sorteo()) {
+
+      <section class="countdown-panel">
+
+        <span class="countdown-title">
+
+          {{ fechaAlcanzada()
+
+            ? 'RULETA DISPONIBLE'
+
+            : 'TIEMPO RESTANTE PARA EL SORTEO' }}
+
+        </span>
+
+
+        <div class="countdown-grid">
+
+          <div class="countdown-item">
+
+            <strong>
+              {{ tiempoRestante().dias }}
+            </strong>
+
+            <span>DÍAS</span>
+
+          </div>
+
+
+          <div class="countdown-item">
+
+            <strong>
+              {{ tiempoRestante().horas }}
+            </strong>
+
+            <span>HORAS</span>
+
+          </div>
+
+
+          <div class="countdown-item">
+
+            <strong>
+              {{ tiempoRestante().minutos }}
+            </strong>
+
+            <span>MINUTOS</span>
+
+          </div>
+
+
+          <div class="countdown-item">
+
+            <strong>
+              {{ tiempoRestante().segundos }}
+            </strong>
+
+            <span>SEGUNDOS</span>
+
+          </div>
+
+        </div>
+
+
+        @if (fechaAlcanzada()) {
+
+          <p class="countdown-ready">
+
+            La hora programada ha llegado.
+            El giro se iniciará manualmente.
+
+          </p>
+
+        }
+
+      </section>
+
+    }
+
+
+    <!-- ==========================================
+         ESTADISTICAS GENERALES
+    =========================================== -->
+
+    <div class="summary-grid">
+
+
+      <!-- TOTAL PARTICIPANTES -->
+
+      <article class="summary-card">
+
+        <span>Total participantes</span>
+
+        <strong>
+
+          {{ totalParticipantes() }}
+
+        </strong>
+
+      </article>
+
+
+      <!-- CLIENTES PARTICULARES -->
+
+      <article class="summary-card">
+
+        <span>Clientes particulares</span>
+
+        <strong>
+
+          {{ particulares() }}
+
+        </strong>
+
+      </article>
+
+
+      <!-- EMPRESAS -->
+
+      <article class="summary-card">
+
+        <span>Empresas</span>
+
+        <strong>
+
+          {{ empresas() }}
+
+        </strong>
+
+      </article>
+
+
+      <!-- TOTAL CONFIRMADO -->
+
+      <article class="summary-card">
+
+        <div class="summary-card-heading">
+
+          <span>Total confirmado</span>
+
+          <button
+            type="button"
+            class="visibility-button"
+            [attr.aria-label]="mostrarRecaudacion()
+              ? 'Ocultar montos'
+              : 'Mostrar montos'"
+            [attr.aria-pressed]="mostrarRecaudacion()"
+            (click)="alternarMontos()">
+
+            @if (mostrarRecaudacion()) {
+
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round">
+
+                <path d="m3 3 18 18"/>
+
+                <path d="M10.5 10.5a2.1 2.1 0 0 0 3 3"/>
+
+                <path d="M9.8 5.2A11.5 11.5 0 0 1
+                  12 5c6 0 10 7 10 7a17 17 0 0 1-3 3.8"/>
+
+                <path d="M6.3 6.3C3.5 8.1 2 12 2 12
+                  s4 7 10 7a10 10 0 0 0 4.7-1.2"/>
+
+              </svg>
+
+            } @else {
+
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8">
+
+                <path d="M2 12s4-7 10-7
+                  10 7 10 7-4 7-10 7S2 12 2 12z"/>
+
+                <circle cx="12" cy="12" r="3"/>
+
+              </svg>
+
+            }
+
+          </button>
+
+        </div>
+
+
+        <strong>
+
+          @if (mostrarRecaudacion()) {
+
+            S/ {{ totalRecaudado() | number:'1.2-2' }}
+
+          } @else {
+
+            S/ ••••••
+
+          }
+
+        </strong>
+
+      </article>
+
+    </div>
+
+
+    <!-- ==========================================
+         MENSAJE DE ERROR
+    =========================================== -->
+
+    @if (error()) {
+
+      <div class="error-notice" role="alert">
+
+        {{ error() }}
+
+      </div>
+
+    }
+
+
+    <!-- ==========================================
+         CONTENIDO PRINCIPAL
+    =========================================== -->
+
+    <div class="stage-grid">
+
+
+      <!-- ==========================================
+           PANEL DE LA RULETA
+      =========================================== -->
+
+      <div class="wheel-panel">
+
+        <div class="wheel-heading">
+
+          <span class="eyebrow">
+
+            CHARATEC / RULETA
+
+          </span>
+
+          <h2>Ruleta de participantes</h2>
+
+          <p>
+
+            Distribución proporcional a los aportes confirmados.
+
+          </p>
+
+        </div>
+
+
+        <!-- ==========================================
+             RULETA VISUAL
+        =========================================== -->
+
+        <div class="wheel-container">
+
+          <!--
+            IMPORTANTE:
+            wheelHost debe permanecer siempre en el DOM.
+          -->
+
+          <div
+            #wheelHost
+            class="wheel-host"
+            [class.wheel-hidden]="
+              cargando() || totalParticipantes() === 0
+            ">
+
+          </div>
+
+
+          <!-- PUNTERO Y CENTRO -->
+
+          @if (!cargando() && totalParticipantes() > 0) {
+
+            <div class="wheel-pointer"></div>
+
+            <div class="wheel-center">
+
+              <strong>CHARATEC</strong>
+
+              <span>SORTEOS</span>
+
+            </div>
+
+          }
+
+
+          <!-- ESTADO DE CARGA -->
+
+          @if (cargando()) {
+
+            <div class="wheel-empty">
+
+              <span class="spinner"></span>
+
+              <p>Cargando participantes...</p>
+
+            </div>
+
+          } @else if (totalParticipantes() === 0) {
+
+            <div class="wheel-empty">
+
+              <svg
+                width="55"
+                height="55"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.3">
+
+                <circle cx="12" cy="12" r="10"/>
+
+                <path d="M12 2v20M2 12h20"/>
+
+                <path d="m5 5 14 14M19 5 5 19"/>
+
+              </svg>
+
+              <strong>Sin participantes</strong>
+
+              <p>No existen aportes aprobados.</p>
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <!-- ==========================================
+             CONTROLES DEL GIRO
+        =========================================== -->
+
+        <div class="wheel-controls">
+
+          <div class="duration-field">
+
+            <label for="duracion">
+
+              Duración del giro (segundos)
+
+            </label>
+
+            <div class="duration-input">
+
+              <input
+                id="duracion"
+                type="number"
+                min="3"
+                max="60"
+                step="1"
+                [ngModel]="duracion()"
+                (ngModelChange)="cambiarDuracion($event)"
+                [disabled]="girando()"
+              />
+
+              <span>SEG.</span>
+
+            </div>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="btn-primary execute-button"
+            [disabled]="!puedeGirar()"
+            (click)="girar()">
+
+            @if (girando()) {
+
+              <span class="button-spinner"></span>
+
+              GIRANDO RULETA...
+
+            } @else {
+
+              GIRAR RULETA
+
+            }
+
+          </button>
+
+        </div>
+
+
+        <!-- ==========================================
+             ESTADO DE LA RULETA
+        =========================================== -->
+
+        <div class="draw-status">
+
+          @if (girando()) {
+
+            La ruleta está girando...
+
+          } @else if (cargando()) {
+
+            Consultando información...
+
+          } @else if (sorteo()?.status === 'cancelled') {
+
+            El sorteo se encuentra cancelado.
+
+          } @else if (!fechaAlcanzada()) {
+
+            El giro se habilitará al llegar la fecha programada.
+
+          } @else if (totalParticipantes() === 0) {
+
+            No hay participantes disponibles.
+
+          } @else {
+
+            La ruleta está disponible para iniciar la simulación.
+
+          }
+
+        </div>
+
+      </div>
+
+
+      <!-- ==========================================
+           LISTADO DE PARTICIPANTES
+      =========================================== -->
+
+      <aside class="participants-panel">
+
+        <div class="participants-heading">
+
+          <div>
+
+            <span class="eyebrow">
+
+              PARTICIPANTES
+
+            </span>
+
+            <h2>Listado de participantes</h2>
+
+            <p>Ordenados de mayor a menor aporte.</p>
+
+          </div>
+
+
+          <span class="participants-count">
+
+            {{ totalParticipantes() }}
+
+          </span>
+
+        </div>
+
+
+        <!-- ==========================================
+             BUSCADOR
+        =========================================== -->
+
+        <div class="search-box">
+
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8">
+
+            <circle cx="11" cy="11" r="7"/>
+
+            <path d="m16 16 5 5"/>
+
+          </svg>
+
+
+          <input
+            type="search"
+            placeholder="Buscar cliente o empresa..."
+            aria-label="Buscar participante"
+            [ngModel]="busqueda()"
+            (ngModelChange)="cambiarBusqueda($event)"
+          />
+
+        </div>
+
+
+        <!-- CABECERA DEL LISTADO -->
+
+        <div class="participants-list-heading">
+
+          <span>PARTICIPANTE</span>
+
+          <span>PROBABILIDAD</span>
+
+        </div>
+
+
+        <!-- ==========================================
+             PARTICIPANTES PAGINADOS
+        =========================================== -->
+
+        <div class="participants-list">
+
+          @for (
+            participante of participantesPaginados();
+            track participante.user_id
+          ) {
+
+            <article class="participant-row">
+
+
+              <!-- COLOR DEL PARTICIPANTE -->
+
+              <span
+                class="participant-color"
+                [style.background]="participante.color">
+
+              </span>
+
+
+              <!-- NUMERO -->
+
+              <span class="participant-number">
+
+                {{ participante.numero }}
+
+              </span>
+
+
+              <!-- INFORMACION -->
+
+              <div class="participant-information">
+
+                <strong
+                  [title]="participante.participant_name">
+
+                  {{ nombreCorto(
+                    participante.participant_name
+                  ) }}
+
+                </strong>
+
+
+                <span class="participant-type">
+
+                  @switch (participante.participant_type) {
+
+                    @case ('customer') {
+
+                      Cliente particular
+
+                    }
+
+                    @case ('distributor') {
+
+                      Empresa
+
+                    }
+
+                    @default {
+
+                      Usuario
+
+                    }
+
+                  }
+
+                </span>
+
+
+                <small>
+
+                  {{ participante.total_contributions }}
+
+                  {{ participante.total_contributions === 1
+
+                    ? 'aporte'
+
+                    : 'aportes' }}
+
+
+                  @if (mostrarRecaudacion()) {
+
+                    · S/ {{ participante.confirmed_amount
+                      | number:'1.2-2' }}
+
+                  }
+
+                </small>
+
+              </div>
+
+
+              <!-- PROBABILIDAD -->
+
+              <div class="participant-probability">
+
+                <strong>
+
+                  {{ participante.winning_probability
+                    | number:'1.2-4' }}%
+
+                </strong>
+
+                <div class="probability-track">
+
+                  <div
+                    class="probability-fill"
+                    [style.background]="participante.color"
+                    [style.width.%]="
+                      participante.winning_probability
+                    ">
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </article>
+
+          } @empty {
+
+            <div class="participants-empty">
+
+              @if (cargando()) {
+
+                Cargando participantes...
+
+              } @else {
+
+                No se encontraron participantes.
+
+              }
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <!-- ==========================================
+             PAGINACION
+        =========================================== -->
+
+        <div class="pagination">
+
+          <button
+            type="button"
+            class="pagination-button"
+            aria-label="Página anterior"
+            [disabled]="pagina() <= 1"
+            (click)="cambiarPagina(pagina() - 1)">
+
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+
+              <path d="m15 18-6-6 6-6"/>
+
+            </svg>
+
+          </button>
+
+
+          <span>
+
+            Página <strong>{{ pagina() }}</strong>
+
+            de {{ totalPaginas() }}
+
+          </span>
+
+
+          <button
+            type="button"
+            class="pagination-button"
+            aria-label="Página siguiente"
+            [disabled]="pagina() >= totalPaginas()"
+            (click)="cambiarPagina(pagina() + 1)">
+
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+
+              <path d="m9 18 6-6-6-6"/>
+
+            </svg>
+
+          </button>
+
+        </div>
+
+
+        <div class="participants-footer">
+
+          {{ participantesFiltrados().length }}
+
+          participantes encontrados.
+
+        </div>
+
+      </aside>
+
+    </div>
+
+  </section>
+
+
+  <!-- ==========================================
+       POPUP DEL PARTICIPANTE SELECCIONADO
+  =========================================== -->
+
+  @if (modalGanador()) {
+
+    @if (ganador(); as seleccionado) {
+
+      <div class="winner-overlay">
+
+        <section
+          class="winner-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="winner-title">
+
+
+          <!-- CERRAR -->
+
+          <button
+            type="button"
+            class="winner-close"
+            aria-label="Cerrar resultado"
+            (click)="cerrarGanador()">
+
+            ✕
+
+          </button>
+
+
+          <!-- LOGO DEL POPUP -->
+
+          <div class="winner-brand">
+
+            <img
+              src="/logo.png"
+              alt="Corporación Charatec"
+            />
+
+          </div>
+
+
+          <!-- TROFEO -->
+
+          <div class="winner-trophy">
+
+            <svg
+              width="80"
+              height="80"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+
+              <path d="M8 21h8M12 17v4"/>
+
+              <path d="M7 3h10v8a5 5 0 0 1-10 0V3z"/>
+
+              <path d="M7 5H3v2a4 4 0 0 0 4 4"/>
+
+              <path d="M17 5h4v2a4 4 0 0 1-4 4"/>
+
+            </svg>
+
+          </div>
+
+
+          <span class="winner-eyebrow">
+
+            RESULTADO DE SIMULACIÓN
+
+          </span>
+
+
+          <h2 id="winner-title">
+
+            ¡Participante seleccionado!
+
+          </h2>
+
+
+          <div class="winner-name">
+
+            {{ seleccionado.participant_name }}
+
+          </div>
+
+
+          <span class="winner-type">
+
+            {{ seleccionado.participant_type === 'distributor'
+
+              ? 'Empresa'
+
+              : seleccionado.participant_type === 'customer'
+
+                ? 'Cliente particular'
+
+                : 'Usuario' }}
+
+          </span>
+
+
+          <!-- INFORMACION DEL PARTICIPANTE -->
+
+          <div class="winner-details">
+
+            <div>
+
+              <span>Número de participante</span>
+
+              <strong>
+
+                #{{ seleccionado.numero }}
+
+              </strong>
+
+            </div>
+
+
+            <div>
+
+              <span>Probabilidad</span>
+
+              <strong>
+
+                {{ seleccionado.winning_probability
+                  | number:'1.2-4' }}%
+
+              </strong>
+
+            </div>
+
+
+            @if (mostrarRecaudacion()) {
+
+              <div>
+
+                <span>Aporte acumulado</span>
+
+                <strong>
+
+                  S/ {{ seleccionado.confirmed_amount
+                    | number:'1.2-2' }}
+
+                </strong>
+
+              </div>
+
+            }
+
+          </div>
+
+
+          <p class="winner-notice">
+
+            Este resultado corresponde a una simulación
+            y no se registra en la base de datos.
+
+          </p>
+
+
+          <button
+            type="button"
+            class="btn-primary winner-button"
+            (click)="cerrarGanador()">
+
+            CONTINUAR
+
+          </button>
+
+        </section>
+
+      </div>
+
+    }
+
+  }
+
+</section>

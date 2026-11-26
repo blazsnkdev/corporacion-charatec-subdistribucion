@@ -1,4 +1,3 @@
-
 import { inject } from '@angular/core';
 
 import {
@@ -15,11 +14,19 @@ export const authGuard: CanActivateFn = async () => {
 
   try {
 
-    await auth.inicializar();
+    await auth.refresh();
 
-    return auth.autenticado()
-      ? true
-      : router.createUrlTree(['/login']);
+    if (
+      !auth.autenticado() ||
+      auth.bloqueado() ||
+      auth.sinPerfil()
+    ) {
+
+      return router.createUrlTree(['/login']);
+
+    }
+
+    return true;
 
   } catch {
 

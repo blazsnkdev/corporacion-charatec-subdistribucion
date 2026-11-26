@@ -1,4 +1,3 @@
-
 import { inject } from '@angular/core';
 
 import {
@@ -15,17 +14,27 @@ export const distributorGuard: CanActivateFn = async () => {
 
   try {
 
-    await auth.inicializar();
+    await auth.refresh();
 
-    if (!auth.autenticado()) {
+    if (
+      !auth.autenticado() ||
+      auth.bloqueado() ||
+      auth.sinPerfil()
+    ) {
+
       return router.createUrlTree(['/login']);
+
     }
 
     if (auth.allowed()) {
+
       return true;
+
     }
 
-    return router.createUrlTree(['/pendiente']);
+    return router.parseUrl(
+      auth.rutaInicio()
+    );
 
   } catch {
 

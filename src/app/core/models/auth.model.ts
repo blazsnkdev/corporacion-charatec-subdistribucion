@@ -14,4 +14,6 @@ export interface AuthState {
 export type UserRole =
   | 'Administrador'
   | 'Distribuidor'
+  | 'Cliente particular'
+  | 'Sin perfil'
   | 'Invitado';

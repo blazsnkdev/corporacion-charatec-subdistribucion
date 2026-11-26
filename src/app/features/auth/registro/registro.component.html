@@ -3,31 +3,77 @@
 
   <div class="auth-card register-card">
 
-    <!-- PRESENTACIÓN -->
+    <!-- ======================================
+         PRESENTACION
+    ======================================= -->
+
     <div class="auth-intro">
 
       <span class="auth-tag">
-        CORPORACIÓN CHARATEC B2B
+
+        CORPORACIÓN CHARATEC
+
       </span>
 
-      <h1>
-        Conviértete en nuestro distribuidor.
-      </h1>
+      @if (esEmpresa()) {
 
-      <p>
-        Accede a nuestro catálogo de tecnología
-        y precios exclusivos para tu negocio.
-      </p>
+        <h1>
+
+          Conviértete en nuestro distribuidor.
+
+        </h1>
+
+        <p>
+
+          Accede a nuestro catálogo de tecnología
+          y precios exclusivos para tu negocio.
+
+        </p>
+
+      } @else {
+
+        <h1>
+
+          Forma parte de nuestra comunidad.
+
+        </h1>
+
+        <p>
+
+          Descubre nuestras promociones,
+          novedades y sorteos tecnológicos.
+
+        </p>
+
+      }
+
+      <!-- BENEFICIOS DINAMICOS -->
 
       <div class="benefits">
 
-        <div>✓ Precios mayoristas</div>
+        @for (beneficio of beneficios(); track beneficio) {
 
-        <div>✓ Atención comercial personalizada</div>
+          <div class="benefit-item">
 
-        <div>✓ Consulta de stock</div>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
 
-        <div>✓ Envíos a nivel nacional</div>
+              <path d="M20 6 9 17l-5-5"/>
+
+            </svg>
+
+            <span>{{ beneficio }}</span>
+
+          </div>
+
+        }
 
       </div>
 
@@ -43,123 +89,377 @@
 
     </div>
 
-    <!-- FORMULARIO -->
+    <!-- ======================================
+         PANEL DE REGISTRO
+    ======================================= -->
+
     <div class="auth-panel">
 
       <div class="auth-heading">
 
         <span class="eyebrow">
-          NUEVO DISTRIBUIDOR
+
+          NUEVA CUENTA
+
         </span>
 
-        <h2>Registra tu tienda</h2>
+        <h2>Crear cuenta</h2>
 
         <p>
-          Completa los datos de tu empresa
-          para solicitar acceso al catálogo.
+
+          Selecciona el tipo de cliente
+          que deseas registrar.
+
         </p>
 
       </div>
 
-      @if (message()) {
+      <!-- ======================================
+           REGISTRO COMPLETADO
+      ======================================= -->
 
-        <div
-          class="alert"
-          [class.success]="success()"
-          role="status">
+      @if (success()) {
 
-          {{ message() }}
+        <div class="registration-success">
+
+          <div class="success-icon">
+
+            <svg
+              width="38"
+              height="38"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+
+              <circle cx="12" cy="12" r="9"/>
+
+              <path d="m8 12 3 3 5-6"/>
+
+            </svg>
+
+          </div>
+
+          <h3>Registro completado</h3>
+
+          <p>{{ message() }}</p>
+
+          <span class="registered-email">
+
+            {{ email }}
+
+          </span>
 
         </div>
 
-      }
+      } @else {
 
-      @if (!success()) {
+        <!-- ====================================
+             SELECTOR TIPO DE CUENTA
+        ===================================== -->
+
+        <div class="account-selector">
+
+          <!-- CLIENTE EMPRESA -->
+
+          <button
+            type="button"
+            class="account-option"
+            [class.selected]="esEmpresa()"
+            [attr.aria-pressed]="esEmpresa()"
+            [disabled]="busy()"
+            (click)="seleccionarTipo('distributor')">
+
+            <div class="account-icon">
+
+              <svg
+                width="25"
+                height="25"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+
+                <rect
+                  x="4"
+                  y="3"
+                  width="16"
+                  height="18"
+                  rx="2"/>
+
+                <path d="M9 21v-4h6v4"/>
+
+                <path d="M8 7h2M14 7h2"/>
+
+                <path d="M8 11h2M14 11h2"/>
+
+              </svg>
+
+            </div>
+
+            <div class="account-text">
+
+              <strong>Cliente empresa</strong>
+
+              <small>Precios especiales B2B</small>
+
+            </div>
+
+            <span class="radio-indicator">
+
+              @if (esEmpresa()) {
+
+                <span></span>
+
+              }
+
+            </span>
+
+          </button>
+
+          <!-- CLIENTE PARTICULAR -->
+
+          <button
+            type="button"
+            class="account-option"
+            [class.selected]="esParticular()"
+            [attr.aria-pressed]="esParticular()"
+            [disabled]="busy()"
+            (click)="seleccionarTipo('customer')">
+
+            <div class="account-icon">
+
+              <svg
+                width="25"
+                height="25"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+
+                <circle cx="12" cy="7" r="4"/>
+
+                <path d="M4 21v-2a8 8 0 0 1 16 0v2"/>
+
+              </svg>
+
+            </div>
+
+            <div class="account-text">
+
+              <strong>Cliente particular</strong>
+
+              <small>Sorteos y promociones</small>
+
+            </div>
+
+            <span class="radio-indicator">
+
+              @if (esParticular()) {
+
+                <span></span>
+
+              }
+
+            </span>
+
+          </button>
+
+        </div>
+
+        <!-- ====================================
+             FORMULARIO
+        ===================================== -->
 
         <form
           #registroForm="ngForm"
           (ngSubmit)="registrar()">
 
-<div class="form-group">
+          <!-- ==================================
+               CAMPOS CLIENTE EMPRESA
+          =================================== -->
 
-  <label for="ruc">
-    Número de RUC
-  </label>
+          @if (esEmpresa()) {
 
-  <input
-    id="ruc"
-    name="ruc"
-    type="text"
-    inputmode="numeric"
-    maxlength="11"
-    minlength="11"
-    pattern="(10|20)[0-9]{9}"
-    placeholder="RUC iniciado en 10 o 20"
-    [(ngModel)]="ruc"
-    (input)="validarEntradaRuc($event)"
-    required
-  />
+            <div class="form-group">
 
-</div>
-          <div class="form-group">
+              <label for="ruc">
 
-            <label for="company">
-              Razón social
-            </label>
+                Número de RUC
 
-            <input
-              id="company"
-              name="company"
-              type="text"
-              placeholder="Nombre de tu empresa"
-              autocomplete="organization"
-              [(ngModel)]="company"
-              required
-            />
+              </label>
 
-          </div>
+              <input
+                id="ruc"
+                name="ruc"
+                type="text"
+                inputmode="numeric"
+                maxlength="11"
+                minlength="11"
+                pattern="(10|20)[0-9]{9}"
+                placeholder="RUC iniciado en 10 o 20"
+                [ngModel]="ruc"
+                (ngModelChange)="validarEntradaRuc($event)"
+                [disabled]="busy()"
+                required
+              />
+
+            </div>
+
+            <div class="form-group">
+
+              <label for="company">
+
+                Razón social
+
+              </label>
+
+              <input
+                id="company"
+                name="company"
+                type="text"
+                maxlength="150"
+                placeholder="Nombre de tu empresa"
+                autocomplete="organization"
+                [(ngModel)]="company"
+                [disabled]="busy()"
+                required
+              />
+
+            </div>
+
+          } @else {
+
+            <!-- ================================
+                 CAMPOS CLIENTE PARTICULAR
+            ================================= -->
+
+            <div class="form-row">
+
+              <div class="form-group">
+
+                <label for="firstName">
+
+                  Nombres
+
+                </label>
+
+                <input
+                  id="firstName"
+                  name="firstName"
+                  type="text"
+                  minlength="2"
+                  maxlength="100"
+                  placeholder="Tus nombres"
+                  autocomplete="given-name"
+                  [(ngModel)]="firstName"
+                  [disabled]="busy()"
+                  required
+                />
+
+              </div>
+
+              <div class="form-group">
+
+                <label for="lastName">
+
+                  Apellidos
+
+                </label>
+
+                <input
+                  id="lastName"
+                  name="lastName"
+                  type="text"
+                  minlength="2"
+                  maxlength="100"
+                  placeholder="Tus apellidos"
+                  autocomplete="family-name"
+                  [(ngModel)]="lastName"
+                  [disabled]="busy()"
+                  required
+                />
+
+              </div>
+
+            </div>
+
+          }
+
+          <!-- ==================================
+               TELEFONO
+          =================================== -->
 
           <div class="form-group">
 
             <label for="phone">
+
               Teléfono / WhatsApp
+
             </label>
 
             <input
               id="phone"
               name="phone"
               type="tel"
-              placeholder="Número de contacto"
-              autocomplete="tel"
-              [(ngModel)]="phone"
+              inputmode="numeric"
+              maxlength="9"
+              minlength="9"
+              pattern="9[0-9]{8}"
+              placeholder="9XXXXXXXX"
+              autocomplete="tel-national"
+              [ngModel]="phone"
+              (ngModelChange)="validarEntradaCelular($event)"
+              [disabled]="busy()"
               required
             />
 
           </div>
 
+          <!-- ==================================
+               CORREO ELECTRONICO
+          =================================== -->
+
           <div class="form-group">
 
             <label for="email">
+
               Correo electrónico
+
             </label>
 
             <input
               id="email"
               name="email"
               type="email"
-              placeholder="correo@empresa.com"
+              [placeholder]="esEmpresa()
+                ? 'correo@empresa.com'
+                : 'correo@ejemplo.com'"
               autocomplete="email"
               [(ngModel)]="email"
+              [disabled]="busy()"
               required
               email
             />
 
           </div>
 
+          <!-- ==================================
+               CONTRASENA
+          =================================== -->
+
           <div class="form-group">
 
             <label for="password">
+
               Contraseña
+
             </label>
 
             <div class="password-wrapper">
@@ -174,12 +474,16 @@
                 placeholder="Mínimo 8 caracteres"
                 autocomplete="new-password"
                 [(ngModel)]="password"
+                [disabled]="busy()"
                 required
               />
 
               <button
                 class="password-toggle"
                 type="button"
+                [attr.aria-label]="mostrarPassword()
+                  ? 'Ocultar contraseña'
+                  : 'Mostrar contraseña'"
                 (click)="alternarPassword()">
 
                 {{ mostrarPassword()
@@ -192,14 +496,149 @@
 
           </div>
 
+          <!-- ==================================
+               CONFIRMAR CONTRASENA
+          =================================== -->
+
+          <div class="form-group">
+
+            <label for="confirmPassword">
+
+              Confirmar contraseña
+
+            </label>
+
+            <div class="password-wrapper">
+
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                [type]="mostrarConfirmPassword()
+                  ? 'text'
+                  : 'password'"
+                minlength="8"
+                placeholder="Repite tu contraseña"
+                autocomplete="new-password"
+                [(ngModel)]="confirmPassword"
+                [class.password-invalid]="
+                  confirmPassword &&
+                  password !== confirmPassword
+                "
+                [disabled]="busy()"
+                required
+              />
+
+              <button
+                class="password-toggle"
+                type="button"
+                [attr.aria-label]="mostrarConfirmPassword()
+                  ? 'Ocultar confirmación'
+                  : 'Mostrar confirmación'"
+                (click)="alternarConfirmPassword()">
+
+                {{ mostrarConfirmPassword()
+                  ? 'Ocultar'
+                  : 'Mostrar' }}
+
+              </button>
+
+            </div>
+
+            @if (
+              confirmPassword &&
+              password !== confirmPassword
+            ) {
+
+              <small class="field-error">
+
+                Las contraseñas no coinciden.
+
+              </small>
+
+            }
+
+          </div>
+
+          <!-- ==================================
+               INFORMACION DEL REGISTRO
+          =================================== -->
+
+          <div class="account-notice">
+
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+
+              <circle cx="12" cy="12" r="9"/>
+
+              <path d="M12 11v5M12 8h.01"/>
+
+            </svg>
+
+            <div>
+
+              <strong>
+
+                {{ esEmpresa()
+                  ? 'Cuenta empresarial'
+                  : 'Cuenta particular' }}
+
+              </strong>
+
+              <p>
+
+                @if (esEmpresa()) {
+
+                  Confirma tu correo y espera
+                  la aprobación del administrador
+                  para acceder al catálogo B2B.
+
+                } @else {
+
+                  Confirma tu correo para acceder
+                  a los sorteos y promociones.
+                  Esta cuenta no incluye precios mayoristas.
+
+                }
+
+              </p>
+
+            </div>
+
+          </div>
+
+          <!-- ==================================
+               BOTON REGISTRO
+          =================================== -->
+
           <button
             type="submit"
-            class="btn-primary"
-            [disabled]="busy() || registroForm.invalid">
+            class="btn-primary register-submit"
+            [disabled]="
+              busy() ||
+              registroForm.invalid ||
+              password !== confirmPassword
+            ">
 
-            {{ busy()
-              ? 'Registrando...'
-              : 'Solicitar acceso' }}
+            @if (busy()) {
+
+              <span class="register-spinner"></span>
+
+              Registrando...
+
+            } @else {
+
+              {{ esEmpresa()
+                ? 'Solicitar acceso'
+                : 'Crear cuenta' }}
+
+            }
 
           </button>
 
@@ -207,9 +646,17 @@
 
       }
 
+      <!-- ======================================
+           ACCESO AL LOGIN
+      ======================================= -->
+
       <div class="auth-divider">
 
-        <span>¿Ya tienes una cuenta?</span>
+        <span>
+
+          ¿Ya tienes una cuenta?
+
+        </span>
 
       </div>
 
@@ -222,8 +669,19 @@
       </a>
 
       <p class="auth-note">
-        Todas las solicitudes están sujetas a
-        verificación y aprobación administrativa.
+
+        @if (esEmpresa()) {
+
+          Todas las solicitudes empresariales están
+          sujetas a verificación y aprobación administrativa.
+
+        } @else {
+
+          Tu cuenta personal requiere confirmación
+          de correo electrónico.
+
+        }
+
       </p>
 
     </div>

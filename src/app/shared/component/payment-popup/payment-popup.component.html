@@ -1,3 +1,4 @@
+
 <dialog
   #dialog
   class="payment-dialog"
@@ -8,21 +9,68 @@
 
     <div
       class="payment-content"
+      [class.raffle-payment-content]="esSorteo()"
       [attr.data-method]="method()">
 
-      <!-- BOTÓN CERRAR -->
+
+      <!-- =====================================
+           BOTON CERRAR
+      ====================================== -->
 
       <button
         type="button"
         class="close-button"
         aria-label="Cerrar métodos de pago"
+        [disabled]="procesando()"
         (click)="cerrar()">
 
         ✕
 
       </button>
 
-      <!-- LOGO DEL MÉTODO DE PAGO -->
+
+      <!-- =====================================
+           INFORMACION DEL SORTEO
+      ====================================== -->
+
+      @if (raffleContext(); as contexto) {
+
+        <div class="raffle-payment-header">
+
+          <span class="raffle-payment-eyebrow">
+
+            CORPORACIÓN CHARATEC / SORTEOS
+
+          </span>
+
+          <h3>{{ contexto.title }}</h3>
+
+          <span class="raffle-payment-label">
+
+            MONTO SELECCIONADO
+
+          </span>
+
+          <strong class="raffle-payment-amount">
+
+            S/ {{ montoFormateado() }}
+
+          </strong>
+
+          <small>
+
+            Participante: {{ contexto.participant }}
+
+          </small>
+
+        </div>
+
+      }
+
+
+      <!-- =====================================
+           LOGO DEL METODO DE PAGO
+      ====================================== -->
 
       <div class="payment-logo">
 
@@ -30,21 +78,32 @@
 
       </div>
 
+
       <h2 id="payment-title">
 
-        Paga con {{ nombre() }}
+        @if (esSorteo()) {
+
+          Participación mediante {{ nombre() }}
+
+        } @else {
+
+          Paga con {{ nombre() }}
+
+        }
 
       </h2>
 
+
       <p class="subtitle">
 
-        Métodos de pago de Corporación Charatec
+        Corporación Charatec
 
       </p>
 
-      <!-- =============================
+
+      <!-- =====================================
            CUENTAS BANCARIAS BCP
-      ============================== -->
+      ====================================== -->
 
       @if (method() === 'bcp') {
 
@@ -52,13 +111,21 @@
 
           <span>TITULAR DE LA CUENTA</span>
 
-          <strong>{{ config.bcp.titular }}</strong>
+          <strong>
+
+            {{ config.bcp.titular }}
+
+          </strong>
 
         </div>
 
+
         <div class="bank-accounts">
 
-          @for (cuenta of config.bcp.cuentas; track cuenta.label) {
+          @for (
+            cuenta of config.bcp.cuentas;
+            track cuenta.label
+          ) {
 
             <div class="account-card">
 
@@ -78,15 +145,23 @@
 
               </div>
 
+
               <button
                 type="button"
                 class="copy-button"
-                [disabled]="!cuenta.number"
-                (click)="copiar(cuenta.number, cuenta.label)">
+                [disabled]="!cuenta.number || procesando()"
+                (click)="copiar(
+                  cuenta.number,
+                  cuenta.label
+                )">
 
                 @if (copiado() === cuenta.label) {
 
-                  <span class="copied">✓ Copiado</span>
+                  <span class="copied">
+
+                    ✓ Copiado
+
+                  </span>
 
                 } @else {
 
@@ -105,7 +180,9 @@
                       height="12"
                       rx="2"/>
 
-                    <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>
+                    <path d="M16 8V6a2 2 0 0 0-2-2H6
+                      a2 2 0 0 0-2 2v8
+                      a2 2 0 0 0 2 2h2"/>
 
                   </svg>
 
@@ -123,77 +200,106 @@
 
       }
 
-      <!-- =============================
+
+      <!-- =====================================
            YAPE Y PLIN
-      ============================== -->
+      ====================================== -->
 
-      @if (billetera(); as datos) {
+      @if (method() === 'yape' || method() === 'plin') {
 
-        <div class="qr-instructions">
+        @if (billetera(); as datos) {
 
-          Escanea el código QR desde tu aplicación.
+          <div class="qr-instructions">
 
-        </div>
+            Escanea el código QR desde tu aplicación.
 
-        <div class="qr-container">
+          </div>
 
-          @if (!qrError()) {
 
-            <img
-              [src]="datos.qr"
-              [alt]="'Código QR de ' + nombre()"
-              (error)="qrError.set(true)"
-            />
+          <!-- CODIGO QR -->
 
-          } @else {
+          <div class="qr-container">
 
-            <p>Código QR pendiente de configurar.</p>
+            @if (!qrError() && datos.qr) {
 
-          }
+              <img
+                [src]="datos.qr"
+                [alt]="'Código QR de ' + nombre()"
+                (error)="qrError.set(true)"
+              />
 
-        </div>
+            } @else {
 
-        <div class="phone-container">
+              <p>
 
-          <span>NÚMERO DE CELULAR</span>
+                Código QR no disponible.
 
-          <strong>
+              </p>
 
-            {{ datos.telefono || 'Por configurar' }}
+            }
 
-          </strong>
+          </div>
 
-          <button
-            type="button"
-            class="copy-phone"
-            [disabled]="!datos.telefono"
-            (click)="copiar(datos.telefono, 'telefono')">
 
-            {{ copiado() === 'telefono'
-              ? '✓ Número copiado'
-              : 'Copiar número' }}
+          <!-- NUMERO DE CELULAR -->
 
-          </button>
+          <div class="phone-container">
 
-        </div>
+            <span>NÚMERO DE CELULAR</span>
 
-        <div class="holder">
+            <strong>
 
-          <span>TITULAR DE LA CUENTA</span>
+              {{ datos.telefono || 'Por configurar' }}
 
-          <strong>
+            </strong>
 
-            {{ datos.titular || 'Por configurar' }}
 
-          </strong>
+            <button
+              type="button"
+              class="copy-phone"
+              [disabled]="!datos.telefono || procesando()"
+              (click)="copiar(
+                datos.telefono,
+                'telefono'
+              )">
 
-        </div>
+              {{ copiado() === 'telefono'
+                ? '✓ Número copiado'
+                : 'Copiar número' }}
+
+            </button>
+
+          </div>
+
+
+          <!-- TITULAR DE LA CUENTA -->
+
+          <div class="holder">
+
+            <span>TITULAR DE LA CUENTA</span>
+
+            <strong>
+
+              {{ datos.titular || 'Por configurar' }}
+
+            </strong>
+
+          </div>
+
+        }
 
       }
 
+
+      <!-- =====================================
+           ERROR AL COPIAR
+      ====================================== -->
+
       @if (errorCopia()) {
 
-        <p class="copy-error" role="alert">
+        <p
+          class="copy-error"
+          role="alert">
 
           {{ errorCopia() }}
 
@@ -201,23 +307,165 @@
 
       }
 
-      <!-- MENSAJE DE SEGURIDAD -->
 
-      <div class="payment-notice">
+      <!-- =====================================
+           PARTICIPACION EN SORTEOS
+      ====================================== -->
 
-        Verifica el nombre del titular y el monto
-        antes de realizar cualquier transferencia.
+      @if (raffleContext(); as contexto) {
 
-      </div>
 
-      <button
-        type="button"
-        class="finish-button"
-        (click)="cerrar()">
 
-        Cerrar
+        <!-- AVISO DE DISPONIBILIDAD -->
 
-      </button>
+        <div class="payment-notice">
+
+          El registro de nuevas solicitudes todavía
+          no se encuentra disponible.
+
+          No realices transferencias para este sorteo
+          hasta que se habilite el registro.
+
+        </div>
+
+
+        <!-- =====================================
+             ERROR DE WHATSAPP
+        ====================================== -->
+
+        @if (errorWhatsApp()) {
+
+          <p
+            class="copy-error"
+            role="alert">
+
+            {{ errorWhatsApp() }}
+
+          </p>
+
+        }
+
+
+        <!-- =====================================
+             BOTON DINAMICO DE COMPROBANTE
+        ====================================== -->
+
+        <button
+          type="button"
+          class="finish-button raffle-finish-button"
+          [class.whatsapp-action]="!whatsappAbierto()"
+          [class.confirm-action]="whatsappAbierto()"
+          [disabled]="!botonComprobanteHabilitado()"
+          (click)="accionComprobante()">
+
+
+          @if (procesando()) {
+
+            <span class="payment-spinner"></span>
+
+          } @else if (whatsappAbierto()) {
+
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+
+              <circle cx="12" cy="12" r="9"/>
+
+              <path d="m8 12 3 3 5-6"/>
+
+            </svg>
+
+          } @else {
+
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+
+              <path d="M21 11.5a9 9 0 0 1-9 9
+                9.3 9.3 0 0 1-4-.9L3 21l1.4-5
+                a9 9 0 1 1 16.6-4.5z"/>
+
+              <path d="M8 8c0 4 4 8 8 8"/>
+
+            </svg>
+
+          }
+
+
+          <span>
+
+            {{ textoBotonComprobante() }}
+
+          </span>
+
+        </button>
+
+
+        <!-- =====================================
+             INSTRUCCION DINAMICA
+        ====================================== -->
+
+<small class="finish-help">
+
+  @if (whatsappAbierto()) {
+
+    Presiona el botón cuando hayas enviado
+    tu comprobante por WhatsApp.
+
+  } @else {
+
+    Adjunta tu comprobante en WhatsApp
+    para solicitar la validación de tu aporte.
+
+  }
+
+</small>
+
+
+        <!-- =====================================
+             CERRAR O CANCELAR
+        ====================================== -->
+
+        <button
+          type="button"
+          class="cancel-payment-button"
+          [disabled]="procesando()"
+          (click)="cerrar()">
+
+          {{ whatsappAbierto()
+            ? 'Cerrar ventana'
+            : 'Cancelar' }}
+
+        </button>
+
+
+      } @else {
+
+
+  
+
+        <button
+          type="button"
+          class="finish-button"
+          (click)="cerrar()">
+
+          Cerrar
+
+        </button>
+
+      }
 
     </div>
 

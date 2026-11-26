@@ -1,0 +1,1014 @@
+
+/* ==========================================
+   ADMINISTRACION DE SORTEOS
+   CORPORACION CHARATEC
+========================================== */
+
+:host {
+  display: block;
+  width: 100%;
+  font-family: 'Montserrat', Arial, sans-serif;
+}
+
+.admin-page {
+  max-width: 1500px;
+  min-height: 600px;
+  margin: 0 auto;
+  padding: 30px 28px 45px;
+  box-sizing: border-box;
+}
+
+
+/* ==========================================
+   ENCABEZADO
+========================================== */
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.eyebrow {
+  color: #003bff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.page-header h1 {
+  font-size: 28px;
+  font-weight: 800;
+  color: #080c14;
+  margin: 12px 0 8px;
+}
+
+.page-header p {
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+
+/* ==========================================
+   BOTONES
+========================================== */
+
+.btn-primary,
+.btn-secondary,
+.btn-warning {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 17px;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .2s ease;
+}
+
+.btn-primary {
+  background: #003bff;
+  border: 1px solid #003bff;
+  color: #ffffff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #002dca;
+}
+
+.btn-secondary {
+  background: #ffffff;
+  border: 1px solid #dce2ed;
+  color: #475569;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #f1f5f9;
+}
+
+.btn-warning {
+  color: #b45309;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+}
+
+.btn-warning:hover:not(:disabled) {
+  background: #fef3c7;
+}
+
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+
+/* ==========================================
+   ESTADISTICAS
+========================================== */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+}
+
+.stat-card span {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.stat-card strong {
+  font-size: 30px;
+  font-weight: 800;
+  color: #003bff;
+}
+
+.stat-card .text-gray {
+  color: #64748b;
+}
+
+.stat-card .text-green {
+  color: #16a34a;
+}
+
+.stat-card .text-purple {
+  color: #7c3aed;
+}
+
+
+/* ==========================================
+   FORMULARIO
+========================================== */
+
+.form-panel {
+  background: #ffffff;
+  border: 1px solid #dce2ed;
+  border-radius: 9px;
+  padding: 25px;
+  margin-bottom: 25px;
+}
+
+.form-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 20px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid #edf0f5;
+}
+
+.form-heading h2 {
+  color: #080c14;
+  font-size: 22px;
+  margin: 12px 0 8px;
+}
+
+.form-heading p {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+}
+
+.close-button {
+  width: 35px;
+  height: 35px;
+  border: 1px solid #dce2ed;
+  border-radius: 5px;
+  background: #ffffff;
+  color: #64748b;
+  cursor: pointer;
+}
+
+fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.form-layout {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.4fr)
+    minmax(0, 1fr);
+  gap: 30px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 9px;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.form-group input,
+.form-group textarea,
+.filters-bar input,
+.filters-bar select {
+  width: 100%;
+  min-height: 44px;
+  padding: 12px;
+  border: 1px solid #dce2ed;
+  border-radius: 5px;
+  background: #ffffff;
+  color: #334155;
+  font-family: inherit;
+  font-size: 12px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.form-group textarea {
+  line-height: 1.7;
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.filters-bar input:focus,
+.filters-bar select:focus {
+  border-color: #003bff;
+  box-shadow:
+    0 0 0 3px rgba(0, 59, 255, .07);
+}
+
+.form-group input.ng-invalid.ng-touched,
+.form-group textarea.ng-invalid.ng-touched {
+  border-color: #dc2626;
+}
+
+
+/* ==========================================
+   CARGA DE IMAGEN
+========================================== */
+
+.upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 190px;
+  padding: 18px;
+  border: 1px dashed #b8c6da;
+  border-radius: 7px;
+  background: #f8faff;
+  color: #64748b;
+  box-sizing: border-box;
+}
+
+.upload-area svg {
+  color: #003bff;
+}
+
+.upload-area strong {
+  font-size: 12px;
+}
+
+.upload-area small {
+  font-size: 10px;
+  text-align: center;
+}
+
+.image-preview {
+  display: block;
+  width: 100%;
+  max-height: 260px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.form-group .file-input {
+  padding: 8px;
+  min-height: auto;
+  font-size: 10px;
+}
+
+.file-input::file-selector-button {
+  padding: 8px 10px;
+  border: none;
+  border-radius: 4px;
+  background: #edf2ff;
+  color: #003bff;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.remove-image {
+  padding: 5px 0;
+  margin-top: 8px;
+  border: none;
+  background: transparent;
+  color: #dc2626;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.info-notice {
+  padding: 14px;
+  background: #edf2ff;
+  border: 1px solid #dce6ff;
+  border-radius: 5px;
+}
+
+.info-notice strong {
+  color: #003bff;
+  font-size: 11px;
+}
+
+.info-notice p {
+  color: #475569;
+  font-size: 11px;
+  line-height: 1.8;
+  margin: 8px 0 0;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 20px;
+  margin-top: 10px;
+  border-top: 1px solid #edf0f5;
+}
+
+
+/* ==========================================
+   FILTROS
+========================================== */
+
+.filters-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.filters-bar input {
+  flex: 1;
+  min-width: 0;
+}
+
+.filters-bar select {
+  width: 200px;
+}
+
+
+/* ==========================================
+   TARJETAS
+========================================== */
+
+.raffles-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.raffle-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: #ffffff;
+  border: 1px solid #dce2ed;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: box-shadow .2s ease;
+}
+
+.raffle-card:hover {
+  box-shadow:
+    0 5px 20px rgba(8, 12, 20, .08);
+}
+
+.raffle-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: #f1f5f9;
+}
+
+.raffle-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  background: #ffffff;
+}
+
+.image-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  height: 100%;
+  background: linear-gradient(
+    145deg,
+    #003bff,
+    #071b59
+  );
+  color: #ffffff;
+}
+
+.image-placeholder span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+
+/* ==========================================
+   ESTADOS
+========================================== */
+
+.status-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 7px 11px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.status-draft {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.status-published {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-closed {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-finished {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.status-cancelled {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+
+/* ==========================================
+   INFORMACION DEL SORTEO
+========================================== */
+
+.raffle-content {
+  padding: 20px;
+  flex: 1;
+}
+
+.raffle-id {
+  color: #003bff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.raffle-content h2 {
+  color: #080c14;
+  font-size: 18px;
+  line-height: 1.5;
+  margin: 10px 0 15px;
+  overflow-wrap: anywhere;
+}
+
+.prize-info {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 12px;
+  background: #f4f7ff;
+  border-radius: 5px;
+}
+
+.prize-info small {
+  color: #64748b;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.prize-info strong {
+  color: #003bff;
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.raffle-description {
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.7;
+  margin: 16px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.raffle-dates {
+  display: grid;
+  gap: 13px;
+  margin-top: 17px;
+  padding-top: 15px;
+  border-top: 1px solid #edf0f5;
+}
+
+.raffle-dates > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.raffle-dates span {
+  color: #64748b;
+  font-size: 10px;
+}
+
+.raffle-dates strong {
+  color: #334155;
+  font-size: 11px;
+}
+
+
+/* ==========================================
+   ACCIONES
+========================================== */
+
+.card-actions {
+  display: flex;
+  gap: 10px;
+  padding: 15px 20px;
+  border-top: 1px solid #edf0f5;
+}
+
+.card-actions button {
+  flex: 1;
+}
+
+.card-note {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+
+/* ==========================================
+   ESTADOS DE CARGA
+========================================== */
+
+.empty-state {
+  min-height: 250px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 1px solid #dce2ed;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.empty-state h3 {
+  color: #080c14;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.empty-state p {
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid #dce6ff;
+  border-top-color: #003bff;
+  border-radius: 50%;
+  animation: raffle-spin .7s linear infinite;
+}
+
+@keyframes raffle-spin {
+
+  to {
+    transform: rotate(360deg);
+  }
+
+}
+
+button:focus-visible {
+  outline: 2px solid #003bff;
+  outline-offset: 3px;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 1100px) {
+
+  .raffles-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+@media (max-width: 800px) {
+
+  .admin-page {
+    padding: 20px 16px 30px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .page-header h1 {
+    font-size: 23px;
+  }
+
+  .form-layout {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+}
+
+@media (max-width: 550px) {
+
+  .raffles-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-panel {
+    padding: 16px;
+  }
+
+  .filters-bar {
+    flex-direction: column;
+  }
+
+  .filters-bar select {
+    width: 100%;
+  }
+
+  .form-actions {
+    flex-wrap: wrap;
+  }
+
+  .form-actions button {
+    flex: 1;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .spinner {
+    animation: none;
+  }
+
+  .raffle-card {
+    transition: none;
+  }
+
+}
+
+/* ==========================================
+   CONFIGURACION DE APORTES
+========================================== */
+
+.contribution-config {
+  display: block;
+  width: 100%;
+  padding: 25px;
+  margin: 25px 0;
+  background: #f8fafc;
+  border: 1px solid #dce2ed;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+
+/* ==========================================
+   ENCABEZADO DE APORTES
+========================================== */
+
+.contribution-header {
+  margin-bottom: 25px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.contribution-eyebrow {
+  display: block;
+  color: #003bff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.contribution-header h3 {
+  color: #080c14;
+  font-size: 20px;
+  font-weight: 800;
+  margin: 10px 0;
+}
+
+.contribution-header p {
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+
+/* ==========================================
+   DISTRIBUCION DE LOS CAMPOS
+========================================== */
+
+.contribution-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 25px;
+}
+
+.contribution-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.contribution-field label {
+  display: block;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.contribution-field > small {
+  display: block;
+  color: #64748b;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+
+/* ==========================================
+   INPUT MONETARIO
+========================================== */
+
+.money-input {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  background: #ffffff;
+  border: 1px solid #dce2ed;
+  border-radius: 6px;
+  overflow: hidden;
+  box-sizing: border-box;
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+.money-input > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 50px;
+  padding: 0 12px;
+  background: #edf2ff;
+  border-right: 1px solid #dce2ed;
+  color: #003bff;
+  font-size: 16px;
+  font-weight: 800;
+  box-sizing: border-box;
+}
+
+.money-input input {
+  display: block;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  padding: 13px 15px;
+  margin: 0;
+  background: #ffffff;
+  border: none;
+  outline: none;
+  color: #080c14;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  box-sizing: border-box;
+}
+
+.money-input input::placeholder {
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.money-input:focus-within {
+  border-color: #003bff;
+  box-shadow: 0 0 0 3px rgba(0, 59, 255, .08);
+}
+
+
+/* ==========================================
+   ELIMINAR FLECHAS DEL INPUT NUMERICO
+========================================== */
+
+.money-input input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.money-input input::-webkit-inner-spin-button,
+.money-input input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+/* ==========================================
+   VALIDACIONES
+========================================== */
+
+.money-input:has(input.ng-invalid.ng-touched) {
+  border-color: #dc2626;
+}
+
+.money-input input:disabled {
+  background: #f1f5f9;
+  cursor: not-allowed;
+}
+
+
+/* ==========================================
+   INFORMACION DE LA META
+========================================== */
+
+.contribution-notice {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 18px;
+  margin-top: 25px;
+  background: #edf2ff;
+  border: 1px solid #dce6ff;
+  border-left: 3px solid #003bff;
+  border-radius: 6px;
+}
+
+.contribution-notice strong {
+  display: block;
+  color: #003bff;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.contribution-notice p {
+  color: #475569;
+  font-size: 11px;
+  line-height: 1.8;
+  margin: 0;
+}
+
+
+/* ==========================================
+   AVISO DE DISPONIBILIDAD
+========================================== */
+
+.contribution-test-notice {
+  display: block;
+  padding: 15px 18px;
+  margin-top: 15px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 6px;
+  color: #92400e;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.8;
+}
+
+
+/* ==========================================
+   RESPONSIVE - TABLET
+========================================== */
+
+@media (max-width: 800px) {
+
+  .contribution-config {
+    padding: 20px;
+  }
+
+  .contribution-grid {
+    gap: 18px;
+  }
+
+}
+
+
+/* ==========================================
+   RESPONSIVE - CELULARES
+========================================== */
+
+@media (max-width: 550px) {
+
+  .contribution-config {
+    padding: 16px;
+    margin: 18px 0;
+  }
+
+  .contribution-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .contribution-header h3 {
+    font-size: 17px;
+  }
+
+  .contribution-header p {
+    font-size: 11px;
+  }
+
+  .money-input {
+    min-height: 46px;
+  }
+
+  .money-input input {
+    font-size: 16px;
+  }
+
+  .contribution-notice,
+  .contribution-test-notice {
+    padding: 13px;
+  }
+
+}

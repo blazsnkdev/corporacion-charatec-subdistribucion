@@ -1,7 +1,9 @@
+
 import {
   Component,
   inject,
-  signal
+  signal,
+  computed
 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
@@ -14,6 +16,14 @@ import {
 import {
   AuthService
 } from '../../../core/services/auth.service';
+
+import {
+  PopupService
+} from '../../../core/services/popup.service';
+
+import {
+  RegistrationType
+} from '../../../core/models/role.model';
 
 import {
   validarRuc
@@ -34,129 +44,464 @@ import {
 })
 export class RegistroComponent {
 
-  private readonly authService = inject(AuthService);
+  private readonly authService =
+    inject(AuthService);
 
-  private readonly router = inject(Router);
+  private readonly popupService =
+    inject(PopupService);
+
+  private readonly router =
+    inject(Router);
+
+  // ==========================================
+  // TIPO DE REGISTRO
+  // ==========================================
+
+  readonly tipo =
+    signal<RegistrationType>('distributor');
+
+  readonly esEmpresa = computed(
+    () => this.tipo() === 'distributor'
+  );
+
+  readonly esParticular = computed(
+    () => this.tipo() === 'customer'
+  );
+
+  // ==========================================
+  // DATOS EMPRESARIALES
+  // ==========================================
 
   ruc = '';
+
   company = '';
+
+  // ==========================================
+  // DATOS PERSONALES
+  // ==========================================
+
+  firstName = '';
+
+  lastName = '';
+
+  // ==========================================
+  // DATOS COMUNES
+  // ==========================================
+
   phone = '';
+
   email = '';
+
   password = '';
+
+  confirmPassword = '';
+
+  // ==========================================
+  // ESTADOS DEL FORMULARIO
+  // ==========================================
 
   readonly busy = signal(false);
 
-  readonly message = signal('');
-
   readonly success = signal(false);
+
+  readonly message = signal('');
 
   readonly mostrarPassword = signal(false);
 
-  alternarPassword(): void {
-    this.mostrarPassword.update(value => !value);
-  }
-validarEntradaRuc(event: Event): void {
+  readonly mostrarConfirmPassword = signal(false);
 
-  const input = event.target as HTMLInputElement;
+  // ==========================================
+  // BENEFICIOS SEGUN TIPO DE CLIENTE
+  // ==========================================
 
-  let valor = input.value.replace(/\D/g, '');
+  readonly beneficios = computed(() => {
 
-  // Solo permitir 1 o 2 como primer dígito.
-  if (valor.length >= 1 && !/^[12]/.test(valor)) {
-    valor = '';
-  }
+    if (this.esEmpresa()) {
 
-  // Solo permitir 10 o 20 como prefijo.
-  if (valor.length >= 2 && !/^(10|20)/.test(valor)) {
-    valor = valor.charAt(0);
-  }
+      return [
 
-  valor = valor.slice(0, 11);
+        'Precios mayoristas',
 
-  this.ruc = valor;
-  input.value = valor;
+        'Atención comercial personalizada',
 
-}
-  async registrar(): Promise<void> {
+        'Consulta de stock',
 
-    if (this.busy()) {
+        'Envíos a nivel nacional',
+
+        'Acceso a sorteos y promociones'
+
+      ];
+
+    }
+
+    return [
+
+      'Acceso a sorteos exclusivos',
+
+      'Promociones tecnológicas',
+
+      'Consulta de participaciones',
+
+      'Resultados de sorteos',
+
+      'Atención personalizada'
+
+    ];
+
+  });
+
+  // ==========================================
+  // SELECCIONAR TIPO DE CUENTA
+  // ==========================================
+
+  seleccionarTipo(
+    tipo: RegistrationType
+  ): void {
+
+    if (
+      this.busy() ||
+      this.success() ||
+      this.tipo() === tipo
+    ) {
       return;
     }
 
+    this.tipo.set(tipo);
+
     this.message.set('');
-    this.success.set(false);
 
-    if (!validarRuc(this.ruc.trim())) {
+    this.ruc = '';
 
-      this.message.set(
-        'Ingresa un número de RUC válido.'
+    this.company = '';
+
+    this.firstName = '';
+
+    this.lastName = '';
+
+    this.password = '';
+
+    this.confirmPassword = '';
+
+    this.mostrarPassword.set(false);
+
+    this.mostrarConfirmPassword.set(false);
+
+  }
+
+  // ==========================================
+  // MOSTRAR CONTRASENA
+  // ==========================================
+
+  alternarPassword(): void {
+
+    this.mostrarPassword.update(
+      value => !value
+    );
+
+  }
+
+  alternarConfirmPassword(): void {
+
+    this.mostrarConfirmPassword.update(
+      value => !value
+    );
+
+  }
+
+  // ==========================================
+  // VALIDAR ENTRADA RUC
+  // ==========================================
+
+  validarEntradaRuc(valor: string): void {
+
+    let ruc = valor.replace(/\D/g, '');
+
+    // Primer digito: 1 o 2.
+
+    if (ruc && !/^[12]/.test(ruc)) {
+
+      ruc = '';
+
+    }
+
+    // Prefijo obligatorio: 10 o 20.
+
+    if (
+      ruc.length >= 2 &&
+      !/^(10|20)/.test(ruc)
+    ) {
+
+      ruc = ruc.charAt(0);
+
+    }
+
+    this.ruc = ruc.slice(0, 11);
+
+  }
+
+  // ==========================================
+  // VALIDAR ENTRADA CELULAR
+  // ==========================================
+
+  validarEntradaCelular(
+    valor: string
+  ): void {
+
+    let phone = valor.replace(/\D/g, '');
+
+    if (phone && !phone.startsWith('9')) {
+
+      phone = '';
+
+    }
+
+    this.phone = phone.slice(0, 9);
+
+  }
+
+  // ==========================================
+  // VALIDAR FORMULARIO
+  // ==========================================
+
+  private validarFormulario(): void {
+
+    if (this.esEmpresa()) {
+
+      const ruc = this.ruc.trim();
+
+      if (
+
+        !/^(10|20)\d{9}$/.test(ruc) ||
+
+        !validarRuc(ruc)
+
+      ) {
+
+        throw new Error(
+          'Ingresa un RUC válido que comience en 10 o 20.'
+        );
+
+      }
+
+      if (!this.company.trim()) {
+
+        throw new Error(
+          'Ingresa la razón social de tu empresa.'
+        );
+
+      }
+
+    } else {
+
+      if (this.firstName.trim().length < 2) {
+
+        throw new Error(
+          'Ingresa tus nombres.'
+        );
+
+      }
+
+      if (this.lastName.trim().length < 2) {
+
+        throw new Error(
+          'Ingresa tus apellidos.'
+        );
+
+      }
+
+    }
+
+    if (!/^9\d{8}$/.test(this.phone.trim())) {
+
+      throw new Error(
+        'El celular debe comenzar en 9 y tener 9 dígitos.'
       );
 
-      return;
     }
 
     if (
-      !this.company.trim() ||
-      !this.phone.trim() ||
-      !this.email.trim()
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        .test(this.email.trim())
     ) {
 
-      this.message.set(
-        'Completa todos los campos.'
+      throw new Error(
+        'Ingresa un correo electrónico válido.'
       );
 
-      return;
     }
 
     if (this.password.length < 8) {
 
-      this.message.set(
+      throw new Error(
         'La contraseña debe tener al menos 8 caracteres.'
       );
 
+    }
+
+    if (this.password !== this.confirmPassword) {
+
+      throw new Error(
+        'Las contraseñas no coinciden.'
+      );
+
+    }
+
+  }
+
+  // ==========================================
+  // REGISTRAR USUARIO
+  // ==========================================
+
+  async registrar(): Promise<void> {
+
+    if (this.busy() || this.success()) {
+
       return;
+
     }
 
     this.busy.set(true);
 
+    this.message.set('');
+
+    this.success.set(false);
+
     try {
 
-      const tieneSesion =
-        await this.authService.registro({
+      // VALIDAR DATOS
 
-          ruc: this.ruc.trim(),
-          company: this.company.trim(),
-          phone: this.phone.trim(),
-          email: this.email.trim(),
-          password: this.password
+      this.validarFormulario();
 
-        });
+      // REGISTRAR SEGUN TIPO DE CUENTA
+
+      const tieneSesion = this.esEmpresa()
+
+        ? await this.authService.registro({
+
+            ruc: this.ruc.trim(),
+
+            company: this.company.trim(),
+
+            phone: this.phone.trim(),
+
+            email: this.email.trim(),
+
+            password: this.password
+
+          })
+
+        : await this.authService.registroCliente({
+
+            first_name: this.firstName.trim(),
+
+            last_name: this.lastName.trim(),
+
+            phone: this.phone.trim(),
+
+            email: this.email.trim(),
+
+            password: this.password
+
+          });
+
+      // LIMPIAR CONTRASENAS
 
       this.password = '';
+
+      this.confirmPassword = '';
+
+      this.mostrarPassword.set(false);
+
+      this.mostrarConfirmPassword.set(false);
+
+      // ======================================
+      // CONFIRMACION DE CORREO ELECTRONICO
+      // ======================================
 
       if (!tieneSesion) {
 
         this.success.set(true);
 
-        this.message.set(
-          'Revisa tu correo para confirmar tu cuenta. ' +
-          'Después inicia sesión y espera la aprobación.'
+        const mensaje = this.esEmpresa()
+
+          ? 'Si el registro es válido, recibirás un correo para confirmar tu cuenta. Después inicia sesión y espera la aprobación del administrador.'
+
+          : 'Si el registro es válido, recibirás un correo para confirmar tu cuenta. Después podrás iniciar sesión y acceder a los sorteos.';
+
+        this.message.set(mensaje);
+
+        await this.popupService.success(
+
+          '¡Revisa tu correo electrónico!',
+
+          mensaje
+
         );
 
         return;
+
       }
 
-      await this.router.navigate([
-        this.authService.allowed()
-          ? '/catalogo'
-          : '/pendiente'
-      ]);
+      // ======================================
+      // REGISTRO CON SESION ACTIVA
+      // ======================================
+
+      this.success.set(true);
+
+      if (this.esEmpresa()) {
+
+        await this.popupService.success(
+
+          '¡Solicitud registrada!',
+
+          'Tu cuenta empresarial fue registrada correctamente y está pendiente de aprobación.'
+
+        );
+
+      } else {
+
+        await this.popupService.success(
+
+          '¡Bienvenido a Charatec!',
+
+          'Tu cuenta particular fue registrada correctamente.'
+
+        );
+
+      }
+
+      // REDIRECCION SEGUN EL ROL REAL
+
+      const navegacion = await this.router.navigateByUrl(
+
+        this.authService.rutaInicio()
+
+      );
+
+      if (!navegacion) {
+
+        this.message.set(
+          'Tu cuenta fue registrada. Puedes continuar desde el inicio de sesión.'
+        );
+
+      }
 
     } catch (error) {
 
-      this.message.set(
+      const mensaje =
+
         (error as { message?: string })?.message ||
-        'No se pudo completar el registro.'
+
+        'No se pudo completar el registro.';
+
+      this.message.set(mensaje);
+
+      await this.popupService.error(
+
+        'No se pudo completar la operación',
+
+        mensaje
+
       );
 
     } finally {

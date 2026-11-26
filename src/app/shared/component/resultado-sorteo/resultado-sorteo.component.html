@@ -1,0 +1,220 @@
+
+<section class="resultado-panel">
+
+  @if (cargando()) {
+
+    <div class="empty-state" role="status">
+
+      <span class="spinner"></span>
+
+      <p>Consultando resultado oficial...</p>
+
+    </div>
+
+  } @else if (mensajeError()) {
+
+    <div class="empty-state" role="alert">
+
+      <h3>No se pudo consultar el resultado</h3>
+
+      <p>{{ mensajeError() }}</p>
+
+      <button
+        type="button"
+        class="btn-primary"
+        (click)="cargarResultado()">
+
+        Intentar nuevamente
+
+      </button>
+
+    </div>
+
+  } @else if (resultado(); as oficial) {
+
+    <div class="result-content">
+
+      <!-- TROFEO -->
+
+      <div class="trophy-icon">
+
+        <svg
+          viewBox="0 0 24 24"
+          width="45"
+          height="45"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7"
+          aria-hidden="true">
+
+          <path d="M8 21h8M12 17v4" />
+
+          <path d="M7 4h10v7a5 5 0 0 1-10 0z" />
+
+          <path d="M7 6H3v2a4 4 0 0 0 4 4" />
+
+          <path d="M17 6h4v2a4 4 0 0 1-4 4" />
+
+        </svg>
+
+      </div>
+
+      <span class="eyebrow">
+
+        CORPORACIÓN CHARATEC / RESULTADO OFICIAL
+
+      </span>
+
+      <h2>¡Tenemos un ganador!</h2>
+
+      <p class="description">
+
+        El sorteo ha finalizado correctamente.
+        Este es el resultado oficial registrado.
+
+      </p>
+
+
+      <!-- NUMERO GANADOR -->
+
+      <div class="winner-number-box">
+
+        <span>PARTICIPACIÓN GANADORA</span>
+
+        <strong>
+
+          #{{ formatearNumero(oficial.winner_number) }}
+
+        </strong>
+
+      </div>
+
+
+      <!-- MENSAJE PERSONALIZADO -->
+
+      @if (oficial.is_my_win) {
+
+        <div class="my-winner-message">
+
+          <h3>¡Felicitaciones, eres el ganador!</h3>
+
+          <p>
+
+            Tu participación fue seleccionada.
+
+            Comunícate con nuestro equipo
+            para coordinar la entrega del premio.
+
+          </p>
+
+        </div>
+
+      } @else {
+
+        <div class="general-message">
+
+          Gracias a todos por participar
+          en nuestros eventos tecnológicos.
+
+        </div>
+
+      }
+
+
+      <!-- ESTADISTICAS -->
+
+      <div class="result-stats">
+
+        <div class="stat-item">
+
+          <span>Participantes oficiales</span>
+
+          <strong>
+
+            {{ oficial.total_participants }}
+
+          </strong>
+
+        </div>
+
+        <div class="stat-item">
+
+          <span>Fecha de ejecución</span>
+
+          <strong>
+
+            {{ oficial.executed_at
+              | date:'dd/MM/yyyy':'-0500' }}
+
+          </strong>
+
+          <small>
+
+            {{ oficial.executed_at
+              | date:'HH:mm':'-0500' }}
+
+            - Hora Perú
+
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <!-- VERIFICACION -->
+
+      <div class="verified-result">
+
+        <svg
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          aria-hidden="true">
+
+          <path d="M12 3l8 4v5c0 5-8 9-8 9s-8-4-8-9V7z" />
+
+          <path d="m9 12 2 2 4-4" />
+
+        </svg>
+
+        <span>
+
+          Resultado oficial registrado
+
+        </span>
+
+      </div>
+
+    </div>
+
+  } @else {
+
+    <div class="empty-state">
+
+      <h3>Resultado no disponible</h3>
+
+      <p>
+
+        Todavía no se encuentra disponible
+        el resultado oficial de este sorteo.
+
+      </p>
+
+      <button
+        type="button"
+        class="btn-primary"
+        (click)="cargarResultado()">
+
+        Actualizar resultado
+
+      </button>
+
+    </div>
+
+  }
+
+</section>

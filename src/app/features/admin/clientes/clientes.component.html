@@ -1,0 +1,677 @@
+
+<section class="clientes-page">
+
+  <!-- ======================================
+       ENCABEZADO
+  ======================================= -->
+
+  <div class="page-header">
+
+    <div>
+
+      <span class="eyebrow">
+
+        CORPORACIÓN CHARATEC / ADMINISTRACIÓN
+
+      </span>
+
+      <h1>Clientes particulares</h1>
+
+      <p>
+
+        Gestiona las cuentas personales
+        registradas en nuestra plataforma.
+
+      </p>
+
+    </div>
+
+    <button
+      type="button"
+      class="btn-primary refresh-button"
+      [disabled]="cargando() || procesandoId() !== null"
+      (click)="cargarClientes()">
+
+      <svg
+        width="17"
+        height="17"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round">
+
+        <path d="M20 7v5h-5"/>
+
+        <path d="M4 17v-5h5"/>
+
+        <path d="M6.1 8a7 7 0 0 1 11.8-2L20 12"/>
+
+        <path d="M4 12l2.1 6a7 7 0 0 0 11.8-2"/>
+
+      </svg>
+
+      {{ cargando()
+        ? 'Actualizando...'
+        : 'Actualizar' }}
+
+    </button>
+
+  </div>
+
+
+  <!-- ======================================
+       ESTADISTICAS
+  ======================================= -->
+
+  <div class="stats-grid">
+
+    <article class="stat-card">
+
+      <div class="stat-icon blue">
+
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7">
+
+          <circle cx="9" cy="7" r="4"/>
+
+          <path d="M2 21v-3a7 7 0 0 1 14 0v3"/>
+
+          <path d="M17 4a4 4 0 0 1 0 8"/>
+
+          <path d="M22 21v-3a7 7 0 0 0-4-6"/>
+
+        </svg>
+
+      </div>
+
+      <div class="stat-info">
+
+        <span>Total clientes</span>
+
+        <strong>{{ totalClientes() }}</strong>
+
+      </div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <div class="stat-icon green">
+
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7">
+
+          <circle cx="9" cy="7" r="4"/>
+
+          <path d="M2 21v-3a7 7 0 0 1 14 0v3"/>
+
+          <path d="m16 11 2 2 4-4"/>
+
+        </svg>
+
+      </div>
+
+      <div class="stat-info">
+
+        <span>Clientes activos</span>
+
+        <strong class="text-green">
+
+          {{ totalActivos() }}
+
+        </strong>
+
+      </div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <div class="stat-icon red">
+
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7">
+
+          <circle cx="9" cy="7" r="4"/>
+
+          <path d="M2 21v-3a7 7 0 0 1 14 0v3"/>
+
+          <path d="m17 9 5 5m0-5-5 5"/>
+
+        </svg>
+
+      </div>
+
+      <div class="stat-info">
+
+        <span>Clientes bloqueados</span>
+
+        <strong class="text-red">
+
+          {{ totalBloqueados() }}
+
+        </strong>
+
+      </div>
+
+    </article>
+
+  </div>
+
+
+  <!-- ======================================
+       PANEL PRINCIPAL
+  ======================================= -->
+
+  <div class="clientes-panel">
+
+    <div class="panel-heading">
+
+      <div>
+
+        <h2>Listado de clientes</h2>
+
+        <p>
+
+          Consulta y administra las cuentas particulares.
+
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- FILTROS -->
+
+    <div class="filters-bar">
+
+      <div class="search-wrapper">
+
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round">
+
+          <circle cx="11" cy="11" r="7"/>
+
+          <path d="m16 16 5 5"/>
+
+        </svg>
+
+        <input
+          type="search"
+          placeholder="Buscar por nombre, apellido o celular..."
+          aria-label="Buscar cliente"
+          [ngModel]="busqueda()"
+          (ngModelChange)="cambiarBusqueda($event)"
+        />
+
+      </div>
+
+
+      <select
+        class="filter-select"
+        aria-label="Filtrar estado"
+        [ngModel]="filtroEstado()"
+        (ngModelChange)="cambiarFiltro($event)">
+
+        <option value="all">
+
+          Todos los estados
+
+        </option>
+
+        <option value="active">
+
+          Activos
+
+        </option>
+
+        <option value="blocked">
+
+          Bloqueados
+
+        </option>
+
+      </select>
+
+
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="limpiarFiltros()">
+
+        Limpiar filtros
+
+      </button>
+
+    </div>
+
+
+    <!-- MENSAJE DE ERROR -->
+
+    @if (mensajeError()) {
+
+      <div class="error-message" role="alert">
+
+        {{ mensajeError() }}
+
+      </div>
+
+    }
+
+
+    <!-- ESTADO DE CARGA -->
+
+    @if (cargando()) {
+
+      <div class="loading-state" role="status">
+
+        <span class="spinner"></span>
+
+        <p>Cargando clientes...</p>
+
+      </div>
+
+    } @else if (mensajeError()) {
+
+      <div class="empty-state">
+
+        <h3>No se pudo cargar el listado</h3>
+
+        <p>
+
+          Presiona Actualizar para intentarlo nuevamente.
+
+        </p>
+
+      </div>
+
+    } @else if (clientesFiltrados().length === 0) {
+
+      <!-- SIN RESULTADOS -->
+
+      <div class="empty-state">
+
+        <div class="empty-icon">
+
+          <svg
+            width="42"
+            height="42"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.4">
+
+            <circle cx="12" cy="7" r="4"/>
+
+            <path d="M4 21v-2a8 8 0 0 1 16 0v2"/>
+
+          </svg>
+
+        </div>
+
+        <h3>
+
+          {{ totalClientes() === 0
+
+            ? 'Todavía no hay clientes registrados'
+
+            : 'No se encontraron resultados' }}
+
+        </h3>
+
+        <p>
+
+          {{ totalClientes() === 0
+
+            ? 'Los clientes particulares aparecerán aquí cuando completen su registro.'
+
+            : 'Prueba con otro nombre o cambia los filtros.' }}
+
+        </p>
+
+      </div>
+
+    } @else {
+
+      <!-- ==================================
+           TABLA DE CLIENTES
+      =================================== -->
+
+      <div class="table-wrapper">
+
+        <table class="clientes-table">
+
+          <thead>
+
+            <tr>
+
+              <th>N°</th>
+
+              <th>Cliente</th>
+
+              <th>Teléfono / WhatsApp</th>
+
+              <th>Fecha de registro</th>
+
+              <th>Estado</th>
+
+              <th class="actions-heading">
+
+                Acciones
+
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            @for (
+              cliente of clientesPaginados();
+              track cliente.id;
+              let i = $index
+            ) {
+
+              <tr>
+
+                <td class="row-number">
+
+                  {{ primerRegistro() + i }}
+
+                </td>
+
+
+                <!-- NOMBRE -->
+
+                <td>
+
+                  <div class="customer-info">
+
+                    <div class="customer-avatar">
+
+                      {{ iniciales(cliente) }}
+
+                    </div>
+
+                    <div class="customer-name">
+
+                      <strong>
+
+                        {{ nombreCompleto(cliente) }}
+
+                      </strong>
+
+                      <small>
+
+                        Cliente particular
+
+                      </small>
+
+                    </div>
+
+                  </div>
+
+                </td>
+
+
+                <!-- TELEFONO -->
+
+                <td>
+
+                  <a
+                    class="phone-link"
+                    [href]="enlaceWhatsapp(cliente)"
+                    target="_blank"
+                    rel="noopener noreferrer">
+
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round">
+
+                      <path d="M21 11.5a9 9 0 0 1-9 9
+                        9.5 9.5 0 0 1-4-.9L3 21
+                        l1.4-4.6A9 9 0 1 1 21 11.5z"/>
+
+                      <path d="M8 8c0 4 4 8 8 8l1-3
+                        -3-1-1 1-2-2 1-1-1-3z"/>
+
+                    </svg>
+
+                    +51 {{ cliente.phone }}
+
+                  </a>
+
+                </td>
+
+
+                <!-- FECHA -->
+
+                <td>
+
+                  <div class="date-info">
+
+                    <span>
+
+                      {{ cliente.created_at
+                        | date:'dd/MM/yyyy':'-0500' }}
+
+                    </span>
+
+                    <small>
+
+                      {{ cliente.created_at
+                        | date:'HH:mm':'-0500' }}
+
+                    </small>
+
+                  </div>
+
+                </td>
+
+
+                <!-- ESTADO -->
+
+                <td>
+
+                  <span
+                    class="status-badge"
+                    [class.status-active]="
+                      cliente.status === 'active'
+                    "
+                    [class.status-blocked]="
+                      cliente.status === 'blocked'
+                    ">
+
+                    <span class="status-dot"></span>
+
+                    {{ cliente.status === 'active'
+
+                      ? 'Activo'
+
+                      : 'Bloqueado' }}
+
+                  </span>
+
+                </td>
+
+
+                <!-- ACCIONES -->
+
+                <td>
+
+                  <div class="table-actions">
+
+                    <button
+                      type="button"
+                      class="action-button"
+                      [class.action-block]="
+                        cliente.status === 'active'
+                      "
+                      [class.action-activate]="
+                        cliente.status === 'blocked'
+                      "
+                      [disabled]="
+                        procesandoId() !== null ||
+                        cargando()
+                      "
+                      (click)="cambiarEstado(cliente)">
+
+                      @if (procesandoId() === cliente.id) {
+
+                        Procesando...
+
+                      } @else {
+
+                        {{ cliente.status === 'active'
+
+                          ? 'Bloquear'
+
+                          : 'Activar' }}
+
+                      }
+
+                    </button>
+
+                  </div>
+
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    }
+
+
+    <!-- ====================================
+         PAGINACION
+    ===================================== -->
+
+    <div class="pagination">
+
+      <div class="pagination-info">
+
+        Mostrando
+
+        <strong>{{ primerRegistro() }}</strong>
+
+        -
+
+        <strong>{{ ultimoRegistro() }}</strong>
+
+        de
+
+        <strong>
+
+          {{ clientesFiltrados().length }}
+
+        </strong>
+
+        registros
+
+      </div>
+
+
+      <div class="pagination-controls">
+
+        <select
+          class="page-size"
+          aria-label="Registros por página"
+          [ngModel]="tamanioPagina()"
+          (ngModelChange)="cambiarTamanioPagina($event)">
+
+          @for (
+            opcion of opcionesPagina;
+            track opcion
+          ) {
+
+            <option [ngValue]="opcion">
+
+              {{ opcion }} por página
+
+            </option>
+
+          }
+
+        </select>
+
+
+        <button
+          type="button"
+          class="pagination-button"
+          aria-label="Página anterior"
+          [disabled]="pagina() <= 1 || cargando()"
+          (click)="paginaAnterior()">
+
+          ‹
+
+        </button>
+
+
+        <span class="page-number">
+
+          {{ pagina() }} / {{ totalPaginas() }}
+
+        </span>
+
+
+        <button
+          type="button"
+          class="pagination-button"
+          aria-label="Página siguiente"
+          [disabled]="
+            pagina() >= totalPaginas() ||
+            cargando()
+          "
+          (click)="paginaSiguiente()">
+
+          ›
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

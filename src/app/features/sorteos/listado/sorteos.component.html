@@ -1,0 +1,468 @@
+
+<section class="sorteos-page">
+
+  <!-- ==========================================
+       BANNER PRINCIPAL
+  =========================================== -->
+
+  <section class="hero">
+
+    <div class="hero-content">
+
+      <span class="eyebrow">
+        CORPORACIÓN CHARATEC
+      </span>
+
+      <h1>
+        Sorteos y eventos tecnológicos
+      </h1>
+
+      <p>
+        Participa en nuestros sorteos y descubre
+        nuevas oportunidades de ganar increíbles
+        premios tecnológicos.
+      </p>
+
+      <div class="hero-actions">
+<button
+  type="button"
+  class="btn-primary"
+  (click)="explorarSorteos()">
+
+  Explorar sorteos
+
+</button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ==========================================
+       FILTROS Y BUSCADOR
+  =========================================== -->
+
+  <section
+    id="sorteos-disponibles"
+    class="sorteos-section">
+
+    <div class="section-heading">
+
+      <div>
+
+        <span class="eyebrow">
+          EVENTOS CHARATEC
+        </span>
+
+        <h2>Nuestros sorteos</h2>
+
+        <p>
+          Encuentra nuestros sorteos disponibles
+          y consulta los eventos finalizados.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="filters-bar">
+
+      <input
+        type="search"
+        class="search-input"
+        placeholder="Buscar sorteo o premio..."
+        aria-label="Buscar sorteo"
+        [ngModel]="busqueda()"
+        (ngModelChange)="busqueda.set($event)"
+      />
+
+      <div class="filter-buttons">
+
+        <button
+          type="button"
+          [class.active]="filtro() === 'all'"
+          (click)="filtro.set('all')">
+
+          Todos
+
+        </button>
+
+        <button
+          type="button"
+          [class.active]="filtro() === 'available'"
+          (click)="filtro.set('available')">
+
+          Disponibles
+
+        </button>
+
+        <button
+          type="button"
+          [class.active]="filtro() === 'closed'"
+          (click)="filtro.set('closed')">
+
+          Cerrados
+
+        </button>
+
+        <button
+          type="button"
+          [class.active]="filtro() === 'finished'"
+          (click)="filtro.set('finished')">
+
+          Finalizados
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         ESTADO DE CARGA
+    =========================================== -->
+
+    @if (cargando()) {
+
+      <div class="empty-state" role="status">
+
+        <span class="spinner"></span>
+
+        <h3>Cargando sorteos...</h3>
+
+        <p>
+          Estamos consultando nuestros eventos.
+        </p>
+
+      </div>
+
+    } @else if (mensajeError()) {
+
+      <div class="empty-state" role="alert">
+
+        <h3>No se pudieron cargar los sorteos</h3>
+
+        <p>{{ mensajeError() }}</p>
+
+        <button
+          type="button"
+          class="btn-primary"
+          (click)="cargarSorteos()">
+
+          Intentar nuevamente
+
+        </button>
+
+      </div>
+
+    } @else if (sorteosFiltrados().length === 0) {
+
+      <div class="empty-state">
+
+        <h3>No encontramos sorteos</h3>
+
+        <p>
+          Actualmente no existen sorteos
+          que coincidan con tu búsqueda.
+        </p>
+
+        <button
+          type="button"
+          class="btn-primary"
+          (click)="busqueda.set(''); filtro.set('all')">
+
+          Ver todos los sorteos
+
+        </button>
+
+      </div>
+
+    } @else {
+
+
+      <!-- ==========================================
+           LISTADO DE SORTEOS
+      =========================================== -->
+
+      <div class="results-info">
+
+        {{ sorteosFiltrados().length }}
+        sorteos encontrados
+
+      </div>
+
+
+      <div class="sorteos-grid">
+
+        @for (
+          sorteo of sorteosFiltrados();
+          track sorteo.id
+        ) {
+
+          <article class="sorteo-card">
+
+
+            <!-- IMAGEN DEL SORTEO -->
+
+            <div class="card-image">
+
+              @if (sorteo.image) {
+
+                <img
+                  [src]="sorteo.image"
+                  [alt]="sorteo.title"
+                  loading="lazy"
+                />
+
+              } @else {
+
+                <div class="image-placeholder">
+
+                  <img
+                    src="/logo.png"
+                    alt="Corporación Charatec"
+                  />
+
+                  <span>CHARATEC SORTEOS</span>
+
+                </div>
+
+              }
+
+
+              <!-- ESTADO -->
+
+<div class="card-badges">
+
+  <span
+    [class]="'status-badge ' + claseEstado(sorteo)">
+
+    {{ etiquetaEstado(sorteo) }}
+
+  </span>
+
+</div>
+
+            </div>
+
+
+            <!-- INFORMACION DEL SORTEO -->
+
+            <div class="card-content">
+
+              <span class="card-category">
+                SORTEO TECNOLÓGICO
+              </span>
+
+              <h3>{{ sorteo.title }}</h3>
+
+              <p class="card-description">
+
+                {{ sorteo.description }}
+
+              </p>
+
+
+              <!-- PREMIO -->
+
+              <div class="prize-box">
+
+                <span>PREMIO DEL SORTEO</span>
+
+                <strong>{{ sorteo.prize }}</strong>
+
+              </div>
+
+
+              <!-- FECHAS -->
+
+              <div class="card-dates">
+
+                <div class="date-item">
+
+                  <span>Cierre de participaciones</span>
+
+                  <strong>
+
+                    {{ sorteo.ends_at
+                      | date:'dd/MM/yyyy HH:mm':'-0500' }}
+
+                  </strong>
+
+                </div>
+
+                <div class="date-item">
+
+                  <span>Fecha del sorteo</span>
+
+                  <strong>
+
+                    {{ sorteo.draw_at
+                      | date:'dd/MM/yyyy HH:mm':'-0500' }}
+
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              <!-- MODALIDAD -->
+
+              <div class="participation-info">
+
+                <span>Modalidad de participación</span>
+
+                <strong>Participación gratuita</strong>
+
+              </div>
+              @if (estaDisponible(sorteo)) {
+
+  @if (tiempoRestante(sorteo.ends_at); as tiempo) {
+
+    <div class="countdown">
+
+      <span class="countdown-title">
+        Tiempo restante para participar
+      </span>
+
+      <div class="countdown-grid">
+
+        <div class="countdown-item">
+          <strong>{{ tiempo.dias }}</strong>
+          <span>Días</span>
+        </div>
+
+        <div class="countdown-item">
+          <strong>{{ tiempo.horas }}</strong>
+          <span>Horas</span>
+        </div>
+
+        <div class="countdown-item">
+          <strong>{{ tiempo.minutos }}</strong>
+          <span>Minutos</span>
+        </div>
+
+        <div class="countdown-item">
+          <strong>{{ tiempo.segundos }}</strong>
+          <span>Segundos</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+}
+
+
+              <!-- ACCIONES -->
+
+<div class="card-actions">
+
+  <a
+    class="btn-primary"
+    [routerLink]="['/sorteos', sorteo.id]">
+
+    @if (sorteo.status === 'finished') {
+
+      Ver resultado
+
+    } @else if (estaCerrado(sorteo)) {
+
+      Ver información
+
+    } @else {
+
+      Ver sorteo
+
+    }
+
+  </a>
+
+</div>
+
+            </div>
+
+          </article>
+
+        }
+
+      </div>
+
+    }
+
+  </section>
+
+
+  <!-- ==========================================
+       COMO PARTICIPAR
+  =========================================== -->
+
+  <section class="how-to-section">
+
+    <div class="section-heading">
+
+      <span class="eyebrow">
+        CHARATEC SORTEOS
+      </span>
+
+      <h2>¿Cómo participar?</h2>
+
+      <p>
+        Participa siguiendo estos tres sencillos pasos.
+      </p>
+
+    </div>
+
+    <div class="steps-grid">
+
+      <article class="step-card">
+
+        <span class="step-number">01</span>
+
+        <h3>Crea tu cuenta</h3>
+
+        <p>
+          Regístrate como cliente particular
+          o empresa distribuidora.
+        </p>
+
+      </article>
+
+      <article class="step-card">
+
+        <span class="step-number">02</span>
+
+        <h3>Selecciona un sorteo</h3>
+
+        <p>
+          Revisa el premio, las condiciones
+          y las fechas de participación.
+        </p>
+
+      </article>
+
+      <article class="step-card">
+
+        <span class="step-number">03</span>
+
+        <h3>Registra tu participación</h3>
+
+        <p>
+          Envía tu solicitud y espera
+          la confirmación correspondiente.
+        </p>
+
+      </article>
+
+    </div>
+
+  </section>
+
+</section>

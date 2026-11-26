@@ -1,4 +1,3 @@
-
 import { inject } from '@angular/core';
 
 import {
@@ -15,15 +14,28 @@ export const guestGuard: CanActivateFn = async () => {
 
   try {
 
-    await auth.inicializar();
+    await auth.refresh();
 
     if (!auth.autenticado()) {
+
       return true;
+
     }
 
-    return router.createUrlTree([
-      auth.allowed() ? '/catalogo' : '/pendiente'
-    ]);
+    if (
+      auth.bloqueado() ||
+      auth.sinPerfil()
+    ) {
+
+      await auth.logout();
+
+      return true;
+
+    }
+
+    return router.parseUrl(
+      auth.rutaInicio()
+    );
 
   } catch {
 

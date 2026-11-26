@@ -1,0 +1,820 @@
+
+<section class="detalle-page">
+
+  <!-- =====================================
+       NAVEGACION
+  ====================================== -->
+
+  <div class="breadcrumb">
+
+    <a routerLink="/">Inicio</a>
+
+    <span>/</span>
+
+    <a routerLink="/sorteos">Sorteos</a>
+
+    <span>/</span>
+
+    <span>Detalle del sorteo</span>
+
+  </div>
+
+
+  <!-- =====================================
+       ESTADO DE CARGA
+  ====================================== -->
+
+  @if (cargando()) {
+
+    <div class="empty-state" role="status">
+
+      <span class="spinner"></span>
+
+      <p>Cargando información del sorteo...</p>
+
+    </div>
+
+  } @else if (mensajeError()) {
+
+    <div class="empty-state" role="alert">
+
+      <h2>Sorteo no disponible</h2>
+
+      <p>{{ mensajeError() }}</p>
+
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="cargarDetalle()">
+
+        Intentar nuevamente
+
+      </button>
+
+      <a
+        routerLink="/sorteos"
+        class="btn-primary">
+
+        Volver a sorteos
+
+      </a>
+
+    </div>
+
+  } @else if (sorteo(); as item) {
+
+
+    <!-- =====================================
+         DISTRIBUCION PRINCIPAL
+    ====================================== -->
+
+    <div class="detail-grid">
+
+
+      <!-- =====================================
+           COLUMNA IZQUIERDA
+      ====================================== -->
+
+      <div class="detail-left">
+
+
+        <!-- IMAGEN DEL SORTEO -->
+
+        <div class="image-panel">
+
+          @if (item.image) {
+
+            <img
+              [src]="item.image"
+              [alt]="item.title"
+              class="raffle-image"
+            />
+
+          } @else {
+
+            <div class="image-placeholder">
+
+              <svg
+                width="100"
+                height="100"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+
+                <rect
+                  x="3"
+                  y="8"
+                  width="18"
+                  height="4"
+                  rx="1"
+                />
+
+                <path d="M5 12v9h14v-9M12 8v13"/>
+
+                <path d="M12 8H8a2.5 2.5 0 1 1 2.5-2.5L12 8z"/>
+
+                <path d="M12 8h4a2.5 2.5 0 1 0-2.5-2.5L12 8z"/>
+
+              </svg>
+
+              <strong>CHARATEC SORTEOS</strong>
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <!-- =====================================
+             DESCRIPCION Y REGLAS
+        ====================================== -->
+
+        <div class="description-panel">
+
+          <section class="content-section">
+
+            <span class="eyebrow">
+
+              INFORMACIÓN DEL EVENTO
+
+            </span>
+
+            <h2>Descripción del sorteo</h2>
+
+            <p class="formatted-text">{{ item.description }}</p>
+
+          </section>
+
+
+          <section
+            id="reglas-sorteo"
+            class="content-section">
+
+            <span class="eyebrow">
+
+              TÉRMINOS Y CONDICIONES
+
+            </span>
+
+            <h2>Reglas del sorteo</h2>
+
+            <p class="formatted-text">{{ item.rules }}</p>
+
+          </section>
+
+        </div>
+
+
+        <!-- RESULTADO HISTORICO -->
+
+        @if (item.status === 'finished') {
+
+          <app-resultado-sorteo
+            [raffleId]="item.id">
+
+          </app-resultado-sorteo>
+
+        }
+
+      </div>
+
+
+      <!-- =====================================
+           COLUMNA DERECHA
+      ====================================== -->
+
+      <div class="information-panel">
+
+
+        <!-- ENCABEZADO -->
+
+        <div class="raffle-top">
+
+          <span class="eyebrow">
+
+            CORPORACIÓN CHARATEC / SORTEO #{{ item.id }}
+
+          </span>
+
+          <span
+            class="status-badge"
+            [class.status-open]="disponible()"
+            [class.status-finished]="item.status === 'finished'">
+
+            {{ etiquetaEstado() }}
+
+          </span>
+
+        </div>
+
+        <h1>{{ item.title }}</h1>
+
+
+        <!-- =====================================
+             PREMIO PRINCIPAL
+        ====================================== -->
+
+        <div class="prize-box">
+
+          <span>PREMIO PRINCIPAL</span>
+
+          <strong>{{ item.prize }}</strong>
+
+        </div>
+
+
+        <!-- =====================================
+             CONTADOR REGRESIVO
+        ====================================== -->
+
+        @if (disponible()) {
+
+          <div class="countdown-section">
+
+            <h3>Tiempo restante para participar</h3>
+
+            <div class="countdown-grid">
+
+              <div class="time-box">
+
+                <strong>{{ contador().dias }}</strong>
+
+                <span>DÍAS</span>
+
+              </div>
+
+              <div class="time-box">
+
+                <strong>{{ contador().horas }}</strong>
+
+                <span>HORAS</span>
+
+              </div>
+
+              <div class="time-box">
+
+                <strong>{{ contador().minutos }}</strong>
+
+                <span>MINUTOS</span>
+
+              </div>
+
+              <div class="time-box">
+
+                <strong>{{ contador().segundos }}</strong>
+
+                <span>SEGUNDOS</span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        }
+
+
+        <!-- =====================================
+             FECHAS
+        ====================================== -->
+
+        <div class="dates-grid">
+
+          <div class="date-item">
+
+            <span>Cierre de participaciones</span>
+
+            <strong>
+
+              {{ item.ends_at
+                | date:'dd/MM/yyyy HH:mm':'-0500' }}
+
+            </strong>
+
+          </div>
+
+          <div class="date-item">
+
+            <span>Fecha del sorteo</span>
+
+            <strong>
+
+              {{ item.draw_at
+                | date:'dd/MM/yyyy HH:mm':'-0500' }}
+
+            </strong>
+
+          </div>
+
+        </div>
+
+        <p class="timezone-note">
+
+          Horario de Perú (UTC-5)
+
+        </p>
+
+
+        <!-- =====================================
+             FORMULARIO DE PARTICIPACION
+        ====================================== -->
+
+        @if (disponible()) {
+
+
+          <!-- USUARIO INVITADO -->
+
+          @if (!authService.autenticado()) {
+
+            <div class="participation-panel">
+
+              <h3>Participa en el sorteo</h3>
+
+              <p>
+
+                Inicia sesión o crea una cuenta
+                para participar en el sorteo.
+
+              </p>
+
+              <div class="account-actions">
+
+                <a
+                  routerLink="/login"
+                  class="btn-primary">
+
+                  Iniciar sesión
+
+                </a>
+
+                <a
+                  routerLink="/registro"
+                  class="btn-secondary">
+
+                  Crear cuenta
+
+                </a>
+
+              </div>
+
+            </div>
+
+
+          <!-- ADMINISTRADOR -->
+
+          } @else if (authService.admin()) {
+
+            <div class="info-notice">
+
+              Estás visualizando este sorteo
+              como administrador.
+
+            </div>
+
+
+          <!-- CUENTA NO AUTORIZADA -->
+
+          } @else if (!authService.puedeParticipar()) {
+
+            <div class="info-notice">
+
+              Tu cuenta no está habilitada
+              para registrar participaciones.
+
+            </div>
+
+
+          <!-- CLIENTE AUTORIZADO -->
+
+          } @else {
+
+            <div class="participation-panel">
+
+              <h3>Participa en el sorteo</h3>
+
+              <p>Selecciona el monto de tu aporte.</p>
+
+
+              <!-- =====================================
+                   DATOS DEL PARTICIPANTE
+              ====================================== -->
+
+              <div class="participant-info">
+
+                <span>Participante:</span>
+
+                <strong>
+
+                  {{ authService.nombreCompleto() }}
+
+                </strong>
+
+                <small>
+
+                  {{ authService.rol() }}
+
+                </small>
+
+              </div>
+
+
+              <!-- =====================================
+                   SELECTOR DE APORTES
+              ====================================== -->
+
+              <div class="aporte-selector">
+
+
+                <!-- MONTO Y PORCENTAJE -->
+
+                <div class="aporte-summary">
+
+                  <div class="aporte-summary-item">
+
+                    <span class="aporte-label">
+
+                      MONTO SELECCIONADO
+
+                    </span>
+
+                    <strong class="aporte-amount">
+
+                      S/ {{ aporteSeleccionado()
+                        | number:'1.2-2' }}
+
+                    </strong>
+
+                  </div>
+
+
+                  <div class="aporte-summary-item">
+
+                    <span class="aporte-label">
+
+                      PORCENTAJE REFERENCIAL
+
+                    </span>
+
+                    <strong class="probability-value">
+
+                      {{ probabilidadReferencial()
+                        | number:'1.2-2' }}%
+
+                    </strong>
+
+                  </div>
+
+                </div>
+
+
+                <!-- BARRA DESLIZANTE -->
+
+                <input
+                  type="range"
+                  class="aporte-range"
+                  aria-label="Seleccionar monto del aporte"
+                  [min]="aporteMinimo()"
+                  [max]="aporteMaximo()"
+                  [step]="incrementoAporte() || 0.01"
+                  [value]="aporteSeleccionado()"
+                  [style.--slider-progress]="
+                    porcentajeSlider() + '%'
+                  "
+                  [disabled]="
+                    enviando() ||
+                    contextoPago() !== null
+                  "
+                  (input)="cambiarAporte($event)"
+                />
+
+
+                <!-- LIMITES DEL MONTO -->
+
+                <div class="aporte-limits">
+
+                  <span>
+
+                    Mín. S/ {{ aporteMinimo()
+                      | number:'1.2-2' }}
+
+                  </span>
+
+                  <span>
+
+                    Máx. S/ {{ aporteMaximo()
+                      | number:'1.2-2' }}
+
+                  </span>
+
+                </div>
+
+
+                <!-- INPUT MANUAL -->
+
+                <label for="montoAporte">
+
+                  Ingresa el monto de tu aporte
+
+                </label>
+
+                <div class="aporte-money-input">
+
+                  <span>S/</span>
+
+                  <input
+                    id="montoAporte"
+                    type="number"
+                    class="aporte-input"
+                    inputmode="decimal"
+                    [min]="aporteMinimo()"
+                    [max]="aporteMaximo()"
+                    [step]="incrementoAporte() || 0.01"
+                    [value]="aporteSeleccionado()"
+                    [disabled]="
+                      enviando() ||
+                      contextoPago() !== null
+                    "
+                    (input)="cambiarAporte($event)"
+                  />
+
+                </div>
+
+
+                <small class="aporte-help">
+
+                  Incremento permitido:
+
+                  S/ {{ incrementoAporte()
+                    | number:'1.2-2' }}
+
+                </small>
+
+
+                @if (!aporteValido()) {
+
+                  <small class="aporte-error">
+
+                    Ingresa un monto válido dentro
+                    del rango permitido.
+
+                  </small>
+
+                }
+
+
+                <!-- INFORMACION DEL PORCENTAJE -->
+
+                <small class="probability-note">
+
+                  Porcentaje referencial sobre la meta.
+                  No representa la probabilidad real de ganar.
+
+                </small>
+
+              </div>
+
+
+              <!-- =====================================
+                   METODOS DE PAGO COMPACTOS
+              ====================================== -->
+
+              <fieldset
+                class="payment-options"
+                [disabled]="
+                  enviando() ||
+                  contextoPago() !== null
+                ">
+
+                <legend>
+
+                  Selecciona tu método de pago
+
+                </legend>
+
+
+                <!-- YAPE -->
+
+                <label class="payment-option yape">
+
+                  <input
+                    type="radio"
+                    name="metodoPago"
+                    value="yape"
+                    [checked]="metodoSeleccionado() === 'yape'"
+                    (change)="seleccionarMetodo('yape')"
+                  />
+
+                  <span>Yape</span>
+
+                </label>
+
+
+                <!-- BCP -->
+
+                <label class="payment-option bcp">
+
+                  <input
+                    type="radio"
+                    name="metodoPago"
+                    value="bcp"
+                    [checked]="metodoSeleccionado() === 'bcp'"
+                    (change)="seleccionarMetodo('bcp')"
+                  />
+
+                  <span>BCP</span>
+
+                </label>
+
+
+                <!-- PLIN -->
+
+                <label class="payment-option plin">
+
+                  <input
+                    type="radio"
+                    name="metodoPago"
+                    value="plin"
+                    [checked]="metodoSeleccionado() === 'plin'"
+                    (change)="seleccionarMetodo('plin')"
+                  />
+
+                  <span>Plin</span>
+
+                </label>
+
+              </fieldset>
+
+
+
+
+              <!-- =====================================
+                   TERMINOS Y CONDICIONES
+              ====================================== -->
+
+              <label class="terms-check">
+
+                <input
+                  type="checkbox"
+                  [checked]="aceptaReglas()"
+                  [disabled]="
+                    enviando() ||
+                    contextoPago() !== null
+                  "
+                  (change)="cambiarAceptacion($event)"
+                />
+
+                <span>
+
+                  He leído y acepto las reglas y
+                  condiciones de este sorteo.
+
+                </span>
+
+              </label>
+
+              <a
+                href="#reglas-sorteo"
+                class="rules-link">
+
+                Leer reglas y condiciones
+
+              </a>
+
+
+              <!-- =====================================
+                   BOTON PARTICIPAR
+              ====================================== -->
+
+              <button
+                type="button"
+                class="btn-primary participate-button"
+                [disabled]="
+                  !puedeRegistrar() ||
+                  contextoPago() !== null
+                "
+                (click)="participar()">
+
+                @if (enviando()) {
+
+                  Procesando...
+
+                } @else {
+
+                  Participar en el sorteo
+
+                }
+
+              </button>
+
+            </div>
+
+          }
+
+
+        <!-- =====================================
+             SORTEO NO DISPONIBLE
+        ====================================== -->
+
+        } @else {
+
+          <div class="info-notice">
+
+            @switch (item.status) {
+
+              @case ('finished') {
+
+                Este sorteo ha finalizado.
+
+              }
+
+              @case ('cancelled') {
+
+                Este sorteo fue cancelado.
+
+              }
+
+              @case ('draft') {
+
+                Este sorteo todavía es un borrador.
+
+              }
+
+              @default {
+
+                Actualmente no se reciben
+                nuevas participaciones.
+
+              }
+
+            }
+
+          </div>
+
+        }
+
+
+        <!-- =====================================
+             COMPARTIR SORTEO
+        ====================================== -->
+
+        @if (item.status !== 'draft') {
+
+          <button
+            type="button"
+            class="share-button"
+            (click)="compartir()">
+
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+
+              <circle cx="18" cy="5" r="3"/>
+
+              <circle cx="6" cy="12" r="3"/>
+
+              <circle cx="18" cy="19" r="3"/>
+
+              <path d="m8.7 10.5 6.6-4"/>
+
+              <path d="m8.7 13.5 6.6 4"/>
+
+            </svg>
+
+            Compartir sorteo
+
+          </button>
+
+        }
+
+      </div>
+
+    </div>
+
+  }
+
+</section>
+
+
+<!-- =====================================
+     POPUP DE METODOS DE PAGO
+====================================== -->
+
+<app-payment-popup
+  [method]="metodoPago()"
+  [raffleContext]="contextoPago()"
+  [procesando]="enviando()"
+  (methodChanged)="cambiarMetodoPago($event)"
+  (completed)="finalizarAporte($event)"
+  (closed)="cerrarPopupPago()">
+
+</app-payment-popup>

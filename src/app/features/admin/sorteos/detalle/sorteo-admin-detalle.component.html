@@ -1,0 +1,1801 @@
+
+<section class="detalle-admin-page">
+
+  <!-- ==========================================
+       NAVEGACION
+  =========================================== -->
+
+  <div class="breadcrumb">
+
+    <a routerLink="/admin/sorteos">
+      Administración de sorteos
+    </a>
+
+    <span>/</span>
+
+    <span>Detalle del sorteo</span>
+
+  </div>
+
+
+  <!-- ==========================================
+       ESTADO DE CARGA
+  =========================================== -->
+
+  @if (cargando()) {
+
+    <div class="empty-state" role="status">
+
+      <span class="spinner"></span>
+
+      <p>Cargando información...</p>
+
+    </div>
+
+  } @else if (mensajeError()) {
+
+    <div class="empty-state" role="alert">
+
+      <h2>No se pudo cargar el sorteo</h2>
+
+      <p>{{ mensajeError() }}</p>
+
+      <button
+        type="button"
+        class="btn-primary"
+        (click)="cargarDetalle()">
+
+        Intentar nuevamente
+
+      </button>
+
+    </div>
+
+  } @else if (sorteo(); as item) {
+
+
+    <!-- ==========================================
+         ENCABEZADO
+    =========================================== -->
+
+    <div class="page-header">
+
+      <div>
+
+        <span class="eyebrow">
+
+          CORPORACIÓN CHARATEC / SORTEO #{{ item.id }}
+
+        </span>
+
+        <h1>{{ item.title }}</h1>
+
+        <span
+          [class]="'status-badge status-' + item.status">
+
+          {{ nombreEstado(item.status) }}
+
+        </span>
+
+      </div>
+
+
+      <div class="header-actions">
+
+        <button
+          type="button"
+          class="btn-secondary"
+          [disabled]="
+            guardando() ||
+            procesando() ||
+            editandoSorteo() ||
+            aporteSeleccionado() !== null
+          "
+          (click)="cargarDetalle()">
+
+          Actualizar
+
+        </button>
+
+
+        <a
+          [routerLink]="['/sorteos', item.id]"
+          class="btn-secondary">
+
+          Vista del cliente
+
+        </a>
+
+
+        <button
+          type="button"
+          class="btn-secondary"
+          [disabled]="
+            !puedeEditarSorteo() ||
+            aporteSeleccionado() !== null
+          "
+          (click)="abrirEdicion()">
+
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+
+            <path d="m16 3 5 5L9 20l-6 1 1-6L16 3z"/>
+
+            <path d="m13 6 5 5"/>
+
+          </svg>
+
+          Editar sorteo
+
+        </button>
+
+
+        @if (puedeAbrirRuleta()) {
+
+          <a
+            class="btn-primary"
+            [routerLink]="[
+              '/admin/sorteos',
+              item.id,
+              'ruleta'
+            ]">
+
+            Abrir ruleta
+
+          </a>
+
+        }
+
+      </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         INFORMACION PRINCIPAL
+    =========================================== -->
+
+    <div
+  class="summary-grid admin-summary-grid"
+  style="grid-template-columns: 35% minmax(0, 1fr) 25%;">
+
+
+      <!-- IMAGEN -->
+
+      <div class="image-panel">
+
+        @if (item.image) {
+
+          <img
+            [src]="item.image"
+            [alt]="item.title"
+          />
+
+        } @else {
+
+          <div class="image-placeholder">
+
+            CHARATEC SORTEOS
+
+          </div>
+
+        }
+
+      </div>
+
+
+      <!-- INFORMACION GENERAL -->
+
+      <div class="information-panel">
+
+        <span class="eyebrow">
+
+          INFORMACIÓN GENERAL
+
+        </span>
+
+        <h2>Premio del sorteo</h2>
+
+        <strong class="prize">
+
+          {{ item.prize }}
+
+        </strong>
+
+        <p class="raffle-description">
+
+          {{ item.description }}
+
+        </p>
+
+
+        <div class="dates-grid">
+
+          <div>
+
+            <span>Cierre de participaciones</span>
+
+            <strong>
+
+              {{ item.ends_at
+                | date:'dd/MM/yyyy HH:mm':'-0500' }}
+
+            </strong>
+
+          </div>
+
+          <div>
+
+            <span>Fecha del sorteo</span>
+
+            <strong>
+
+              {{ item.draw_at
+                | date:'dd/MM/yyyy HH:mm':'-0500' }}
+
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- TOTAL RECAUDADO -->
+
+      <article class="total-raffle-card">
+
+        <div class="total-raffle-header">
+
+          <span>TOTAL RECAUDADO</span>
+
+          <button
+            type="button"
+            class="visibility-button"
+            [attr.aria-pressed]="mostrarMontos()"
+            [attr.aria-label]="
+              mostrarMontos()
+                ? 'Ocultar monto'
+                : 'Mostrar monto'
+            "
+            (click)="alternarMontos()">
+
+            @if (mostrarMontos()) {
+
+              <svg
+                width="19"
+                height="19"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+
+                <path d="m3 3 18 18"/>
+
+                <path d="M10.5 10.5a2.1 2.1 0 0 0 3 3"/>
+
+                <path d="M9.8 5.2A11.5 11.5 0 0 1
+                  12 5c6 0 10 7 10 7a17 17 0 0 1-3 3.8"/>
+
+                <path d="M6.3 6.3C3.5 8.1 2 12 2 12
+                  s4 7 10 7a10 10 0 0 0 4.7-1.2"/>
+
+              </svg>
+
+            } @else {
+
+              <svg
+                width="19"
+                height="19"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+
+                <path d="M2 12s4-7 10-7
+                  10 7 10 7-4 7-10 7-10-7-10-7z"/>
+
+                <circle cx="12" cy="12" r="3"/>
+
+              </svg>
+
+            }
+
+          </button>
+
+        </div>
+
+
+        <strong class="total-raffle-value">
+
+          {{ mostrarMontos()
+            ? formatearMonto(totalRecaudado())
+            : 'S/ ••••••' }}
+
+        </strong>
+
+        <p>
+
+          Suma total de aportes validados.
+
+        </p>
+
+        <small>
+
+          {{ estadisticasAportes().approved }}
+
+          solicitudes aprobadas
+
+        </small>
+
+      </article>
+
+    </div>
+
+
+    <!-- ==========================================
+         CONDICIONES DE APORTES
+    =========================================== -->
+
+    <section class="configuration-panel">
+
+      <div class="configuration-heading">
+
+        <div class="section-heading">
+
+          <span class="eyebrow">
+
+            CONFIGURACIÓN DEL EVENTO
+
+          </span>
+
+          <h2>Condiciones de aportes</h2>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="btn-secondary"
+          [disabled]="
+            !puedeEditarSorteo() ||
+            aporteSeleccionado() !== null
+          "
+          (click)="abrirEdicion()">
+
+          Modificar condiciones
+
+        </button>
+
+      </div>
+
+
+      <div class="configuration-grid">
+
+        <article class="configuration-card">
+
+          <span>Aporte mínimo</span>
+
+          <strong>
+
+            {{ item.min_contribution === null
+              ? 'Sin configurar'
+              : formatearMonto(aporteMinimo()) }}
+
+          </strong>
+
+        </article>
+
+
+        <article class="configuration-card">
+
+          <span>Aporte máximo</span>
+
+          <strong>
+
+            {{ item.max_contribution === null
+              ? 'Sin configurar'
+              : formatearMonto(aporteMaximo()) }}
+
+          </strong>
+
+        </article>
+
+
+        <article class="configuration-card">
+
+          <span>Incremento permitido</span>
+
+          <strong>
+
+            {{ item.contribution_step === null
+              ? 'Sin configurar'
+              : formatearMonto(incrementoAporte()) }}
+
+          </strong>
+
+        </article>
+
+
+        <article class="configuration-card">
+
+          <span>Meta establecida</span>
+
+          <strong>
+
+            {{ item.collection_goal === null
+              ? 'Sin configurar'
+              : formatearMonto(metaRecaudacion()) }}
+
+          </strong>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         LISTADO UNICO DE APORTES
+    =========================================== -->
+
+    <section class="participants-panel contributions-panel">
+
+      <div class="panel-heading">
+
+        <span class="eyebrow">
+
+          CONTROL ADMINISTRATIVO
+
+        </span>
+
+        <h2>Solicitudes de aportes</h2>
+
+        <p>
+
+          Revisa los comprobantes y confirma
+          los montos de cada solicitud.
+
+        </p>
+
+      </div>
+
+
+      <!-- ==========================================
+           FILTROS DE ESTADO
+      =========================================== -->
+
+      <div class="request-status-tabs">
+
+        <button
+          type="button"
+          class="request-tab"
+          [class.active]="filtroAportes() === 'pending'"
+          (click)="
+            filtroAportes.set('pending');
+            paginaAportes.set(1)
+          ">
+
+          Pendientes
+
+          <span>{{ estadisticasAportes().pending }}</span>
+
+        </button>
+
+
+        <button
+          type="button"
+          class="request-tab"
+          [class.active]="filtroAportes() === 'approved'"
+          (click)="
+            filtroAportes.set('approved');
+            paginaAportes.set(1)
+          ">
+
+          Aprobados
+
+          <span>{{ estadisticasAportes().approved }}</span>
+
+        </button>
+
+
+        <button
+          type="button"
+          class="request-tab"
+          [class.active]="filtroAportes() === 'rejected'"
+          (click)="
+            filtroAportes.set('rejected');
+            paginaAportes.set(1)
+          ">
+
+          Rechazados
+
+          <span>{{ estadisticasAportes().rejected }}</span>
+
+        </button>
+
+
+        <button
+          type="button"
+          class="request-tab"
+          [class.active]="filtroAportes() === 'cancelled'"
+          (click)="
+            filtroAportes.set('cancelled');
+            paginaAportes.set(1)
+          ">
+
+          Cancelados
+
+          <span>{{ estadisticasAportes().cancelled }}</span>
+
+        </button>
+
+
+        <button
+          type="button"
+          class="request-tab"
+          [class.active]="filtroAportes() === 'all'"
+          (click)="
+            filtroAportes.set('all');
+            paginaAportes.set(1)
+          ">
+
+          Todos
+
+          <span>{{ estadisticasAportes().total }}</span>
+
+        </button>
+
+      </div>
+
+
+      <!-- ==========================================
+           BUSQUEDA
+      =========================================== -->
+
+      <div class="contribution-filters compact-filters">
+
+        <div class="filter-group">
+
+          <label for="buscarAporte">
+
+            Buscar solicitud
+
+          </label>
+
+          <input
+            id="buscarAporte"
+            type="search"
+            placeholder="Nombre, RUC, teléfono o código..."
+            [value]="busquedaAportes()"
+            (input)="cambiarBusquedaAportes($event)"
+          />
+
+        </div>
+
+
+        <button
+          type="button"
+          class="btn-secondary"
+          (click)="limpiarFiltrosAportes()">
+
+          Limpiar filtros
+
+        </button>
+
+      </div>
+
+
+      <!-- ==========================================
+           TABLA DE SOLICITUDES
+      =========================================== -->
+
+      @if (aportesFiltrados().length === 0) {
+
+        <div class="empty-state compact-empty-state">
+
+          <svg
+            width="40"
+            height="40"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.2">
+
+            <rect x="4" y="3" width="16" height="18" rx="2"/>
+
+            <path d="M8 8h8M8 12h8M8 16h4"/>
+
+          </svg>
+
+          <h3>No hay solicitudes para mostrar</h3>
+
+          <p>
+
+            No existen registros que coincidan
+            con los filtros seleccionados.
+
+          </p>
+
+        </div>
+
+      } @else {
+
+        <div class="table-wrapper">
+
+          <table class="contributions-table compact-table">
+
+            <thead>
+
+              <tr>
+
+                <th>N°</th>
+
+                <th>Solicitud</th>
+
+                <th>Participante</th>
+
+                <th>Método</th>
+
+                <th>Monto registrado</th>
+
+                <th>Monto confirmado</th>
+
+                <th>Estado</th>
+
+                <th>Fecha</th>
+
+                <th>Acciones</th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              @for (
+                aporte of aportesPaginados();
+                track aporte.id;
+                let i = $index
+              ) {
+
+                <tr>
+
+
+                  <!-- NUMERACION -->
+
+                  <td>
+
+                    {{
+                      (paginaAportes() - 1) *
+                      tamanioPaginaAportes() + i + 1
+                    }}
+
+                  </td>
+
+
+                  <!-- CODIGO DE SOLICITUD -->
+
+                  <td>
+
+                    <span
+                      class="request-code"
+                      [title]="aporte.id">
+
+                      #{{ aporte.id.slice(0, 8).toUpperCase() }}
+
+                    </span>
+
+                  </td>
+
+
+                  <!-- DATOS DEL PARTICIPANTE -->
+
+                  <td>
+
+                    <div class="participant-detail">
+
+                      <strong>
+
+                        {{ aporte.participant_name }}
+
+                      </strong>
+
+                      <small>
+
+                        {{ nombreTipo(aporte.participant_type) }}
+
+                      </small>
+
+                      @if (aporte.ruc) {
+
+                        <small>RUC: {{ aporte.ruc }}</small>
+
+                      }
+
+                      @if (aporte.phone) {
+
+                        <small>{{ aporte.phone }}</small>
+
+                      }
+
+                    </div>
+
+                  </td>
+
+
+                  <!-- METODO DE PAGO -->
+
+                  <td>
+
+                    <span
+                      [class]="'payment-badge payment-' +
+                        aporte.payment_method">
+
+                      {{ nombreMetodoPago(aporte.payment_method) }}
+
+                    </span>
+
+                  </td>
+
+
+                  <!-- MONTO REGISTRADO -->
+
+                  <td class="amount-cell">
+
+                    <strong>
+
+                      {{ formatearMonto(aporte.amount) }}
+
+                    </strong>
+
+                  </td>
+
+
+                  <!-- MONTO VALIDADO -->
+
+                  <td class="amount-cell">
+
+                    @if (aporte.status === 'approved') {
+
+                      <strong class="text-green">
+
+                        {{ formatearMonto(aporte.approved_amount) }}
+
+                      </strong>
+
+                    } @else {
+
+                      <span class="text-gray">—</span>
+
+                    }
+
+                  </td>
+
+
+                  <!-- ESTADO -->
+
+                  <td>
+
+                    <span
+                      [class]="'contribution-badge contribution-' +
+                        aporte.status">
+
+                      {{ nombreEstadoAporte(aporte.status) }}
+
+                    </span>
+
+                    @if (aporte.admin_comment) {
+
+                      <small
+                        class="row-observation"
+                        [title]="aporte.admin_comment">
+
+                        {{ aporte.admin_comment }}
+
+                      </small>
+
+                    }
+
+                  </td>
+
+
+                  <!-- FECHA -->
+
+                  <td>
+
+                    <div class="request-date">
+
+                      <strong>
+
+                        {{ aporte.created_at
+                          | date:'dd/MM/yyyy':'-0500' }}
+
+                      </strong>
+
+                      <small>
+
+                        {{ aporte.created_at
+                          | date:'HH:mm':'-0500' }}
+
+                      </small>
+
+                    </div>
+
+                  </td>
+
+
+                  <!-- ACCIONES -->
+
+                  <td>
+
+                    <div class="request-actions">
+
+                      @if (puedeRevisarAporte(aporte)) {
+
+                        <button
+                          type="button"
+                          class="btn-primary review-request-button"
+                          [disabled]="
+                            procesando() ||
+                            guardando() ||
+                            editandoSorteo() ||
+                            aporteSeleccionado() !== null
+                          "
+                          (click)="abrirRevision(aporte)">
+
+                          Revisar
+
+                        </button>
+
+                      }
+
+                      @if (enlaceWhatsApp(aporte); as enlace) {
+
+                        <a
+                          class="whatsapp-contact-button"
+                          [href]="enlace"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="Contactar cliente por WhatsApp">
+
+                          WhatsApp
+
+                        </a>
+
+                      }
+
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+
+        <!-- ==========================================
+             PAGINACION
+        =========================================== -->
+
+<div class="pagination">
+
+  <!-- CANTIDAD DE REGISTROS -->
+
+  <span class="pagination-info">
+
+    Mostrando
+
+    <strong>
+      {{ registroInicialAportes() }}
+      -
+      {{ registroFinalAportes() }}
+    </strong>
+
+    de
+
+    <strong>
+      {{ aportesFiltrados().length }}
+    </strong>
+
+    registros
+
+  </span>
+
+
+  <div class="pagination-controls">
+
+    <!-- REGISTROS POR PAGINA -->
+
+    <select
+      class="page-size-select"
+      aria-label="Registros por página"
+      [value]="tamanioPaginaAportes()"
+      (change)="cambiarTamanioPaginaAportes($event)">
+
+      <option value="10">10 por página</option>
+
+      <option value="15">15 por página</option>
+
+      <option value="25">25 por página</option>
+
+      <option value="50">50 por página</option>
+
+    </select>
+
+
+    <!-- PAGINA ANTERIOR -->
+
+    <button
+      type="button"
+      aria-label="Página anterior"
+      [disabled]="paginaAportes() <= 1"
+      (click)="paginaAnteriorAportes()">
+
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round">
+
+        <path d="m15 18-6-6 6-6"/>
+
+      </svg>
+
+    </button>
+
+
+    <!-- PAGINA ACTUAL -->
+
+    <strong class="page-counter">
+
+      {{ paginaAportes() }} /
+      {{ totalPaginasAportes() }}
+
+    </strong>
+
+
+    <!-- PAGINA SIGUIENTE -->
+
+    <button
+      type="button"
+      aria-label="Página siguiente"
+      [disabled]="
+        paginaAportes() >= totalPaginasAportes()
+      "
+      (click)="paginaSiguienteAportes()">
+
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round">
+
+        <path d="m9 18 6-6-6-6"/>
+
+      </svg>
+
+    </button>
+
+  </div>
+
+</div>
+
+
+      }
+
+    </section>
+
+
+    <!-- ==========================================
+         NOTA DE RULETA
+    =========================================== -->
+
+    <div class="simulation-notice">
+
+      La ruleta es una simulación visual.
+      No registra ganadores en la base de datos.
+
+    </div>
+
+  }
+
+</section>
+
+
+<!-- ==========================================
+     MODAL DE EDICION DEL SORTEO
+=========================================== -->
+
+@if (editandoSorteo()) {
+
+  <div class="admin-modal-overlay">
+
+    <section
+      class="admin-modal edit-raffle-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="edit-raffle-title">
+
+
+      <!-- ENCABEZADO -->
+
+      <div class="admin-modal-header">
+
+        <div>
+
+          <span class="eyebrow">
+
+            CONFIGURACIÓN DEL EVENTO
+
+          </span>
+
+          <h2 id="edit-raffle-title">
+
+            Editar sorteo
+
+          </h2>
+
+        </div>
+
+        <button
+          type="button"
+          class="modal-close-button"
+          aria-label="Cerrar edición"
+          [disabled]="guardando()"
+          (click)="cerrarEdicion()">
+
+          ✕
+
+        </button>
+
+      </div>
+
+
+      <form
+        class="edit-raffle-form"
+        (ngSubmit)="guardarSorteo()">
+
+
+        <!-- ==========================================
+             INFORMACION GENERAL
+        =========================================== -->
+
+        <fieldset [disabled]="guardando()">
+
+          <div class="edit-form-grid">
+
+
+            <!-- TITULO -->
+
+            <div class="form-group full-width">
+
+              <label for="editarTitulo">
+
+                Título del sorteo
+
+              </label>
+
+              <input
+                id="editarTitulo"
+                type="text"
+                name="title"
+                [(ngModel)]="formulario.title"
+                required
+              />
+
+            </div>
+
+
+            <!-- PREMIO -->
+
+            <div class="form-group full-width">
+
+              <label for="editarPremio">
+
+                Premio principal
+
+              </label>
+
+              <input
+                id="editarPremio"
+                type="text"
+                name="prize"
+                [(ngModel)]="formulario.prize"
+                required
+              />
+
+            </div>
+
+
+            <!-- DESCRIPCION -->
+
+            <div class="form-group">
+
+              <label for="editarDescripcion">
+
+                Descripción
+
+              </label>
+
+              <textarea
+                id="editarDescripcion"
+                name="description"
+                rows="4"
+                [(ngModel)]="formulario.description"
+                required>
+              </textarea>
+
+            </div>
+
+
+            <!-- REGLAS -->
+
+            <div class="form-group">
+
+              <label for="editarReglas">
+
+                Reglas y condiciones
+
+              </label>
+
+              <textarea
+                id="editarReglas"
+                name="rules"
+                rows="4"
+                [(ngModel)]="formulario.rules"
+                required>
+              </textarea>
+
+            </div>
+
+
+            <!-- FECHA DE CIERRE -->
+
+            <div class="form-group">
+
+              <label for="editarCierre">
+
+                Cierre de participaciones
+
+              </label>
+
+              <input
+                id="editarCierre"
+                type="datetime-local"
+                name="ends_at"
+                [(ngModel)]="formulario.ends_at"
+                required
+              />
+
+            </div>
+
+
+            <!-- FECHA DEL SORTEO -->
+
+            <div class="form-group">
+
+              <label for="editarFechaSorteo">
+
+                Fecha del sorteo
+
+              </label>
+
+              <input
+                id="editarFechaSorteo"
+                type="datetime-local"
+                name="draw_at"
+                [(ngModel)]="formulario.draw_at"
+                required
+              />
+
+            </div>
+
+          </div>
+
+
+          <small class="form-help">
+
+            Las fechas se interpretan en horario
+            de Perú (UTC-5).
+
+          </small>
+
+
+          <!-- ==========================================
+               CONFIGURACION ECONOMICA
+          =========================================== -->
+
+          <div class="form-section-heading">
+
+            <h3>Condiciones de aportes</h3>
+
+          </div>
+
+
+          <div class="economic-form-grid">
+
+
+            <!-- APORTE MINIMO -->
+
+            <div class="form-group">
+
+              <label for="editarMinimo">
+
+                Aporte mínimo (S/)
+
+              </label>
+
+              <input
+                id="editarMinimo"
+                type="number"
+                name="min_contribution"
+                min="0.01"
+                step="0.01"
+                [(ngModel)]="formulario.min_contribution"
+                required
+              />
+
+            </div>
+
+
+            <!-- APORTE MAXIMO -->
+
+            <div class="form-group">
+
+              <label for="editarMaximo">
+
+                Aporte máximo (S/)
+
+              </label>
+
+              <input
+                id="editarMaximo"
+                type="number"
+                name="max_contribution"
+                min="0.01"
+                step="0.01"
+                [(ngModel)]="formulario.max_contribution"
+                required
+              />
+
+            </div>
+
+
+            <!-- INCREMENTO -->
+
+            <div class="form-group">
+
+              <label for="editarIncremento">
+
+                Incremento (S/)
+
+              </label>
+
+              <input
+                id="editarIncremento"
+                type="number"
+                name="contribution_step"
+                min="0.01"
+                step="0.01"
+                [(ngModel)]="formulario.contribution_step"
+                required
+              />
+
+            </div>
+
+
+            <!-- META -->
+
+            <div class="form-group">
+
+              <label for="editarMeta">
+
+                Meta establecida (S/)
+
+              </label>
+
+              <input
+                id="editarMeta"
+                type="number"
+                name="collection_goal"
+                min="0.01"
+                step="0.01"
+                [(ngModel)]="formulario.collection_goal"
+                required
+              />
+
+            </div>
+
+          </div>
+
+
+          @if (
+            estadisticasAportes().pending > 0 ||
+            estadisticasAportes().approved > 0
+          ) {
+
+            <div class="form-warning">
+
+              Existen solicitudes pendientes o aprobadas.
+              No se podrán modificar las condiciones
+              económicas de este sorteo.
+
+            </div>
+
+          }
+
+
+          <!-- ==========================================
+               IMAGEN
+          =========================================== -->
+
+          <div class="form-section-heading">
+
+            <h3>Imagen del sorteo</h3>
+
+          </div>
+
+
+          <div class="edit-image-section">
+
+            @if (vistaPrevia()) {
+
+              <div class="edit-image-preview">
+
+                <img
+                  [src]="vistaPrevia()"
+                  alt="Vista previa del sorteo"
+                />
+
+              </div>
+
+            }
+
+
+            <div class="image-upload-actions">
+
+              <label for="editarImagen">
+
+                Seleccionar nueva imagen
+
+              </label>
+
+              <input
+                id="editarImagen"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                (change)="seleccionarImagen($event)"
+              />
+
+              <small>
+
+                JPG, PNG o WEBP. Máximo 2 MB.
+
+              </small>
+
+              @if (vistaPrevia()) {
+
+                <button
+                  type="button"
+                  class="btn-danger-outline"
+                  (click)="quitarImagen()">
+
+                  Quitar imagen
+
+                </button>
+
+              }
+
+            </div>
+
+          </div>
+
+        </fieldset>
+
+
+        <!-- ==========================================
+             ACCIONES
+        =========================================== -->
+
+        <div class="admin-modal-footer">
+
+          <button
+            type="button"
+            class="btn-secondary"
+            [disabled]="guardando()"
+            (click)="cerrarEdicion()">
+
+            Cancelar
+
+          </button>
+
+
+          <button
+            type="submit"
+            class="btn-primary"
+            [disabled]="guardando()">
+
+            {{ guardando()
+              ? 'Guardando cambios...'
+              : 'Guardar cambios' }}
+
+          </button>
+
+        </div>
+
+      </form>
+
+    </section>
+
+  </div>
+
+}
+
+
+<!-- ==========================================
+     MODAL DE REVISION DE APORTES
+=========================================== -->
+
+@if (aporteSeleccionado(); as aporte) {
+
+  <div class="admin-modal-overlay">
+
+    <section
+      class="admin-modal review-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="review-title">
+
+
+      <!-- ==========================================
+           ENCABEZADO
+      =========================================== -->
+
+      <div class="admin-modal-header">
+
+        <div>
+
+          <span class="eyebrow">
+
+            SOLICITUD #{{ aporte.id.slice(0, 8).toUpperCase() }}
+
+          </span>
+
+          <h2 id="review-title">
+
+            Revisar aporte
+
+          </h2>
+
+        </div>
+
+        <button
+          type="button"
+          class="modal-close-button"
+          aria-label="Cerrar revisión"
+          [disabled]="procesando()"
+          (click)="cerrarRevision()">
+
+          ✕
+
+        </button>
+
+      </div>
+
+
+      <!-- ==========================================
+           DATOS DEL CLIENTE
+      =========================================== -->
+
+      <div class="review-participant">
+
+        <div>
+
+          <span>PARTICIPANTE</span>
+
+          <strong>
+
+            {{ aporte.participant_name }}
+
+          </strong>
+
+          <small>
+
+            {{ nombreTipo(aporte.participant_type) }}
+
+          </small>
+
+          @if (aporte.phone) {
+
+            <small>
+
+              Teléfono: {{ aporte.phone }}
+
+            </small>
+
+          }
+
+        </div>
+
+
+        <span
+          [class]="'payment-badge payment-' +
+            aporte.payment_method">
+
+          {{ nombreMetodoPago(aporte.payment_method) }}
+
+        </span>
+
+      </div>
+
+
+      @if (enlaceWhatsApp(aporte); as enlace) {
+
+        <a
+          class="review-whatsapp-button"
+          [href]="enlace"
+          target="_blank"
+          rel="noopener noreferrer">
+
+          Contactar por WhatsApp
+
+        </a>
+
+      }
+
+
+      <!-- ==========================================
+           MONTO REGISTRADO Y CONFIRMADO
+      =========================================== -->
+
+      <div class="review-amount-grid">
+
+
+        <!-- MONTO ORIGINAL -->
+
+        <article class="review-declared-amount">
+
+          <span>MONTO REGISTRADO</span>
+
+          <strong>
+
+            {{ formatearMonto(aporte.amount) }}
+
+          </strong>
+
+          <small>
+
+            Declarado por el cliente
+
+          </small>
+
+        </article>
+
+
+        <!-- MONTO EDITABLE -->
+
+        <article class="review-confirmed-amount">
+
+          <label for="confirmarMonto">
+
+            MONTO CONFIRMADO
+
+          </label>
+
+          <div class="review-money-input">
+
+            <span>S/</span>
+
+            <input
+              id="confirmarMonto"
+              type="number"
+              min="0.01"
+              step="0.01"
+              [ngModel]="montoConfirmado()"
+              (ngModelChange)="cambiarMontoConfirmado($event)"
+              [disabled]="procesando()"
+            />
+
+          </div>
+
+
+          <button
+            type="button"
+            class="reset-amount-button"
+            [disabled]="procesando()"
+            (click)="restablecerMonto()">
+
+            Restablecer monto
+
+          </button>
+
+        </article>
+
+      </div>
+
+
+      <!-- DIFERENCIA -->
+
+      @if (diferenciaMonto() !== 0) {
+
+        <div class="amount-difference-notice">
+
+          <span>Diferencia respecto al monto declarado</span>
+
+          <strong>
+
+            {{ formatearMonto(diferenciaMonto()) }}
+
+          </strong>
+
+        </div>
+
+      }
+
+
+      @if (!montoConfirmadoValido()) {
+
+        <div class="form-warning">
+
+          El monto confirmado debe ser válido
+          y encontrarse dentro de las condiciones
+          económicas del sorteo.
+
+        </div>
+
+      }
+
+
+      <!-- ==========================================
+           NUMERO DE OPERACION
+      =========================================== -->
+
+      <div class="form-group review-form-group">
+
+        <label for="referenciaOperacion">
+
+          Número de operación bancaria
+
+        </label>
+
+        <input
+          id="referenciaOperacion"
+          type="text"
+          maxlength="150"
+          placeholder="Número de operación del comprobante"
+          [ngModel]="referenciaOperacion()"
+          (ngModelChange)="cambiarReferenciaOperacion($event)"
+          [disabled]="procesando()"
+        />
+
+        <small class="form-help">
+
+          Obligatorio para aprobar el aporte.
+
+        </small>
+
+      </div>
+
+
+      <!-- ==========================================
+           OBSERVACION
+      =========================================== -->
+
+      <div class="form-group review-form-group">
+
+        <label for="observacionAporte">
+
+          Observación administrativa
+
+        </label>
+
+        <textarea
+          id="observacionAporte"
+          rows="3"
+          maxlength="500"
+          placeholder="Motivo de modificación o rechazo..."
+          [ngModel]="observacion()"
+          (ngModelChange)="observacion.set($event)"
+          [disabled]="procesando()">
+        </textarea>
+
+        <small class="form-help">
+
+          Obligatoria si modificas el monto
+          o rechazas la solicitud.
+
+        </small>
+
+      </div>
+
+
+      <!-- ==========================================
+           VERIFICACION DE TRANSFERENCIA
+      =========================================== -->
+
+      <label class="verification-check">
+
+        <input
+          type="checkbox"
+          [ngModel]="transferenciaVerificada()"
+          (ngModelChange)="transferenciaVerificada.set($event)"
+          [disabled]="procesando()"
+        />
+
+        <span>
+
+          Confirmo que he verificado la transferencia
+          y el monto recibido en la cuenta bancaria.
+
+        </span>
+
+      </label>
+
+
+      <!-- ==========================================
+           APROBAR O RECHAZAR
+      =========================================== -->
+
+      <div class="review-action-grid">
+
+        <button
+          type="button"
+          class="btn-reject"
+          [disabled]="!puedeRechazar()"
+          (click)="revisarAporte('rejected')">
+
+          {{ procesando()
+            ? 'Procesando...'
+            : 'Rechazar solicitud' }}
+
+        </button>
+
+
+        <button
+          type="button"
+          class="btn-approve"
+          [disabled]="!puedeAprobar()"
+          (click)="revisarAporte('approved')">
+
+          {{ procesando()
+            ? 'Procesando...'
+            : 'Aprobar aporte' }}
+
+        </button>
+
+      </div>
+
+    </section>
+
+  </div>
+
+}

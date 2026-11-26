@@ -14,19 +14,27 @@ export const adminGuard: CanActivateFn = async () => {
 
   try {
 
-    await auth.inicializar();
     await auth.refresh();
-    if (!auth.autenticado()) {
+
+    if (
+      !auth.autenticado() ||
+      auth.bloqueado() ||
+      auth.sinPerfil()
+    ) {
+
       return router.createUrlTree(['/login']);
+
     }
 
-    if (auth.admin()) {
+    if (auth.puedeAdministrar()) {
+
       return true;
+
     }
 
-    return router.createUrlTree([
-      auth.allowed() ? '/catalogo' : '/pendiente'
-    ]);
+    return router.parseUrl(
+      auth.rutaInicio()
+    );
 
   } catch {
 

@@ -1,28 +1,54 @@
 
+/* ==========================================
+   CORPORACION CHARATEC
+   ESTILOS DE AUTENTICACION
+========================================== */
+
 :host {
   display: block;
   width: 100%;
 }
 
+
+/* ==========================================
+   CONTENEDOR PRINCIPAL
+========================================== */
+
 .auth-page {
   padding: 45px 24px;
   min-height: 650px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
+  box-sizing: border-box;
 }
 
 .auth-card {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
+
+  grid-template-columns:
+    minmax(0, 1.1fr)
+    minmax(0, 1fr);
+
   width: 100%;
   max-width: 1050px;
   min-height: 490px;
+
   background: #ffffff;
+
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 10px 40px rgba(8, 12, 20, 0.09);
+
+  box-shadow:
+    0 10px 40px rgba(8, 12, 20, 0.09);
 }
+
+
+/* ==========================================
+   PRESENTACION
+========================================== */
 
 .auth-intro {
   background: linear-gradient(
@@ -30,10 +56,15 @@
     #003bff,
     #071b59
   );
+
   color: #ffffff;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  min-width: 0;
+
   padding: 45px;
 }
 
@@ -45,6 +76,7 @@
 
 .auth-intro h1 {
   margin: 22px 0;
+
   font-size: 42px;
   line-height: 1.12;
   font-weight: 800;
@@ -58,20 +90,107 @@
 
 .contact-link {
   color: #ffffff;
+
   font-size: 12px;
   text-decoration: none;
+
   margin-top: 18px;
+
+  width: fit-content;
 }
+
+.contact-link:hover {
+  text-decoration: underline;
+}
+
+
+/* ==========================================
+   BENEFICIOS DEL LOGIN
+========================================== */
+
+.login-benefits {
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+
+  margin: 25px 0 15px;
+
+  padding-top: 20px;
+
+  border-top:
+    1px solid rgba(255, 255, 255, .18);
+}
+
+.login-benefit {
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+}
+
+.login-benefit-icon {
+  width: 43px;
+  height: 43px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid
+    rgba(255, 255, 255, .15);
+
+  border-radius: 7px;
+
+  background:
+    rgba(255, 255, 255, .1);
+
+  color: #ffffff;
+}
+
+.login-benefit-text {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+
+  min-width: 0;
+}
+
+.login-benefit-text strong {
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.login-benefit-text span {
+  color: #dce7ff;
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+
+/* ==========================================
+   PANEL DEL FORMULARIO
+========================================== */
 
 .auth-panel {
   padding: 45px;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  min-width: 0;
 }
 
 .eyebrow {
   color: #003bff;
+
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 1px;
@@ -80,43 +199,89 @@
 .auth-heading h2 {
   font-size: 27px;
   color: #080c14;
+
   margin: 12px 0 8px;
 }
 
 .auth-heading p {
   color: #687386;
   font-size: 13px;
+  line-height: 1.7;
+
   margin-bottom: 25px;
 }
 
+
+/* ==========================================
+   CAMPOS DEL FORMULARIO
+========================================== */
+
 .form-group {
   margin-bottom: 18px;
+
+  min-width: 0;
 }
 
 .form-group label {
   display: block;
+
   margin: 0 0 8px;
+
   font-size: 12px;
   font-weight: 700;
+
   color: #253044;
 }
 
 .form-group input {
   width: 100%;
   min-height: 45px;
+
   border: 1px solid #d5dce7;
   border-radius: 5px;
+
   padding: 12px;
+
+  font-family: inherit;
   font-size: 13px;
+
+  color: #253044;
   background: #ffffff;
+
   outline: none;
-  transition: border-color .2s;
+
+  box-sizing: border-box;
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+.form-group input::placeholder {
+  color: #94a3b8;
 }
 
 .form-group input:focus {
   border-color: #003bff;
-  box-shadow: 0 0 0 3px rgba(0, 59, 255, .08);
+
+  box-shadow:
+    0 0 0 3px rgba(0, 59, 255, .08);
 }
+
+.form-group input:disabled {
+  background: #f8fafc;
+
+  cursor: not-allowed;
+}
+
+.form-group input.ng-invalid.ng-touched {
+  border-color: #dc2626;
+}
+
+
+/* ==========================================
+   CONTRASENA
+========================================== */
 
 .password-wrapper {
   position: relative;
@@ -128,34 +293,102 @@
 
 .password-toggle {
   position: absolute;
+
   right: 10px;
   top: 50%;
+
   transform: translateY(-50%);
+
   padding: 5px;
+
   background: transparent;
   border: none;
+
   color: #003bff;
+
   font-size: 11px;
+  font-weight: 600;
+
   cursor: pointer;
 }
+
+.password-toggle:hover {
+  color: #002dca;
+}
+
+
+/* ==========================================
+   RECUPERAR CONTRASENA
+========================================== */
+
+.forgot-password {
+  display: flex;
+  justify-content: flex-end;
+
+  margin: -3px 0 20px;
+}
+
+.forgot-password button {
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+
+  color: #003bff;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.forgot-password button:hover {
+  text-decoration: underline;
+}
+
+.forgot-password button:disabled {
+  opacity: .5;
+
+  cursor: not-allowed;
+}
+
+
+/* ==========================================
+   BOTONES COMPARTIDOS
+========================================== */
 
 .btn-primary,
 .btn-secondary {
   width: 100%;
   min-height: 44px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   border-radius: 5px;
+
+  font-family: inherit;
   font-size: 12px;
   font-weight: 700;
+
   text-decoration: none;
+
+  box-sizing: border-box;
+
   cursor: pointer;
+
+  transition:
+    background .2s ease,
+    border-color .2s ease;
 }
 
 .btn-primary {
   background: #003bff;
   color: #ffffff;
+
   border: none;
 }
 
@@ -165,12 +398,14 @@
 
 .btn-primary:disabled {
   opacity: .55;
+
   cursor: not-allowed;
 }
 
 .btn-secondary {
   background: #ffffff;
   color: #003bff;
+
   border: 1px solid #003bff;
 }
 
@@ -178,29 +413,220 @@
   background: #edf2ff;
 }
 
+
+/* ==========================================
+   CARGA DEL LOGIN
+========================================== */
+
+.login-submit {
+  gap: 10px;
+}
+
+.login-spinner {
+  width: 15px;
+  height: 15px;
+
+  border: 2px solid
+    rgba(255, 255, 255, .35);
+
+  border-top-color: #ffffff;
+
+  border-radius: 50%;
+
+  animation: login-spin .7s linear infinite;
+}
+
+@keyframes login-spin {
+
+  to {
+
+    transform: rotate(360deg);
+
+  }
+
+}
+
+
+/* ==========================================
+   SEPARADOR
+========================================== */
+
 .auth-divider {
   margin: 22px 0 16px;
+
   text-align: center;
+
   font-size: 11px;
+
   color: #64748b;
+}
+
+
+/* ==========================================
+   TIPOS DE CUENTA
+========================================== */
+
+.login-account-types {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  gap: 12px;
+
+  margin-top: 20px;
+
+  color: #64748b;
+}
+
+.login-account-types > span:not(.account-separator) {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+
+  font-size: 10px;
+}
+
+.login-account-types svg {
+  color: #64748b;
+
+  flex-shrink: 0;
+}
+
+.account-separator {
+  width: 1px;
+  height: 13px;
+
+  background: #d5dce7;
 }
 
 .auth-note {
   font-size: 10px;
   color: #7b8799;
+
   text-align: center;
+
   line-height: 1.6;
+
   margin-top: 18px;
 }
 
+
+/* ==========================================
+   ALERTAS
+========================================== */
+
 .alert {
   padding: 12px;
+
   background: #fff1f1;
+
   border-left: 3px solid #dc2626;
+  border-radius: 4px;
+
   color: #b91c1c;
+
   font-size: 12px;
+  line-height: 1.6;
+
   margin-bottom: 18px;
 }
+
+
+/* ==========================================
+   CORREO SIN CONFIRMAR
+========================================== */
+
+.verification-notice {
+  padding: 13px;
+
+  margin-bottom: 18px;
+
+  border: 1px solid #fde68a;
+  border-radius: 6px;
+
+  background: #fffbeb;
+
+  color: #92400e;
+}
+
+.verification-notice strong {
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+.verification-notice p {
+  margin: 7px 0 10px;
+
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.verification-button {
+  padding: 0;
+
+  background: transparent;
+  border: none;
+
+  color: #92400e;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+
+  text-decoration: underline;
+
+  cursor: pointer;
+}
+
+.verification-button:disabled {
+  opacity: .5;
+
+  cursor: not-allowed;
+}
+
+
+/* ==========================================
+   ACCESIBILIDAD
+========================================== */
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #003bff;
+  outline-offset: 3px;
+}
+
+.auth-intro a:focus-visible {
+  outline-color: #ffffff;
+}
+
+
+/* ==========================================
+   RESPONSIVE TABLET
+========================================== */
+
+@media (max-width: 1000px) {
+
+  .auth-intro {
+    padding: 35px;
+  }
+
+  .auth-panel {
+    padding: 35px;
+  }
+
+  .auth-intro h1 {
+    font-size: 36px;
+  }
+
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
 
 @media (max-width: 800px) {
 
@@ -222,6 +648,75 @@
 
   .auth-panel {
     padding: 30px;
+  }
+
+  .login-benefits {
+    gap: 14px;
+  }
+
+}
+
+
+/* ==========================================
+   RESPONSIVE CELULARES
+========================================== */
+
+@media (max-width: 480px) {
+
+  .auth-page {
+    padding: 18px 12px;
+  }
+
+  .auth-intro {
+    padding: 25px 22px;
+  }
+
+  .auth-panel {
+    padding: 25px 20px;
+  }
+
+  .auth-intro h1 {
+    font-size: 27px;
+  }
+
+  .auth-heading h2 {
+    font-size: 24px;
+  }
+
+  .login-benefit-icon {
+    width: 37px;
+    height: 37px;
+  }
+
+  .login-benefit-text strong {
+    font-size: 11px;
+  }
+
+  .login-benefit-text span {
+    font-size: 10px;
+  }
+
+  .login-account-types {
+    gap: 8px;
+  }
+
+}
+
+
+/* ==========================================
+   REDUCIR ANIMACIONES
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .form-group input,
+  .btn-primary,
+  .btn-secondary {
+    transition: none;
+  }
+
+  .login-spinner {
+    animation: none;
   }
 
 }

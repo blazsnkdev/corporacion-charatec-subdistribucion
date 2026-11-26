@@ -1,0 +1,2103 @@
+
+/* ==========================================
+   CORPORACION CHARATEC
+   DETALLE ADMINISTRATIVO DEL SORTEO
+========================================== */
+
+:host {
+  display: block;
+  width: 100%;
+
+  --primary: #003bff;
+  --dark: #080c14;
+  --muted: #64748b;
+  --border: #dce2ed;
+  --green: #15803d;
+  --red: #dc2626;
+
+  font-family: 'Montserrat', Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.detalle-admin-page {
+  max-width: 1600px;
+  min-height: 600px;
+  margin: 0 auto;
+  padding: 20px 24px 35px;
+}
+
+
+/* ==========================================
+   NAVEGACION
+========================================== */
+
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  color: #64748b;
+  font-size: 11px;
+}
+
+.breadcrumb a {
+  color: #003bff;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+
+/* ==========================================
+   ENCABEZADO
+========================================== */
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 18px;
+}
+
+.page-header > div:first-child {
+  min-width: 0;
+}
+
+.eyebrow {
+  color: #003bff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .8px;
+}
+
+.page-header h1 {
+  color: #080c14;
+  font-size: 25px;
+  line-height: 1.3;
+  font-weight: 800;
+  margin: 8px 0;
+  overflow-wrap: anywhere;
+}
+
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+
+/* ==========================================
+   BOTONES GENERALES
+========================================== */
+
+.btn-primary,
+.btn-secondary,
+.btn-danger-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  min-height: 36px;
+  padding: 8px 14px;
+
+  border-radius: 5px;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+
+  cursor: pointer;
+  transition: background .2s ease;
+}
+
+.btn-primary {
+  background: #003bff;
+  color: #ffffff;
+  border: 1px solid #003bff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #002dca;
+}
+
+.btn-secondary {
+  background: #ffffff;
+  color: #475569;
+  border: 1px solid #dce2ed;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #edf2ff;
+  color: #003bff;
+  border-color: #b9caff;
+}
+
+.btn-danger-outline {
+  color: #dc2626;
+  background: #ffffff;
+  border: 1px solid #fecaca;
+}
+
+.btn-danger-outline:hover:not(:disabled) {
+  background: #fef2f2;
+}
+
+button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+
+/* ==========================================
+   ESTADOS DEL SORTEO
+========================================== */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 5px 10px;
+  border-radius: 4px;
+
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.status-draft {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.status-published {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-closed {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-finished {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.status-cancelled {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+
+/* ==========================================
+   COLORES
+========================================== */
+
+.text-blue {
+  color: #003bff;
+}
+
+.text-green {
+  color: #15803d;
+}
+
+.text-red {
+  color: #dc2626;
+}
+
+.text-gray {
+  color: #64748b;
+}
+
+
+/* ==========================================
+   RESUMEN PRINCIPAL
+========================================== */
+
+.summary-grid {
+  display: grid;
+
+  grid-template-columns:
+    minmax(150px, 200px)
+    minmax(0, 1fr)
+    minmax(220px, 300px);
+
+  gap: 14px;
+  align-items: stretch;
+  margin-bottom: 16px;
+}
+
+.image-panel,
+.information-panel,
+.total-raffle-card,
+.configuration-panel,
+.participants-panel {
+  min-width: 0;
+
+  background: #ffffff;
+  border: 1px solid #dce2ed;
+  border-radius: 7px;
+
+  box-shadow: 0 3px 10px rgba(8, 12, 20, .035);
+}
+
+
+/* ==========================================
+   IMAGEN DEL SORTEO
+========================================== */
+
+.image-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 8px;
+}
+
+.image-panel img {
+  display: block;
+  width: 100%;
+  max-height: 190px;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+}
+
+.image-placeholder {
+  display: grid;
+  place-items: center;
+
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  padding: 10px;
+
+  color: #ffffff;
+  background: #003bff;
+  border-radius: 5px;
+
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+}
+
+
+/* ==========================================
+   INFORMACION DEL EVENTO
+========================================== */
+
+.information-panel {
+  padding: 16px 20px;
+}
+
+.information-panel h2 {
+  color: #080c14;
+  font-size: 16px;
+  font-weight: 800;
+  margin: 7px 0;
+}
+
+.prize {
+  display: block;
+  color: #003bff;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.raffle-description {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 8px 0;
+}
+
+
+/* ==========================================
+   FECHAS
+========================================== */
+
+.dates-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 12px;
+  padding-top: 12px;
+  margin-top: 12px;
+
+  border-top: 1px solid #edf0f5;
+}
+
+.dates-grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.dates-grid span {
+  color: #64748b;
+  font-size: 10px;
+}
+
+.dates-grid strong {
+  color: #334155;
+  font-size: 12px;
+}
+
+
+/* ==========================================
+   TOTAL RECAUDADO
+========================================== */
+
+.total-raffle-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+
+  padding: 20px;
+  border-top: 3px solid #15803d;
+}
+
+.total-raffle-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.total-raffle-header > span {
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .5px;
+}
+
+.total-raffle-value {
+  color: #15803d;
+  font-size: clamp(24px, 2.4vw, 34px);
+  font-weight: 800;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.total-raffle-card p {
+  margin: 0;
+  color: #64748b;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.total-raffle-card > small {
+  font-size: 10px;
+  color: #15803d;
+  font-weight: 700;
+}
+
+
+/* ==========================================
+   BOTON MOSTRAR / OCULTAR
+========================================== */
+
+.visibility-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+
+  padding: 0;
+  border-radius: 5px;
+  border: 1px solid #dce2ed;
+
+  color: #003bff;
+  background: #f5f7fb;
+
+  cursor: pointer;
+}
+
+.visibility-button:hover {
+  background: #edf2ff;
+}
+
+.visibility-button[aria-pressed="true"] {
+  color: #ffffff;
+  background: #003bff;
+  border-color: #003bff;
+}
+
+
+/* ==========================================
+   CONDICIONES DE APORTES
+========================================== */
+
+.configuration-panel {
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+
+.configuration-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.section-heading h2 {
+  color: #080c14;
+  font-size: 17px;
+  font-weight: 800;
+  margin: 6px 0 0;
+}
+
+.configuration-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.configuration-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  min-width: 0;
+  padding: 12px 15px;
+
+  background: #f5f7fb;
+  border: 1px solid #dce2ed;
+  border-radius: 5px;
+}
+
+.configuration-card > span {
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.configuration-card > strong {
+  color: #003bff;
+  font-size: 18px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+
+/* ==========================================
+   PANEL DE SOLICITUDES
+========================================== */
+
+.participants-panel {
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.panel-heading {
+  padding: 16px 20px 12px;
+}
+
+.panel-heading h2 {
+  color: #080c14;
+  font-size: 19px;
+  font-weight: 800;
+  margin: 6px 0;
+}
+
+.panel-heading p {
+  color: #64748b;
+  font-size: 11px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+
+/* ==========================================
+   FILTROS POR ESTADO
+========================================== */
+
+.request-status-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  padding: 5px 20px 12px;
+
+  border-bottom: 1px solid #edf0f5;
+}
+
+.request-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 34px;
+  padding: 7px 13px;
+
+  border: 1px solid #dce2ed;
+  border-radius: 5px;
+  background: #ffffff;
+
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.request-tab > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 20px;
+  padding: 3px 5px;
+
+  border-radius: 4px;
+  background: #edf0f5;
+  color: #475569;
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.request-tab:hover {
+  color: #003bff;
+  border-color: #b9caff;
+}
+
+.request-tab.active {
+  background: #003bff;
+  border-color: #003bff;
+  color: #ffffff;
+}
+
+.request-tab.active > span {
+  background: rgba(255, 255, 255, .2);
+  color: #ffffff;
+}
+
+
+/* ==========================================
+   BUSCADOR
+========================================== */
+
+.contribution-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+
+  align-items: end;
+  gap: 10px;
+
+  padding: 13px 20px;
+  border-bottom: 1px solid #edf0f5;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.filter-group label {
+  color: #475569;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.filter-group input {
+  width: 100%;
+  min-width: 0;
+  min-height: 36px;
+
+  padding: 8px 12px;
+  background: #ffffff;
+
+  color: #334155;
+  font-size: 12px;
+
+  border: 1px solid #dce2ed;
+  border-radius: 5px;
+}
+
+.filter-group input::placeholder {
+  color: #94a3b8;
+}
+
+.filter-group input:focus {
+  outline: none;
+  border-color: #003bff;
+  box-shadow: 0 0 0 3px rgba(0, 59, 255, .07);
+}
+
+
+/* ==========================================
+   TABLA COMPACTA
+========================================== */
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.contributions-table {
+  width: 100%;
+  min-width: 1000px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.contributions-table thead {
+  background: #f5f7fb;
+}
+
+.contributions-table th {
+  padding: 12px 10px;
+
+  color: #475569;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  border-bottom: 1px solid #dce2ed;
+}
+
+.contributions-table td {
+  padding: 12px 10px;
+
+  color: #334155;
+  font-size: 11px;
+  line-height: 1.5;
+
+  vertical-align: middle;
+  border-bottom: 1px solid #edf0f5;
+}
+
+.contributions-table tbody tr:nth-child(even) {
+  background: #fcfdff;
+}
+
+.contributions-table tbody tr:hover {
+  background: #f4f7ff;
+}
+
+
+/* ==========================================
+   CODIGO DE SOLICITUD
+========================================== */
+
+.request-code {
+  display: inline-flex;
+
+  padding: 5px 7px;
+
+  background: #edf2ff;
+  color: #003bff;
+
+  border: 1px solid #dce6ff;
+  border-radius: 4px;
+
+  font-size: 10px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+
+/* ==========================================
+   PARTICIPANTE
+========================================== */
+
+.participant-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  min-width: 130px;
+  max-width: 220px;
+}
+
+.participant-detail strong {
+  color: #080c14;
+  font-size: 12px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.participant-detail small {
+  color: #64748b;
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+
+
+/* ==========================================
+   METODOS DE PAGO
+========================================== */
+
+.payment-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 48px;
+  padding: 6px 10px;
+
+  border-radius: 4px;
+  color: #ffffff;
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.payment-yape {
+  background: #742284;
+}
+
+.payment-bcp {
+  background: #003b70;
+}
+
+.payment-plin {
+  background: #008b9b;
+}
+
+
+/* ==========================================
+   MONTOS
+========================================== */
+
+.amount-cell {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.amount-cell strong {
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+/* ==========================================
+   ESTADOS DE SOLICITUDES
+========================================== */
+
+.contribution-badge {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 5px 8px;
+  border-radius: 4px;
+
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.contribution-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.contribution-approved {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.contribution-rejected {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.contribution-cancelled {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.row-observation {
+  display: block;
+  max-width: 150px;
+  margin-top: 5px;
+
+  color: #64748b;
+  font-size: 10px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+
+/* ==========================================
+   FECHA DE SOLICITUD
+========================================== */
+
+.request-date {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.request-date strong {
+  white-space: nowrap;
+  font-size: 11px;
+}
+
+.request-date small {
+  color: #64748b;
+  font-size: 10px;
+}
+
+
+/* ==========================================
+   ACCIONES DE SOLICITUDES
+========================================== */
+
+.request-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+}
+
+.review-request-button {
+  min-height: 30px;
+  padding: 6px 9px;
+  font-size: 10px;
+}
+
+.whatsapp-contact-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 30px;
+  padding: 6px 9px;
+
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 5px;
+
+  color: #15803d;
+  font-size: 10px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.whatsapp-contact-button:hover {
+  background: #dcfce7;
+}
+
+
+/* ==========================================
+   PAGINACION
+========================================== */
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 12px;
+  padding: 13px 20px;
+
+  color: #64748b;
+  font-size: 11px;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pagination-controls strong {
+  min-width: 45px;
+  text-align: center;
+  color: #334155;
+  font-size: 11px;
+}
+
+.pagination-controls button {
+  display: grid;
+  place-items: center;
+
+  width: 32px;
+  height: 32px;
+
+  color: #003bff;
+  background: #ffffff;
+
+  border: 1px solid #dce2ed;
+  border-radius: 5px;
+
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background: #edf2ff;
+}
+
+
+/* ==========================================
+   MODALES ADMINISTRATIVOS
+========================================== */
+
+.admin-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 15px;
+
+  background: rgba(8, 12, 20, .65);
+  backdrop-filter: blur(3px);
+
+  overflow-y: auto;
+}
+
+.admin-modal {
+  width: 100%;
+  max-height: calc(100dvh - 30px);
+
+  padding: 22px;
+
+  background: #ffffff;
+  border: 1px solid #dce2ed;
+  border-radius: 9px;
+
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  box-shadow: 0 20px 70px rgba(0, 0, 0, .2);
+
+  animation: modal-in .18s ease-out;
+}
+
+.edit-raffle-modal {
+  max-width: 780px;
+}
+
+.review-modal {
+  max-width: 500px;
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ==========================================
+   ENCABEZADO DE MODALES
+========================================== */
+
+.admin-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding-bottom: 14px;
+  margin-bottom: 15px;
+
+  border-bottom: 1px solid #edf0f5;
+}
+
+.admin-modal-header h2 {
+  margin: 7px 0 0;
+
+  color: #080c14;
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.modal-close-button {
+  display: grid;
+  place-items: center;
+
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+
+  background: #f1f5f9;
+  color: #64748b;
+
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.modal-close-button:hover:not(:disabled) {
+  background: #e2e8f0;
+}
+
+
+/* ==========================================
+   FORMULARIO DE EDICION
+========================================== */
+
+.edit-raffle-form fieldset {
+  padding: 0;
+  margin: 0;
+  border: none;
+  min-width: 0;
+}
+
+.edit-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  min-width: 0;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  color: #334155;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 38px;
+
+  padding: 10px 12px;
+
+  color: #080c14;
+  background: #ffffff;
+
+  border: 1px solid #dce2ed;
+  border-radius: 5px;
+
+  font-size: 12px;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #003bff;
+  box-shadow: 0 0 0 3px rgba(0, 59, 255, .07);
+}
+
+.form-group textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.form-group input:disabled,
+.form-group textarea:disabled {
+  background: #f1f5f9;
+  cursor: not-allowed;
+}
+
+.form-help {
+  display: block;
+  margin-top: 6px;
+  color: #64748b;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* ==========================================
+   SECCIONES DEL FORMULARIO
+========================================== */
+
+.form-section-heading {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #edf0f5;
+}
+
+.form-section-heading h3 {
+  color: #080c14;
+  font-size: 14px;
+  font-weight: 800;
+  margin: 0 0 12px;
+}
+
+.economic-form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.form-warning {
+  padding: 10px 12px;
+  margin: 10px 0;
+
+  color: #92400e;
+  background: #fffbeb;
+
+  border: 1px solid #fde68a;
+  border-radius: 5px;
+
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+
+/* ==========================================
+   IMAGEN EDITABLE
+========================================== */
+
+.edit-image-section {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+
+  padding: 12px;
+
+  background: #f8fafc;
+  border: 1px solid #dce2ed;
+  border-radius: 6px;
+}
+
+.edit-image-preview {
+  display: grid;
+  place-items: center;
+
+  width: 105px;
+  height: 105px;
+  flex-shrink: 0;
+
+  border: 1px solid #dce2ed;
+  border-radius: 5px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.edit-image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.image-upload-actions {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+
+  min-width: 0;
+}
+
+.image-upload-actions label {
+  color: #334155;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.image-upload-actions input {
+  max-width: 100%;
+  color: #64748b;
+  font-size: 11px;
+}
+
+.image-upload-actions small {
+  color: #64748b;
+  font-size: 10px;
+}
+
+
+/* ==========================================
+   GUARDAR / CANCELAR EDICION
+========================================== */
+
+.admin-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+
+  margin-top: 18px;
+  padding-top: 14px;
+
+  border-top: 1px solid #edf0f5;
+}
+
+.admin-modal-footer button {
+  min-width: 120px;
+}
+
+
+/* ==========================================
+   MODAL DE REVISION
+========================================== */
+
+.review-participant {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 12px;
+
+  background: #f5f7fb;
+  border: 1px solid #dce2ed;
+  border-radius: 6px;
+}
+
+.review-participant > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.review-participant > div > span {
+  color: #64748b;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.review-participant strong {
+  color: #080c14;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.review-participant small {
+  color: #64748b;
+  font-size: 10px;
+}
+
+.review-whatsapp-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 8px;
+  padding: 8px 10px;
+
+  background: #f0fdf4;
+  color: #15803d;
+
+  border: 1px solid #bbf7d0;
+  border-radius: 5px;
+
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.review-whatsapp-button:hover {
+  background: #dcfce7;
+}
+
+
+/* ==========================================
+   COMPARACION DE MONTOS
+========================================== */
+
+.review-amount-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.review-declared-amount,
+.review-confirmed-amount {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  gap: 9px;
+  min-width: 0;
+
+  padding: 13px 10px;
+
+  border: 1px solid #dce2ed;
+  border-radius: 6px;
+
+  text-align: center;
+}
+
+.review-declared-amount {
+  background: #f5f7fb;
+}
+
+.review-confirmed-amount {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.review-declared-amount > span,
+.review-confirmed-amount > label {
+  color: #64748b;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .3px;
+}
+
+.review-declared-amount > strong {
+  color: #080c14;
+  font-size: 24px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.review-declared-amount > small {
+  color: #64748b;
+  font-size: 9px;
+}
+
+
+/* ==========================================
+   INPUT DE MONTO CONFIRMADO
+========================================== */
+
+.review-money-input {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+
+  background: #ffffff;
+  border: 1px solid #bbf7d0;
+  border-radius: 5px;
+
+  overflow: hidden;
+}
+
+.review-money-input > span {
+  padding: 10px;
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.review-money-input input {
+  width: 100%;
+  min-width: 0;
+
+  padding: 9px 6px;
+
+  background: #ffffff;
+  color: #15803d;
+
+  border: none;
+  outline: none;
+
+  font-size: 21px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.review-money-input:focus-within {
+  border-color: #15803d;
+  box-shadow: 0 0 0 3px rgba(21, 128, 61, .08);
+}
+
+.reset-amount-button {
+  background: transparent;
+  border: none;
+
+  color: #15803d;
+  font-size: 10px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.reset-amount-button:hover {
+  text-decoration: underline;
+}
+
+
+/* ==========================================
+   DIFERENCIA DE MONTO
+========================================== */
+
+.amount-difference-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  margin: 10px 0;
+  padding: 10px;
+
+  background: #fffbeb;
+  color: #92400e;
+
+  border: 1px solid #fde68a;
+  border-radius: 5px;
+
+  font-size: 10px;
+}
+
+.amount-difference-notice strong {
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+
+/* ==========================================
+   REFERENCIA Y OBSERVACION
+========================================== */
+
+.review-form-group {
+  margin-top: 12px;
+}
+
+.review-form-group .form-help {
+  margin-top: 0;
+}
+
+
+/* ==========================================
+   VERIFICACION DE TRANSFERENCIA
+========================================== */
+
+.verification-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+
+  margin-top: 14px;
+  padding: 10px;
+
+  background: #f5f7fb;
+  border: 1px solid #dce2ed;
+  border-radius: 5px;
+
+  color: #334155;
+  font-size: 11px;
+  line-height: 1.6;
+
+  cursor: pointer;
+}
+
+.verification-check input {
+  appearance: auto;
+  -webkit-appearance: checkbox;
+
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+
+  margin: 1px 0 0;
+
+  accent-color: #15803d;
+  cursor: pointer;
+}
+
+
+/* ==========================================
+   BOTONES APROBAR / RECHAZAR
+========================================== */
+
+.review-action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-approve,
+.btn-reject {
+  min-height: 40px;
+  padding: 10px;
+
+  border-radius: 5px;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.btn-approve {
+  background: #15803d;
+  border: 1px solid #15803d;
+  color: #ffffff;
+}
+
+.btn-approve:hover:not(:disabled) {
+  background: #166534;
+}
+
+.btn-reject {
+  background: #ffffff;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+}
+
+.btn-reject:hover:not(:disabled) {
+  background: #fef2f2;
+}
+
+
+/* ==========================================
+   ESTADOS VACIOS
+========================================== */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+  min-height: 220px;
+  padding: 20px;
+
+  background: #ffffff;
+  color: #64748b;
+  border-radius: 7px;
+
+  text-align: center;
+}
+
+.compact-empty-state {
+  min-height: 150px;
+  padding: 18px;
+}
+
+.empty-state svg {
+  color: #94a3b8;
+}
+
+.empty-state h2,
+.empty-state h3 {
+  margin: 0;
+  color: #080c14;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+
+/* ==========================================
+   CARGA
+========================================== */
+
+.spinner {
+  width: 28px;
+  height: 28px;
+
+  border: 3px solid #dce6ff;
+  border-top-color: #003bff;
+  border-radius: 50%;
+
+  animation: spin .7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ==========================================
+   AVISO DE RULETA
+========================================== */
+
+.simulation-notice {
+  color: #64748b;
+  font-size: 10px;
+  line-height: 1.6;
+  text-align: right;
+}
+
+
+/* ==========================================
+   ACCESIBILIDAD
+========================================== */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #003bff;
+  outline-offset: 2px;
+}
+
+
+/* ==========================================
+   RESPONSIVE - TABLET
+========================================== */
+
+@media (max-width: 1050px) {
+
+  .summary-grid {
+    grid-template-columns: 160px minmax(0, 1fr);
+  }
+
+  .total-raffle-card {
+    grid-column: 1 / -1;
+  }
+
+  .total-raffle-value {
+    font-size: 30px;
+  }
+
+}
+
+@media (max-width: 800px) {
+
+  .detalle-admin-page {
+    padding: 16px;
+  }
+
+  .page-header {
+    align-items: flex-start;
+  }
+
+  .page-header h1 {
+    font-size: 22px;
+  }
+
+  .configuration-grid,
+  .economic-form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* ==========================================
+   RESPONSIVE - CELULAR
+========================================== */
+
+@media (max-width: 550px) {
+
+  .detalle-admin-page {
+    padding: 12px;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .image-panel img {
+    max-width: 230px;
+    max-height: 230px;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+
+  .header-actions > button,
+  .header-actions > a {
+    flex: 1 1 130px;
+  }
+
+  .information-panel,
+  .configuration-panel,
+  .total-raffle-card {
+    padding: 14px;
+  }
+
+  .configuration-card {
+    padding: 10px;
+  }
+
+  .configuration-card > strong {
+    font-size: 15px;
+  }
+
+  .panel-heading {
+    padding: 14px;
+  }
+
+  .request-status-tabs {
+    padding: 5px 14px 12px;
+  }
+
+  .request-tab {
+    flex: 1 1 auto;
+    padding: 7px 9px;
+    font-size: 10px;
+  }
+
+  .contribution-filters {
+    grid-template-columns: 1fr;
+    padding: 12px 14px;
+  }
+
+  .admin-modal-overlay {
+    padding: 10px;
+  }
+
+  .admin-modal {
+    padding: 15px;
+    max-height: calc(100dvh - 20px);
+  }
+
+  .edit-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .review-declared-amount > strong {
+    font-size: 20px;
+  }
+
+  .review-money-input input {
+    font-size: 19px;
+  }
+
+  .review-action-grid {
+    gap: 7px;
+  }
+
+  .btn-approve,
+  .btn-reject {
+    font-size: 10px;
+  }
+
+  .pagination {
+    padding: 12px;
+  }
+
+}
+
+@media (max-width: 360px) {
+
+  .configuration-grid,
+  .economic-form-grid,
+  .dates-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* ==========================================
+   MOVIMIENTO REDUCIDO
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .admin-modal,
+  .spinner {
+    animation: none;
+  }
+
+  button,
+  a {
+    transition: none;
+  }
+
+}
+
+
+/* ==========================================
+   AJUSTE DEL RESUMEN ADMINISTRATIVO
+========================================== */
+
+.summary-grid {
+  grid-template-columns:
+    minmax(280px, 340px)
+    minmax(0, 1fr)
+    minmax(220px, 270px);
+
+  gap: 14px;
+  align-items: stretch;
+}
+
+
+/* IMAGEN MAS GRANDE */
+
+.image-panel {
+  padding: 6px;
+  min-height: 200px;
+}
+
+.image-panel img {
+  width: 100%;
+  height: 220px;
+  max-height: 220px;
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+
+
+/* INFORMACION GENERAL COMPACTA */
+
+.information-panel {
+  padding: 15px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.information-panel h2 {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.prize {
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.raffle-description {
+  font-size: 11px;
+  line-height: 1.5;
+  margin: 6px 0;
+}
+
+
+/* FECHAS MAS CERCANAS */
+
+.dates-grid {
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 8px;
+}
+
+.dates-grid > div {
+  gap: 4px;
+}
+
+.dates-grid span {
+  font-size: 10px;
+}
+
+.dates-grid strong {
+  font-size: 11px;
+}
+
+
+/* TOTAL RECAUDADO - DISEÑO NEUTRO */
+
+.total-raffle-card {
+  background: #ffffff;
+  border: 1px solid #dce2ed;
+  border-radius: 7px;
+
+  padding: 18px;
+  gap: 10px;
+
+  justify-content: center;
+}
+
+.total-raffle-value {
+  color: #003bff;
+  font-size: clamp(22px, 2.4vw, 32px);
+}
+
+.total-raffle-card > small {
+  color: #64748b;
+}
+
+.total-raffle-header > span {
+  color: #475569;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 1050px) {
+
+  .summary-grid {
+    grid-template-columns:
+      250px minmax(0, 1fr);
+  }
+
+  .total-raffle-card {
+    grid-column: 1 / -1;
+  }
+
+}
+
+@media (max-width: 650px) {
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .image-panel img {
+    max-width: 100%;
+    height: auto;
+    max-height: 280px;
+  }
+
+  .total-raffle-card {
+    grid-column: auto;
+  }
+
+}
+
+
+/* ==========================================
+   PAGINACION CORPORATIVA CHARATEC
+========================================== */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  gap: 12px;
+  padding: 18px 24px;
+
+  background: #ffffff;
+  border-top: 1px solid #edf0f5;
+
+  color: #64748b;
+  font-size: 11px;
+}
+
+.pagination-info {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.pagination-info strong {
+  color: #334155;
+  font-weight: 700;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.page-size-select {
+  height: 34px;
+  min-width: 115px;
+  padding: 6px 10px;
+
+  background: #ffffff;
+  color: #334155;
+
+  border: 1px solid #dce2ed;
+  border-radius: 5px;
+
+  font-family: inherit;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.page-size-select:focus {
+  outline: none;
+  border-color: #003bff;
+}
+
+.pagination-controls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  padding: 0;
+
+  background: #ffffff;
+  color: #003bff;
+
+  border: 1px solid #dce2ed;
+  border-radius: 5px;
+
+  cursor: pointer;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background: #edf2ff;
+  border-color: #b9caff;
+}
+
+.pagination-controls button:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+.pagination-controls .page-counter {
+  min-width: 32px;
+  color: #334155;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+
+  .pagination {
+    flex-direction: column;
+    justify-content: center;
+    padding: 14px;
+  }
+
+  .pagination-controls {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+}

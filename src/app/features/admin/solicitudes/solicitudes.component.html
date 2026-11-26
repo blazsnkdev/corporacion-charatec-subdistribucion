@@ -1,0 +1,2065 @@
+<section class="solicitudes-page">
+
+  <!-- ==========================================
+       ENCABEZADO
+  =========================================== -->
+
+  <div class="page-header">
+
+    <div>
+
+      <span class="eyebrow">
+        CORPORACIÓN CHARATEC / ADMINISTRACIÓN
+      </span>
+
+      <h1>Solicitudes de participación</h1>
+
+      <p>
+        Gestiona las solicitudes de clientes
+        particulares y empresas distribuidoras.
+      </p>
+
+    </div>
+
+    <div class="header-actions">
+
+      <a routerLink="/admin/sorteos" class="btn-secondary">
+
+        Administrar sorteos
+
+      </a>
+
+      <button type="button" class="btn-primary" [disabled]="
+          cargando() ||
+          procesando() ||
+          seleccionada() !== null ||
+          aporteSeleccionado() !== null
+        " (click)="cargarSolicitudes()">
+
+        Actualizar información
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- ==========================================
+       ESTADISTICAS DE APORTES
+  =========================================== -->
+
+  <div class="stats-grid">
+
+    <article class="stat-card">
+
+      <span>Total solicitudes de aporte</span>
+
+      <strong>{{ totalAportes() }}</strong>
+
+    </article>
+
+    <article class="stat-card">
+
+      <span>Pendientes</span>
+
+      <strong class="text-orange">
+
+        {{ aportesPendientes() }}
+
+      </strong>
+
+    </article>
+
+    <article class="stat-card">
+
+      <span>Aprobadas</span>
+
+      <strong class="text-green">
+
+        {{ aportesAprobados() }}
+
+      </strong>
+
+    </article>
+
+    <article class="stat-card">
+
+      <span>Rechazadas</span>
+
+      <strong class="text-red">
+
+        {{ aportesRechazados() }}
+
+      </strong>
+
+    </article>
+
+    <article class="stat-card">
+
+      <span>Canceladas</span>
+
+      <strong class="text-gray">
+
+        {{ aportesCancelados() }}
+
+      </strong>
+
+    </article>
+
+  </div>
+
+
+  <!-- ==========================================
+       CONTROL DE RECAUDACION
+  =========================================== -->
+
+  <section class="collection-panel">
+
+    <div class="collection-header">
+
+      <div>
+
+        <span class="eyebrow">
+          CONTROL ADMINISTRATIVO
+        </span>
+
+        <h2>Recaudación de aportes</h2>
+
+        <p>
+
+          Consulta los montos declarados
+          y confirmados de los sorteos.
+
+        </p>
+
+      </div>
+
+
+      <!-- MOSTRAR / OCULTAR MONTOS -->
+
+      <button type="button" class="visibility-button" [attr.aria-pressed]="mostrarMontos()" [attr.aria-label]="mostrarMontos()
+          ? 'Ocultar montos'
+          : 'Mostrar montos'" (click)="alternarMontos()">
+
+        @if (mostrarMontos()) {
+
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round">
+
+          <path d="m3 3 18 18" />
+
+          <path d="M10.5 10.5a2.1 2.1 0 0 0
+              3 3" />
+
+          <path d="M9.8 5.2A11.5 11.5 0 0 1
+              12 5c6 0 10 7 10 7a17 17 0 0 1
+              -3 3.8" />
+
+          <path d="M6.3 6.3C3.5 8.1 2 12 2 12
+              s4 7 10 7a10 10 0 0 0
+              4.7-1.2" />
+
+        </svg>
+
+        Ocultar montos
+
+        } @else {
+
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round">
+
+          <path d="M2 12s4-7 10-7
+              10 7 10 7-4 7-10 7S2 12 2 12z" />
+
+          <circle cx="12" cy="12" r="3" />
+
+        </svg>
+
+        Mostrar montos
+
+        }
+
+      </button>
+
+    </div>
+
+
+    @if (cargando()) {
+
+    <p role="status">
+      Consultando recaudación...
+    </p>
+
+    } @else if (mensajeError()) {
+
+    <p role="alert">
+      No se pudo actualizar la recaudación.
+    </p>
+
+    } @else {
+
+    <div class="collection-grid">
+
+
+      <!-- META -->
+
+      <article class="collection-card">
+
+        <span>Meta de recaudación</span>
+
+        <strong class="collection-value">
+
+          {{ formatearMonto(metaRecaudacion()) }}
+
+        </strong>
+
+        <small>
+          Objetivo establecido por el administrador
+        </small>
+
+      </article>
+
+
+      <!-- MONTO CONFIRMADO -->
+
+      <article class="collection-card">
+
+        <span>Monto confirmado</span>
+
+        <strong class="collection-value text-green">
+
+          {{ formatearMonto(totalRecaudado()) }}
+
+        </strong>
+
+        <small>
+          Únicamente aportes aprobados
+        </small>
+
+      </article>
+
+
+      <!-- MONTO PENDIENTE -->
+
+      <article class="collection-card">
+
+        <span>Monto pendiente</span>
+
+        <strong class="collection-value text-orange">
+
+          {{ formatearMonto(totalMontoPendiente()) }}
+
+        </strong>
+
+        <small>
+          Montos declarados pendientes de revisión
+        </small>
+
+      </article>
+
+
+      <!-- MONTO RESTANTE -->
+
+      <article class="collection-card">
+
+        <span>Monto restante</span>
+
+        <strong class="collection-value text-blue">
+
+          {{ formatearMonto(montoRestante()) }}
+
+        </strong>
+
+        <small>
+          Importe restante para alcanzar la meta
+        </small>
+
+      </article>
+
+
+      <!-- EXCEDENTE -->
+
+      <article class="collection-card">
+
+        <span>Excedente de recaudación</span>
+
+        <strong class="collection-value text-green">
+
+          {{ formatearMonto(montoExcedente()) }}
+
+        </strong>
+
+        <small>
+          Importe que supera la meta establecida
+        </small>
+
+      </article>
+
+
+      <!-- MONTO RECHAZADO -->
+
+      <article class="collection-card">
+
+        <span>Monto rechazado</span>
+
+        <strong class="collection-value text-red">
+
+          {{ formatearMonto(totalMontoRechazado()) }}
+
+        </strong>
+
+        <small>
+          No se contabiliza en la recaudación
+        </small>
+
+      </article>
+
+    </div>
+
+
+    <!-- ==========================================
+           PROGRESO DE RECAUDACION
+      =========================================== -->
+
+    @if (mostrarMontos() && metaRecaudacion() > 0) {
+
+    <div class="collection-progress">
+
+      <div class="progress-heading">
+
+        <span>Progreso de recaudación</span>
+
+        <strong>
+
+          {{ porcentajeRecaudacion()
+          | number:'1.0-2' }}%
+
+        </strong>
+
+      </div>
+
+      <div class="progress-track" role="progressbar" aria-label="Progreso hacia la meta" aria-valuemin="0"
+        aria-valuemax="100" [attr.aria-valuenow]="porcentajeBarra()">
+
+        <div class="progress-fill" [class.goal-completed]="
+                porcentajeRecaudacion() >= 100
+              " [style.width.%]="porcentajeBarra()">
+
+        </div>
+
+      </div>
+
+      @if (porcentajeRecaudacion() >= 100) {
+
+      <div class="goal-notice">
+
+        ✓ Meta de recaudación alcanzada.
+
+        <small>
+
+          Las solicitudes podrán continuar
+          hasta el cierre del sorteo.
+
+        </small>
+
+      </div>
+
+      }
+
+    </div>
+
+    }
+
+    }
+
+  </section>
+
+
+  <!-- ==========================================
+       FILTROS GENERALES
+  =========================================== -->
+
+  <section class="requests-panel">
+
+    <div class="panel-heading">
+
+      <h2>Filtros de solicitudes</h2>
+
+      <p>
+
+        Busca y organiza las solicitudes registradas.
+
+      </p>
+
+    </div>
+
+    <div class="filters-grid">
+
+      <div class="form-group">
+
+        <label for="busqueda">
+
+          Buscar solicitud
+
+        </label>
+
+        <input id="busqueda" type="search" placeholder="Nombre, código, método o sorteo..." [ngModel]="busqueda()"
+          (ngModelChange)="cambiarBusqueda($event)" />
+
+      </div>
+
+
+      <!-- FILTRO POR SORTEO -->
+
+      <div class="form-group">
+
+        <label for="filtro-sorteo">
+
+          Sorteo
+
+        </label>
+
+        <select id="filtro-sorteo" [ngModel]="filtroSorteo()" (ngModelChange)="cambiarSorteo($event)">
+
+          <option [ngValue]="'all'">
+
+            Todos los sorteos
+
+          </option>
+
+          @for (sorteo of sorteos(); track sorteo.id) {
+
+          <option [ngValue]="sorteo.id">
+
+            #{{ sorteo.id }} - {{ sorteo.title }}
+
+          </option>
+
+          }
+
+        </select>
+
+      </div>
+
+
+      <!-- FILTRO POR ESTADO -->
+
+      <div class="form-group">
+
+        <label for="filtro-estado">
+
+          Estado
+
+        </label>
+
+        <select id="filtro-estado" [ngModel]="filtroEstado()" (ngModelChange)="cambiarEstado($event)">
+
+          <option value="all">Todos</option>
+
+          <option value="pending">
+            Pendientes
+          </option>
+
+          <option value="approved">
+            Aprobadas
+          </option>
+
+          <option value="rejected">
+            Rechazadas
+          </option>
+
+          <option value="cancelled">
+            Canceladas
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- FILTRO POR TIPO DE PARTICIPANTE -->
+
+      <div class="form-group">
+
+        <label for="filtro-tipo">
+
+          Tipo de participante (historial anterior)
+
+        </label>
+
+        <select id="filtro-tipo" [ngModel]="filtroTipo()" (ngModelChange)="cambiarTipo($event)">
+
+          <option value="all">Todos</option>
+
+          <option value="customer">
+
+            Cliente particular
+
+          </option>
+
+          <option value="distributor">
+
+            Cliente empresa
+
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="filter-action">
+
+        <button type="button" class="btn-secondary" (click)="limpiarFiltros()">
+
+          Limpiar filtros
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ==========================================
+       LISTADO DE APORTES
+  =========================================== -->
+
+  <section class="requests-panel contribution-panel">
+
+    <div class="panel-heading">
+
+      <span class="eyebrow">
+        GESTIÓN ADMINISTRATIVA
+      </span>
+
+      <h2>Solicitudes de aportes</h2>
+
+      <p>
+
+        Revisa las solicitudes y confirma manualmente
+        los montos recibidos.
+
+      </p>
+
+    </div>
+
+
+    <!-- ESTADO DE CARGA -->
+
+    @if (cargando()) {
+
+    <div class="empty-state" role="status">
+
+      <span class="spinner"></span>
+
+      <h3>Cargando aportes...</h3>
+
+      <p>
+        Consultando información en Supabase.
+      </p>
+
+    </div>
+
+    } @else if (mensajeError()) {
+
+    <div class="empty-state" role="alert">
+
+      <h3>No se pudo cargar la información</h3>
+
+      <p>{{ mensajeError() }}</p>
+
+      <button type="button" class="btn-primary" (click)="cargarSolicitudes()">
+
+        Intentar nuevamente
+
+      </button>
+
+    </div>
+
+    } @else if (aportesFiltrados().length === 0) {
+
+    <div class="empty-state">
+
+      <div class="empty-icon">☷</div>
+
+      <h3>No se encontraron aportes</h3>
+
+      <p>
+
+        No existen solicitudes que coincidan
+        con los filtros seleccionados.
+
+      </p>
+
+      <button type="button" class="btn-secondary" (click)="limpiarFiltros()">
+
+        Limpiar filtros
+
+      </button>
+
+    </div>
+
+    } @else {
+
+
+    <!-- TABLA DE APORTES -->
+
+    <div class="table-wrapper">
+
+      <table class="contributions-table">
+
+        <thead>
+
+          <tr>
+
+            <th>N°</th>
+
+            <th>Solicitud</th>
+
+            <th>Participante</th>
+
+            <th>Tipo de cuenta</th>
+
+            <th>Teléfono</th>
+
+            <th>Sorteo</th>
+
+            <th>Método</th>
+
+            <th>Monto declarado</th>
+
+            <th>Monto confirmado</th>
+
+            <th>Fecha de registro</th>
+
+            <th>Estado</th>
+
+            <th>Referencia</th>
+
+            <th>Observación</th>
+
+            <th>Acciones</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          @for (
+          aporte of aportesPaginados();
+          track aporte.id;
+          let i = $index
+          ) {
+
+          <tr>
+
+            <!-- NUMERACION -->
+
+            <td>
+
+              {{
+              (paginaAportes() - 1) *
+              tamanioPagina() + i + 1
+              }}
+
+            </td>
+
+
+            <!-- CODIGO DE SOLICITUD -->
+
+            <td>
+
+              <span class="request-code" [title]="aporte.id">
+
+                #{{ aporte.id.slice(0, 8).toUpperCase() }}
+
+              </span>
+
+            </td>
+
+
+            <!-- IDENTIFICADOR DE USUARIO -->
+
+
+            <!-- ==========================================
+     NOMBRE DEL PARTICIPANTE
+========================================== -->
+
+            <td>
+
+              <div class="participant-detail">
+
+                <strong class="participant-name">
+
+                  {{ aporte.participant_name }}
+
+                </strong>
+
+                @if (aporte.ruc) {
+
+                <small>
+
+                  RUC: {{ aporte.ruc }}
+
+                </small>
+
+                }
+
+              </div>
+
+            </td>
+
+
+            <!-- ==========================================
+     TIPO DE CUENTA
+========================================== -->
+
+            <td>
+
+              <span [class]="'type-badge type-' +
+      aporte.participant_type">
+
+                {{ nombreTipo(aporte.participant_type) }}
+
+              </span>
+
+            </td>
+
+
+            <!-- ==========================================
+     TELEFONO / WHATSAPP
+========================================== -->
+
+            <td>
+
+              @if (aporte.phone) {
+
+              <a class="whatsapp-contact" [href]="'https://wa.me/51' + aporte.phone" target="_blank"
+                rel="noopener noreferrer">
+
+                {{ aporte.phone }}
+
+              </a>
+
+              } @else {
+
+              —
+
+              }
+
+            </td>
+
+
+
+            <!-- SORTEO -->
+
+            <td>
+
+              <a class="raffle-link" [routerLink]="[
+                      '/admin/sorteos',
+                      aporte.raffle_id
+                    ]">
+
+                {{ nombreSorteo(aporte.raffle_id) }}
+
+              </a>
+
+            </td>
+
+
+            <!-- METODO DE PAGO -->
+
+            <td>
+
+              <span [class]="'payment-badge payment-' +
+                      aporte.payment_method">
+
+                {{ nombreMetodoPago(
+                aporte.payment_method
+                ) }}
+
+              </span>
+
+            </td>
+
+
+            <!-- MONTO DECLARADO -->
+
+            <td class="amount-cell">
+
+              <strong>
+
+                {{ formatearMonto(aporte.amount) }}
+
+              </strong>
+
+            </td>
+
+
+            <!-- MONTO CONFIRMADO -->
+
+            <td class="amount-cell confirmed-amount">
+
+              @if (
+              aporte.status === 'approved' &&
+              aporte.approved_amount !== null
+              ) {
+
+              <strong class="text-green">
+
+                {{ formatearMonto(
+                aporte.approved_amount
+                ) }}
+
+              </strong>
+
+              } @else {
+
+              <span class="no-actions">—</span>
+
+              }
+
+            </td>
+
+
+            <!-- FECHA -->
+
+            <td>
+
+              {{ aporte.created_at
+              | date:'dd/MM/yyyy HH:mm':'-0500' }}
+
+            </td>
+
+
+            <!-- ESTADO -->
+
+            <td>
+
+              <span [class]="'status-badge status-' +
+                      aporte.status">
+
+                {{ nombreEstado(aporte.status) }}
+
+              </span>
+
+            </td>
+
+
+            <!-- REFERENCIA -->
+
+            <td>
+
+              @if (aporte.operation_reference) {
+
+              <span class="operation-reference">
+
+                {{ mostrarMontos()
+                ? aporte.operation_reference
+                : '••••••' }}
+
+              </span>
+
+              } @else {
+
+              —
+
+              }
+
+            </td>
+
+
+            <!-- OBSERVACION -->
+
+            <td class="comment-cell">
+
+              {{ aporte.admin_comment || '—' }}
+
+            </td>
+
+
+            <!-- ACCIONES -->
+
+            <td>
+
+              @if (puedeRevisarAporte(aporte)) {
+
+              <div class="table-actions">
+
+                <button type="button" class="btn-approve" [disabled]="
+                          procesando() ||
+                          seleccionada() !== null ||
+                          aporteSeleccionado() !== null
+                        " (click)="abrirRevisionAporte(
+                          aporte,
+                          'approved'
+                        )">
+
+                  Confirmar
+
+                </button>
+
+                <button type="button" class="btn-reject" [disabled]="
+                          procesando() ||
+                          seleccionada() !== null ||
+                          aporteSeleccionado() !== null
+                        " (click)="abrirRevisionAporte(
+                          aporte,
+                          'rejected'
+                        )">
+
+                  Rechazar
+
+                </button>
+
+              </div>
+
+              } @else {
+
+              <span class="no-actions">
+
+                Sin acciones disponibles
+
+              </span>
+
+              }
+
+            </td>
+
+          </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <!-- ==========================================
+           PAGINACION DE APORTES
+      =========================================== -->
+
+    <div class="pagination">
+
+      <div class="pagination-info">
+
+        <span>
+
+          {{ aportesFiltrados().length }}
+          aportes encontrados
+
+        </span>
+
+        <select aria-label="Aportes por página" [ngModel]="tamanioPagina()" (ngModelChange)="cambiarTamanio($event)">
+
+          @for (
+          cantidad of opcionesPagina;
+          track cantidad
+          ) {
+
+          <option [ngValue]="cantidad">
+
+            {{ cantidad }} por página
+
+          </option>
+
+          }
+
+        </select>
+
+      </div>
+
+      <div class="pagination-controls">
+
+        <button type="button" aria-label="Página anterior de aportes" [disabled]="paginaAportes() <= 1"
+          (click)="paginaAnteriorAportes()">
+
+          ‹
+
+        </button>
+
+        <strong>
+
+          {{ paginaAportes() }} /
+          {{ totalPaginasAportes() }}
+
+        </strong>
+
+        <button type="button" aria-label="Página siguiente de aportes" [disabled]="
+              paginaAportes() >= totalPaginasAportes()
+            " (click)="paginaSiguienteAportes()">
+
+          ›
+
+        </button>
+
+      </div>
+
+    </div>
+
+    }
+
+  </section>
+
+
+  <!-- ==========================================
+       HISTORIAL ANTERIOR
+  =========================================== -->
+
+  <section class="requests-panel legacy-panel">
+
+    <div class="panel-heading">
+
+      <span class="eyebrow">
+        HISTORIAL DE PARTICIPACIONES
+      </span>
+
+      <h2>Participaciones anteriores</h2>
+
+      <p>
+
+        Consulta los registros del sistema anterior
+        de participaciones.
+
+      </p>
+
+    </div>
+
+
+    <!-- ESTADISTICAS ANTERIORES -->
+
+    <div class="stats-grid">
+
+      <article class="stat-card">
+
+        <span>Total solicitudes</span>
+
+        <strong>{{ total() }}</strong>
+
+      </article>
+
+      <article class="stat-card">
+
+        <span>Pendientes</span>
+
+        <strong class="text-orange">
+
+          {{ pendientes() }}
+
+        </strong>
+
+      </article>
+
+      <article class="stat-card">
+
+        <span>Aprobadas</span>
+
+        <strong class="text-green">
+
+          {{ aprobadas() }}
+
+        </strong>
+
+      </article>
+
+      <article class="stat-card">
+
+        <span>Rechazadas</span>
+
+        <strong class="text-red">
+
+          {{ rechazadas() }}
+
+        </strong>
+
+      </article>
+
+      <article class="stat-card">
+
+        <span>Canceladas</span>
+
+        <strong class="text-gray">
+
+          {{ canceladas() }}
+
+        </strong>
+
+      </article>
+
+    </div>
+
+
+    <!-- TIPOS DE PARTICIPANTES -->
+
+    <div class="distribution-grid">
+
+      <article class="distribution-card">
+
+        <div class="distribution-icon customer-icon">
+
+          CP
+
+        </div>
+
+        <div>
+
+          <span>
+
+            Clientes particulares aprobados
+
+          </span>
+
+          <strong>
+
+            {{ particularesAprobados() }}
+
+          </strong>
+
+        </div>
+
+      </article>
+
+      <article class="distribution-card">
+
+        <div class="distribution-icon company-icon">
+
+          CE
+
+        </div>
+
+        <div>
+
+          <span>
+
+            Empresas distribuidoras aprobadas
+
+          </span>
+
+          <strong>
+
+            {{ empresasAprobadas() }}
+
+          </strong>
+
+        </div>
+
+      </article>
+
+    </div>
+
+
+    @if (cargando()) {
+
+    <div class="empty-state" role="status">
+
+      <span class="spinner"></span>
+
+      <h3>Cargando historial...</h3>
+
+    </div>
+
+    } @else if (mensajeError()) {
+
+    <div class="empty-state" role="alert">
+
+      <h3>No se pudo cargar el historial</h3>
+
+      <p>{{ mensajeError() }}</p>
+
+    </div>
+
+    } @else if (
+    solicitudesFiltradas().length === 0
+    ) {
+
+    <div class="empty-state">
+
+      <div class="empty-icon">☷</div>
+
+      <h3>No se encontraron participaciones</h3>
+
+      <p>
+
+        No existen registros anteriores
+        que coincidan con los filtros.
+
+      </p>
+
+    </div>
+
+    } @else {
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>N°</th>
+
+            <th>Participante</th>
+
+            <th>Tipo de cuenta</th>
+
+            <th>Sorteo</th>
+
+            <th>Fecha de registro</th>
+
+            <th>Estado</th>
+
+            <th>Observación</th>
+
+            <th>Acciones</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          @for (
+          solicitud of solicitudesPaginadas();
+          track solicitud.id;
+          let i = $index
+          ) {
+
+          <tr>
+
+            <td>
+
+              {{
+              (pagina() - 1) *
+              tamanioPagina() + i + 1
+              }}
+
+            </td>
+
+            <td>
+
+              <strong class="participant-name">
+
+                {{ solicitud.participant_name }}
+
+              </strong>
+
+            </td>
+
+            <td>
+
+              <span [class]="'type-badge type-' +
+                      solicitud.participant_type">
+
+                {{ nombreTipo(
+                solicitud.participant_type
+                ) }}
+
+              </span>
+
+            </td>
+
+            <td>
+
+              <a class="raffle-link" [routerLink]="[
+                      '/admin/sorteos',
+                      solicitud.raffle_id
+                    ]">
+
+                {{
+                solicitud.raffle?.title ||
+                'Sorteo #' + solicitud.raffle_id
+                }}
+
+              </a>
+
+            </td>
+
+            <td>
+
+              {{ solicitud.created_at
+              | date:'dd/MM/yyyy HH:mm':'-0500' }}
+
+            </td>
+
+            <td>
+
+              <span [class]="'status-badge status-' +
+                      solicitud.status">
+
+                {{ nombreEstado(solicitud.status) }}
+
+              </span>
+
+            </td>
+
+            <td class="comment-cell">
+
+              {{ solicitud.admin_comment || '—' }}
+
+            </td>
+
+            <td>
+
+              @if (puedeRevisar(solicitud)) {
+
+              <div class="table-actions">
+
+                <button type="button" class="btn-approve" [disabled]="
+                          procesando() ||
+                          seleccionada() !== null ||
+                          aporteSeleccionado() !== null
+                        " (click)="abrirRevision(
+                          solicitud,
+                          'approved'
+                        )">
+
+                  Aprobar
+
+                </button>
+
+                <button type="button" class="btn-reject" [disabled]="
+                          procesando() ||
+                          seleccionada() !== null ||
+                          aporteSeleccionado() !== null
+                        " (click)="abrirRevision(
+                          solicitud,
+                          'rejected'
+                        )">
+
+                  Rechazar
+
+                </button>
+
+              </div>
+
+              } @else {
+
+              <span class="no-actions">
+
+                Sin acciones disponibles
+
+              </span>
+
+              }
+
+            </td>
+
+          </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <!-- PAGINACION ANTERIOR -->
+
+    <div class="pagination">
+
+      <div class="pagination-info">
+
+        <span>
+
+          {{ solicitudesFiltradas().length }}
+          solicitudes encontradas
+
+        </span>
+
+        <select aria-label="Participaciones por página" [ngModel]="tamanioPagina()"
+          (ngModelChange)="cambiarTamanio($event)">
+
+          @for (
+          cantidad of opcionesPagina;
+          track cantidad
+          ) {
+
+          <option [ngValue]="cantidad">
+
+            {{ cantidad }} por página
+
+          </option>
+
+          }
+
+        </select>
+
+      </div>
+
+      <div class="pagination-controls">
+
+        <button type="button" aria-label="Página anterior" [disabled]="pagina() <= 1" (click)="paginaAnterior()">
+
+          ‹
+
+        </button>
+
+        <strong>
+
+          {{ pagina() }} / {{ totalPaginas() }}
+
+        </strong>
+
+        <button type="button" aria-label="Página siguiente" [disabled]="pagina() >= totalPaginas()"
+          (click)="paginaSiguiente()">
+
+          ›
+
+        </button>
+
+      </div>
+
+    </div>
+
+    }
+
+  </section>
+
+
+  <!-- ==========================================
+       MODAL DE REVISION DE APORTES
+  =========================================== -->
+
+  @if (aporteSeleccionado(); as aporte) {
+
+  <div class="modal-overlay">
+
+    <section class="review-modal contribution-modal" role="dialog" aria-modal="true"
+      aria-labelledby="contribution-review-title">
+
+
+      <!-- ENCABEZADO -->
+
+      <div class="modal-header">
+
+        <div>
+
+          <span class="eyebrow">
+
+            REVISIÓN ADMINISTRATIVA
+
+          </span>
+
+          <h2 id="contribution-review-title">
+
+            {{ accion() === 'approved'
+            ? 'Confirmar participación'
+            : 'Rechazar participación' }}
+
+          </h2>
+
+        </div>
+
+        <button type="button" class="modal-close" aria-label="Cerrar revisión" [disabled]="procesando()"
+          (click)="cerrarRevisionAporte()">
+
+          ×
+
+        </button>
+
+      </div>
+
+
+      <!-- INFORMACION DE LA SOLICITUD -->
+
+      <div class="review-information">
+
+        <div>
+
+          <span>Código de solicitud</span>
+
+          <strong [title]="aporte.id">
+
+            #{{ aporte.id.slice(0, 8).toUpperCase() }}
+
+          </strong>
+
+        </div>
+
+        <div>
+
+          <span>Usuario</span>
+
+          <strong class="full-user-id">
+
+            {{ aporte.user_id }}
+
+          </strong>
+
+        </div>
+
+        <div>
+
+          <span>Sorteo</span>
+
+          <strong>
+
+            {{ nombreSorteo(aporte.raffle_id) }}
+
+          </strong>
+
+        </div>
+
+        <div>
+
+          <span>Método declarado</span>
+
+          <strong>
+
+            {{ nombreMetodoPago(
+            aporte.payment_method
+            ) }}
+
+          </strong>
+
+        </div>
+
+        <div>
+
+          <span>Fecha de solicitud</span>
+
+          <strong>
+
+            {{ aporte.created_at
+            | date:'dd/MM/yyyy HH:mm':'-0500' }}
+
+          </strong>
+
+        </div>
+
+        <div>
+
+          <span>Estado</span>
+
+          <strong class="text-orange">
+
+            {{ nombreEstado(aporte.status) }}
+
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- ==========================================
+             MONTO DECLARADO POR EL CLIENTE
+        =========================================== -->
+
+      <div class="declared-amount-box">
+
+        <span>
+
+          MONTO DECLARADO POR EL CLIENTE
+
+        </span>
+
+        <strong>
+
+          S/ {{ aporte.amount | number:'1.2-2' }}
+
+        </strong>
+
+        <small>
+
+          Este importe corresponde al monto
+          seleccionado originalmente por el cliente.
+
+        </small>
+
+      </div>
+
+
+      <!-- ==========================================
+             FORMULARIO DE APROBACION
+        =========================================== -->
+
+      @if (accion() === 'approved') {
+
+
+      <!-- MONTO CONFIRMADO EDITABLE -->
+
+      <div class="form-group confirmed-amount-group">
+
+        <div class="amount-label-row">
+
+          <label for="monto-confirmado">
+
+            Monto confirmado *
+
+          </label>
+
+          <button type="button" class="reset-amount-button" [disabled]="procesando()" (click)="restablecerMonto()">
+
+            Restablecer monto
+
+          </button>
+
+        </div>
+
+        <div class="confirmed-money-input">
+
+          <span class="currency-prefix">
+
+            S/
+
+          </span>
+
+          <input id="monto-confirmado" type="number" min="0.01" max="9999999999.99" step="0.01" inputmode="decimal"
+            placeholder="0.00" [ngModel]="montoConfirmado()" [disabled]="procesando()" (ngModelChange)="
+                  cambiarMontoConfirmado($event)
+                " />
+
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
+
+            <path d="m16 3 5 5L8 21H3v-5L16 3z" />
+
+            <path d="m13 6 5 5" />
+
+          </svg>
+
+        </div>
+
+        <small class="amount-help">
+
+          Modifica este monto si el importe
+          comprobado es diferente al declarado.
+
+        </small>
+
+        @if (!montoConfirmadoValido()) {
+
+        <small class="field-error">
+
+          Ingresa un monto positivo válido
+          con un máximo de dos decimales.
+
+        </small>
+
+        }
+
+      </div>
+
+
+      <!-- DIFERENCIA DE MONTOS -->
+
+      @if (
+      montoConfirmadoValido() &&
+      diferenciaMonto() !== 0
+      ) {
+
+      <div class="amount-difference-notice">
+
+        <strong>
+
+          Diferencia de monto detectada
+
+        </strong>
+
+        <div class="difference-row">
+
+          <span>Monto declarado</span>
+
+          <strong>
+
+            S/ {{ aporte.amount
+            | number:'1.2-2' }}
+
+          </strong>
+
+        </div>
+
+        <div class="difference-row">
+
+          <span>Monto confirmado</span>
+
+          <strong>
+
+            S/ {{ montoConfirmado()
+            | number:'1.2-2' }}
+
+          </strong>
+
+        </div>
+
+        <div class="difference-row difference-total">
+
+          <span>Diferencia</span>
+
+          <strong>
+
+            {{ diferenciaMonto() > 0 ? '+' : '' }}
+
+            S/ {{ diferenciaMonto()
+            | number:'1.2-2' }}
+
+          </strong>
+
+        </div>
+
+        <small>
+
+          Debes ingresar una observación
+          que explique la diferencia.
+
+        </small>
+
+      </div>
+
+      }
+
+
+      <!-- REFERENCIA DE OPERACION -->
+
+      <div class="form-group">
+
+        <label for="referencia-operacion">
+
+          Número o referencia de operación *
+
+        </label>
+
+        <input id="referencia-operacion" type="text" maxlength="150" autocomplete="off"
+          placeholder="Referencia del comprobante" [ngModel]="referenciaOperacion()" [disabled]="procesando()"
+          (ngModelChange)="
+                cambiarReferenciaOperacion($event)
+              " />
+
+        <small class="amount-help">
+
+          Ingresa la referencia de la transferencia
+          que has comprobado manualmente.
+
+        </small>
+
+      </div>
+
+      }
+
+
+      <!-- ==========================================
+             OBSERVACIONES
+        =========================================== -->
+
+      <div class="form-group">
+
+        <label for="comentario-aporte">
+
+          @if (accion() === 'rejected') {
+
+          Motivo del rechazo *
+
+          } @else if (diferenciaMonto() !== 0) {
+
+          Motivo de la modificación del monto *
+
+          } @else {
+
+          Observaciones (opcional)
+
+          }
+
+        </label>
+
+        <textarea id="comentario-aporte" rows="4" maxlength="500" placeholder="Escribe una observación..."
+          [disabled]="procesando()" [ngModel]="comentario()" (ngModelChange)="comentario.set($event)">
+
+          </textarea>
+
+        <small class="character-count">
+
+          {{ comentario().length }} / 500
+
+        </small>
+
+      </div>
+
+
+      <!-- ==========================================
+             VERIFICACION ADMINISTRATIVA
+        =========================================== -->
+
+      @if (accion() === 'approved') {
+
+      <label class="verification-check">
+
+        <input type="checkbox" [ngModel]="transferenciaVerificada()" [disabled]="procesando()" (ngModelChange)="
+                cambiarTransferenciaVerificada($event)
+              " />
+
+        <span>
+
+          He verificado manualmente el comprobante
+          recibido por WhatsApp y la transferencia
+          correspondiente.
+
+        </span>
+
+      </label>
+
+
+      <!-- MONTO FINAL A CONTABILIZAR -->
+
+      <div class="approved-total-box">
+
+        <span>
+
+          MONTO FINAL POR CONTABILIZAR
+
+        </span>
+
+        @if (montoConfirmadoValido()) {
+
+        <strong>
+
+          S/ {{ montoConfirmado()
+          | number:'1.2-2' }}
+
+        </strong>
+
+        } @else {
+
+        <strong>—</strong>
+
+        }
+
+        <small>
+
+          Este será el importe que se contabilizará
+          cuando la aprobación quede registrada.
+
+        </small>
+
+      </div>
+
+      }
+
+
+      <!-- AVISO DE REVISION -->
+
+      <div [class]="'review-notice notice-' + accion()">
+
+        @if (accion() === 'approved') {
+
+        La revisión es exclusivamente manual.
+        La plataforma no realiza transferencias
+        ni verifica operaciones bancarias.
+
+        } @else {
+
+        La solicitud será rechazada y el monto
+        no se contabilizará en la recaudación.
+
+        }
+
+      </div>
+
+
+      <!-- ==========================================
+             BOTONES DEL MODAL
+        =========================================== -->
+
+      <div class="modal-actions">
+
+        <button type="button" class="btn-secondary" [disabled]="procesando()" (click)="cerrarRevisionAporte()">
+
+          Cancelar
+
+        </button>
+
+        <button type="button" [class]="accion() === 'approved'
+              ? 'btn-approve'
+              : 'btn-reject'" [disabled]="!puedeConfirmarAporte()" (click)="confirmarRevisionAporte()">
+
+          @if (procesando()) {
+
+          Procesando...
+
+          } @else {
+
+          {{ accion() === 'approved'
+          ? 'Confirmar participación'
+          : 'Confirmar rechazo' }}
+
+          }
+
+        </button>
+
+      </div>
+
+    </section>
+
+  </div>
+
+  }
+
+
+  <!-- ==========================================
+       MODAL DE REVISION ANTERIOR
+  =========================================== -->
+
+  @if (seleccionada(); as solicitud) {
+
+  <div class="modal-overlay">
+
+    <section class="review-modal" role="dialog" aria-modal="true" aria-labelledby="review-title">
+
+      <div class="modal-header">
+
+        <div>
+
+          <span class="eyebrow">
+
+            REVISIÓN ADMINISTRATIVA
+
+          </span>
+
+          <h2 id="review-title">
+
+            {{ accion() === 'approved'
+            ? 'Aprobar participación'
+            : 'Rechazar participación' }}
+
+          </h2>
+
+        </div>
+
+        <button type="button" class="modal-close" aria-label="Cerrar" [disabled]="procesando()"
+          (click)="cerrarRevision()">
+
+          ×
+
+        </button>
+
+      </div>
+
+      <div class="review-information">
+
+        <div>
+
+          <span>Participante</span>
+
+          <strong>
+
+            {{ solicitud.participant_name }}
+
+          </strong>
+
+        </div>
+
+        <div>
+
+          <span>Tipo de cuenta</span>
+
+          <strong>
+
+            {{ nombreTipo(
+            solicitud.participant_type
+            ) }}
+
+          </strong>
+
+        </div>
+
+        <div>
+
+          <span>Sorteo</span>
+
+          <strong>
+
+            {{ solicitud.raffle?.title ||
+            'Sorteo #' + solicitud.raffle_id }}
+
+          </strong>
+
+        </div>
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="comentario">
+
+          {{ accion() === 'rejected'
+          ? 'Motivo del rechazo (obligatorio)'
+          : 'Observación (opcional)' }}
+
+        </label>
+
+        <textarea id="comentario" rows="4" maxlength="500" placeholder="Escribe una observación..."
+          [disabled]="procesando()" [ngModel]="comentario()" (ngModelChange)="comentario.set($event)">
+
+          </textarea>
+
+        <small class="character-count">
+
+          {{ comentario().length }} / 500
+
+        </small>
+
+      </div>
+
+      <div [class]="'review-notice notice-' + accion()">
+
+        @if (accion() === 'approved') {
+
+        El usuario quedará habilitado para
+        participar en el sorteo oficial,
+        según las condiciones del evento.
+
+        } @else {
+
+        La participación será rechazada.
+        El usuario podrá consultar el motivo
+        desde Mis participaciones.
+
+        }
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button type="button" class="btn-secondary" [disabled]="procesando()" (click)="cerrarRevision()">
+
+          Cancelar
+
+        </button>
+
+        <button type="button" [class]="accion() === 'approved'
+              ? 'btn-approve'
+              : 'btn-reject'" [disabled]="!puedeConfirmar()" (click)="confirmarRevision()">
+
+          @if (procesando()) {
+
+          Procesando...
+
+          } @else {
+
+          {{ accion() === 'approved'
+          ? 'Confirmar aprobación'
+          : 'Confirmar rechazo' }}
+
+          }
+
+        </button>
+
+      </div>
+
+    </section>
+
+  </div>
+
+  }
+
+</section>
