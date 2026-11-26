@@ -1,4 +1,4 @@
-
+import { PopupService } from '../../core/services/popup.service';
 import {
   Component,
   inject,
@@ -30,7 +30,7 @@ export class HeaderComponent {
   readonly authService = inject(AuthService);
 
   private readonly router = inject(Router);
-
+  private readonly popupService = inject(PopupService);
   readonly menuAbierto = signal(false);
 
   readonly cerrandoSesion = signal(false);
@@ -47,14 +47,19 @@ export class HeaderComponent {
 
   async cerrarSesion(): Promise<void> {
 
-    if (this.cerrandoSesion()) {
-      return;
-    }
+    if (this.cerrandoSesion()) return;
 
     this.cerrandoSesion.set(true);
-    this.mensajeError.set('');
 
     try {
+
+      const confirmar = await this.popupService.confirm(
+        '¿Cerrar sesión?',
+        '¿Estás seguro de que deseas cerrar tu sesión en Corporación Charatec B2B?',
+        'Cerrar sesión'
+      );
+
+      if (!confirmar) return;
 
       await this.authService.logout();
 
@@ -64,9 +69,9 @@ export class HeaderComponent {
 
     } catch (error) {
 
-      this.mensajeError.set(
-        (error as { message?: string })?.message ||
-        'No se pudo cerrar la sesión.'
+      await this.popupService.error(
+        'Error al cerrar sesión',
+        'No se pudo completar la operación. Inténtalo nuevamente.'
       );
 
     } finally {
