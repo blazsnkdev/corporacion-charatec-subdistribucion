@@ -626,10 +626,12 @@
 
                 <strong>
                   US$ {{ money(p, 'USD') | number:'1.2-2' }}
+                  <span class="price-igv">+ IGV</span>
                 </strong>
 
                 <small>
                   S/ {{ money(p, 'PEN') | number:'1.2-2' }}
+                  <span class="price-tax-included">Incl. IGV</span>
                 </small>
 
               </td>

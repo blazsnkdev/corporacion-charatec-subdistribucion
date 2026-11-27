@@ -727,3 +727,16 @@ td {
   font-size: 11px;
 }
 
+.price-igv {
+  font-size: 9px;
+  font-weight: 700;
+  color: #003bff;
+  margin-left: 3px;
+}
+
+.price-tax-included {
+  font-size: 9px;
+  font-weight: 500;
+  color: #64748b;
+  margin-left: 3px;
+}
