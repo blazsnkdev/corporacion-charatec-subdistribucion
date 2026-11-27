@@ -205,3 +205,18 @@
     font-size: 17px;
   }
 }
+/* ETIQUETA IGV DEL PRECIO MAYORISTA */
+
+.usd-price {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.usd-price .igv-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #003bff;
+  white-space: nowrap;
+}

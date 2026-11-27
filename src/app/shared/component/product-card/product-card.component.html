@@ -71,46 +71,48 @@
 
     </div>
 
-    <div class="price-section">
+<div class="price-section">
 
-      @if (
-        product().reference_price !== null &&
-        product().reference_price! > product().price
-      ) {
+  @if (
+    product().reference_price !== null &&
+    product().reference_price! > product().price
+  ) {
 
-        <div class="old-price">
+    <div class="old-price">
 
-          <span>Antes</span>
+      <span>Antes</span>
 
-          <del>
-            US$ {{ precioAnterior() | number:'1.2-2' }}
-          </del>
-
-        </div>
-
-      }
-
-      <div class="usd-price">
-
-        US$ {{ precioUSD() | number:'1.2-2' }}
-
-      </div>
-
-      <small class="tax-label">
-        Precio mayorista sin IGV
-      </small>
-
-      <div class="pen-price">
-
-        S/ {{ precioPEN() | number:'1.2-2' }}
-
-      </div>
-
-      <small class="tax-label">
-        Incluido IGV
-      </small>
+      <del>
+        US$ {{ precioAnterior() | number:'1.2-2' }} + IGV
+      </del>
 
     </div>
+
+  }
+
+  <div class="usd-price">
+
+    US$ {{ precioUSD() | number:'1.2-2' }}
+
+    <span class="igv-label">+ IGV</span>
+
+  </div>
+
+  <small class="tax-label">
+    Precio mayorista
+  </small>
+
+  <div class="pen-price">
+
+    S/ {{ precioPEN() | number:'1.2-2' }}
+
+  </div>
+
+  <small class="tax-label">
+    Incluido IGV
+  </small>
+
+</div>
 
     <a
       class="whatsapp-button"
