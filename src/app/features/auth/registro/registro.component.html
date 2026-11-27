@@ -7,87 +7,44 @@
          PRESENTACION
     ======================================= -->
 
-    <div class="auth-intro">
+<!-- ======================================
+     BANNER CORPORATIVO CHARATEC
+======================================= -->
 
-      <span class="auth-tag">
+<div class="auth-intro">
 
-        CORPORACIÓN CHARATEC
+  <div class="banner-pattern"></div>
 
-      </span>
+  <div class="banner-shape shape-top"></div>
 
-      @if (esEmpresa()) {
+  <div class="banner-shape shape-bottom"></div>
 
-        <h1>
+  <div class="banner-brand">
 
-          Conviértete en nuestro distribuidor.
+    <img
+      src="/logo.png"
+      alt="Corporación Charatec"
+      class="banner-logo"
+    />
 
-        </h1>
+    <span class="banner-subtitle">
 
-        <p>
+      TECNOLOGÍA Y NEGOCIOS
 
-          Accede a nuestro catálogo de tecnología
-          y precios exclusivos para tu negocio.
+    </span>
 
-        </p>
+    <div class="banner-divider"></div>
 
-      } @else {
+    <p class="banner-description">
 
-        <h1>
+      Tu socio estratégico en tecnología
 
-          Forma parte de nuestra comunidad.
+    </p>
 
-        </h1>
+  </div>
 
-        <p>
+</div>
 
-          Descubre nuestras promociones,
-          novedades y sorteos tecnológicos.
-
-        </p>
-
-      }
-
-      <!-- BENEFICIOS DINAMICOS -->
-
-      <div class="benefits">
-
-        @for (beneficio of beneficios(); track beneficio) {
-
-          <div class="benefit-item">
-
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round">
-
-              <path d="M20 6 9 17l-5-5"/>
-
-            </svg>
-
-            <span>{{ beneficio }}</span>
-
-          </div>
-
-        }
-
-      </div>
-
-      <a
-        href="https://wa.me/51943771361"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="contact-link">
-
-        Consultas: +51 943 771 361
-
-      </a>
-
-    </div>
 
     <!-- ======================================
          PANEL DE REGISTRO

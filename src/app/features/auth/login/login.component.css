@@ -720,3 +720,627 @@ a:focus-visible {
   }
 
 }
+
+
+/* ==========================================
+   LOGIN CORPORATIVO CHARATEC V2
+========================================== */
+
+:host {
+  display: block;
+  width: 100%;
+  font-family: 'Montserrat', Arial, sans-serif;
+}
+
+
+/* ==========================================
+   CONTENEDOR PRINCIPAL
+========================================== */
+
+.auth-page {
+  display: block;
+
+  width: 100%;
+  min-height: calc(100dvh - 126px);
+
+  padding: 0;
+  margin: 0;
+
+  background: #ffffff;
+
+  box-sizing: border-box;
+}
+
+.auth-card {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.1fr)
+    minmax(0, .9fr);
+
+  width: 100%;
+  max-width: none;
+
+  min-height: calc(100dvh - 126px);
+
+  margin: 0;
+
+  background: #ffffff;
+
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+
+  overflow: hidden;
+}
+
+
+/* ==========================================
+   BANNER CORPORATIVO IZQUIERDO
+========================================== */
+
+.auth-intro {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 0;
+  min-height: 650px;
+
+  padding: 50px;
+
+  background: linear-gradient(
+    135deg,
+    #003bff 0%,
+    #0645e9 45%,
+    #071b59 100%
+  );
+
+  color: #ffffff;
+
+  overflow: hidden;
+  isolation: isolate;
+
+  box-sizing: border-box;
+}
+
+
+/* ==========================================
+   PATRON TECNOLOGICO DE CUADRADOS
+========================================== */
+
+.banner-pattern {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: -1;
+
+  background-image:
+    repeating-conic-gradient(
+      rgba(255, 255, 255, .15) 0% 25%,
+      transparent 0% 100%
+    );
+
+  background-size: 13px 13px;
+
+  clip-path: polygon(
+    0 0,
+    32% 0,
+    100% 76%,
+    100% 100%,
+    75% 100%,
+    0 25%
+  );
+
+  pointer-events: none;
+}
+
+
+/* ==========================================
+   FIGURAS GEOMETRICAS DECORATIVAS
+========================================== */
+
+.banner-shape {
+  position: absolute;
+
+  z-index: -1;
+
+  pointer-events: none;
+}
+
+.shape-top {
+  top: 0;
+  right: 0;
+
+  width: 65%;
+  height: 45%;
+
+  background:
+    rgba(255, 255, 255, .045);
+
+  clip-path: polygon(
+    55% 0,
+    100% 0,
+    100% 100%,
+    0 100%
+  );
+}
+
+.shape-bottom {
+  bottom: 0;
+  left: 0;
+
+  width: 65%;
+  height: 45%;
+
+  background:
+    rgba(255, 255, 255, .045);
+
+  clip-path: polygon(
+    0 0,
+    100% 100%,
+    0 100%
+  );
+}
+
+
+/* ==========================================
+   IDENTIDAD CORPORATIVA
+========================================== */
+
+.banner-brand {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  max-width: 500px;
+
+  text-align: center;
+
+  z-index: 1;
+}
+
+
+/* LOGO ORIGINAL */
+
+.banner-logo {
+  display: block;
+
+  width: 100%;
+  max-width: 340px;
+
+  height: auto;
+
+  object-fit: contain;
+
+  /*
+    Integra el logo blanco con el fondo azul.
+    Evita que se note el fondo cuadrado.
+  */
+
+  mix-blend-mode: lighten;
+}
+
+
+/* SUBTITULO */
+
+.banner-subtitle {
+  display: block;
+
+  margin-top: 15px;
+
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  letter-spacing: 4px;
+
+  text-align: center;
+}
+
+
+/* LINEA DECORATIVA */
+
+.banner-divider {
+  width: 65px;
+  height: 2px;
+
+  margin: 25px 0 15px;
+
+  background:
+    rgba(255, 255, 255, .55);
+}
+
+
+/* DESCRIPCION */
+
+.auth-intro .banner-description {
+  margin: 0;
+
+  color: #dce6ff;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  letter-spacing: .5px;
+
+  text-align: center;
+}
+
+
+/* ==========================================
+   TEXTO INFERIOR DEL BANNER
+========================================== */
+
+.banner-footer {
+  position: absolute;
+
+  bottom: 30px;
+  left: 20px;
+  right: 20px;
+
+  color:
+    rgba(255, 255, 255, .65);
+
+  font-size: 9px;
+  font-weight: 600;
+
+  letter-spacing: 2px;
+
+  text-align: center;
+}
+
+
+/* ==========================================
+   PANEL DERECHO - INICIO DE SESION
+========================================== */
+
+.auth-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  width: 100%;
+  max-width: 520px;
+
+  min-width: 0;
+
+  padding: 50px 55px;
+  margin: 0 auto;
+
+  background: #ffffff;
+
+  box-sizing: border-box;
+}
+
+
+/* TITULO DEL LOGIN */
+
+.auth-heading h2 {
+  margin: 12px 0 10px;
+
+  font-size: 30px;
+  font-weight: 800;
+
+  color: #080c14;
+}
+
+.auth-heading p {
+  margin: 0 0 28px;
+
+  font-size: 12px;
+  line-height: 1.7;
+
+  color: #64748b;
+}
+
+
+/* CAMPOS */
+
+.auth-panel .form-group input {
+  min-height: 46px;
+
+  border-radius: 5px;
+}
+
+
+/* BOTONES */
+
+.auth-panel .btn-primary,
+.auth-panel .btn-secondary {
+  min-height: 45px;
+
+  border-radius: 5px;
+
+  font-size: 12px;
+}
+
+
+/* ==========================================
+   RESPONSIVE - TABLETS
+========================================== */
+
+@media (max-width: 1000px) {
+
+  .auth-card {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 1fr);
+  }
+
+  .auth-intro {
+    padding: 30px;
+  }
+
+  .banner-logo {
+    max-width: 270px;
+  }
+
+  .auth-panel {
+    padding: 40px 30px;
+  }
+
+}
+
+
+/* ==========================================
+   RESPONSIVE - CELULARES
+========================================== */
+
+@media (max-width: 800px) {
+
+  .auth-page {
+    min-height: calc(100dvh - 115px);
+
+    padding: 0;
+
+    background: #ffffff;
+  }
+
+  .auth-card {
+    grid-template-columns: 1fr;
+
+    min-height: calc(100dvh - 115px);
+  }
+
+  /* OCULTAR BANNER EN CELULARES */
+
+  .auth-intro {
+    display: none;
+  }
+
+  .auth-panel {
+    width: 100%;
+    max-width: 480px;
+
+    padding: 45px 30px;
+
+    margin: 0 auto;
+  }
+
+}
+
+
+/* ==========================================
+   CELULARES PEQUENOS
+========================================== */
+
+@media (max-width: 480px) {
+
+  .auth-panel {
+    padding: 35px 24px;
+  }
+
+  .auth-heading h2 {
+    font-size: 26px;
+  }
+
+  .auth-panel .form-group input {
+    font-size: 16px;
+  }
+
+}
+
+/* ==========================================
+   RECUPERAR FORMATO ISLA ORIGINAL
+========================================== */
+
+.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 650px;
+
+  padding: 45px 24px;
+  margin: 0;
+
+  background: transparent;
+
+  box-sizing: border-box;
+}
+
+.auth-card {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.1fr)
+    minmax(0, 1fr);
+
+  width: 100%;
+  max-width: 1050px;
+  min-height: 490px;
+
+  margin: 0 auto;
+
+  background: #ffffff;
+
+  border-radius: 12px;
+  overflow: hidden;
+
+  box-shadow:
+    0 10px 40px rgba(8, 12, 20, .09);
+}
+
+
+/* ==========================================
+   BANNER CORPORATIVO IZQUIERDO
+========================================== */
+
+.auth-intro {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 0;
+  min-height: 0;
+
+  padding: 45px;
+
+  background: linear-gradient(
+    145deg,
+    #003bff,
+    #071b59
+  );
+
+  overflow: hidden;
+}
+
+
+/* LOGO CORPORATIVO */
+
+.banner-logo {
+  display: block;
+
+  width: 100%;
+  max-width: 340px;
+
+  height: auto;
+  object-fit: contain;
+
+  mix-blend-mode: lighten;
+}
+
+.banner-brand {
+  width: 100%;
+  max-width: 450px;
+}
+
+.banner-subtitle {
+  font-size: 12px;
+  letter-spacing: 3px;
+}
+
+.banner-footer {
+  display: none;
+}
+
+
+/* ==========================================
+   RESTAURAR FORMULARIO ORIGINAL
+========================================== */
+
+.auth-panel {
+  width: auto;
+  max-width: none;
+
+  min-width: 0;
+
+  padding: 45px;
+  margin: 0;
+}
+
+.auth-heading h2 {
+  font-size: 27px;
+  margin: 12px 0 8px;
+}
+
+.auth-heading p {
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 13px 0 25px;
+}
+
+.auth-panel .form-group input {
+  min-height: 45px;
+}
+
+.auth-panel .btn-primary,
+.auth-panel .btn-secondary {
+  min-height: 44px;
+}
+
+
+/* ==========================================
+   RESPONSIVE - TABLETS
+========================================== */
+
+@media (max-width: 1000px) {
+
+  .auth-intro,
+  .auth-panel {
+    padding: 35px;
+  }
+
+  .banner-logo {
+    max-width: 280px;
+  }
+
+}
+
+
+/* ==========================================
+   RESPONSIVE - CELULARES
+========================================== */
+
+@media (max-width: 800px) {
+
+  .auth-page {
+    padding: 25px 16px;
+    min-height: 0;
+  }
+
+  .auth-card {
+    grid-template-columns: 1fr;
+    min-height: 490px;
+    max-width: 500px;
+  }
+
+  .auth-intro {
+    display: none;
+  }
+
+  .auth-panel {
+    padding: 30px;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .auth-page {
+    padding: 18px 12px;
+  }
+
+  .auth-panel {
+    padding: 25px 20px;
+  }
+
+  .auth-heading h2 {
+    font-size: 24px;
+  }
+
+}

@@ -528,3 +528,257 @@
   }
 
 }
+
+
+/* ==========================================
+   BANNER CORPORATIVO - REGISTRO
+========================================== */
+
+.register-card {
+  max-width: 1100px;
+
+  border-radius: 12px;
+  overflow: hidden;
+
+  box-shadow:
+    0 10px 40px rgba(8, 12, 20, .09);
+}
+
+
+/* ==========================================
+   PANEL IZQUIERDO
+========================================== */
+
+.register-card .auth-intro {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  min-width: 0;
+  min-height: 0;
+
+  padding: 45px;
+
+  background: linear-gradient(
+    145deg,
+    #003bff,
+    #071b59
+  );
+
+  color: #ffffff;
+
+  overflow: hidden;
+  isolation: isolate;
+
+  box-sizing: border-box;
+}
+
+
+/* ==========================================
+   PATRON TECNOLOGICO
+========================================== */
+
+.banner-pattern {
+  position: absolute;
+
+  inset: 0;
+  z-index: -1;
+
+  background-image:
+    repeating-conic-gradient(
+      rgba(255, 255, 255, .15) 0% 25%,
+      transparent 0% 100%
+    );
+
+  background-size: 13px 13px;
+
+  clip-path: polygon(
+    0 0,
+    32% 0,
+    100% 76%,
+    100% 100%,
+    75% 100%,
+    0 25%
+  );
+
+  pointer-events: none;
+}
+
+
+/* ==========================================
+   FIGURAS GEOMETRICAS
+========================================== */
+
+.banner-shape {
+  position: absolute;
+
+  z-index: -1;
+
+  pointer-events: none;
+}
+
+.shape-top {
+  top: 0;
+  right: 0;
+
+  width: 65%;
+  height: 45%;
+
+  background:
+    rgba(255, 255, 255, .045);
+
+  clip-path: polygon(
+    55% 0,
+    100% 0,
+    100% 100%,
+    0 100%
+  );
+}
+
+.shape-bottom {
+  bottom: 0;
+  left: 0;
+
+  width: 65%;
+  height: 45%;
+
+  background:
+    rgba(255, 255, 255, .045);
+
+  clip-path: polygon(
+    0 0,
+    100% 100%,
+    0 100%
+  );
+}
+
+
+/* ==========================================
+   IDENTIDAD CORPORATIVA
+========================================== */
+
+.banner-brand {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  max-width: 450px;
+
+  text-align: center;
+
+  z-index: 1;
+}
+
+
+/* ==========================================
+   LOGO CORPORATIVO
+========================================== */
+
+.banner-logo {
+  display: block;
+
+  width: 100%;
+  max-width: 340px;
+
+  height: auto;
+
+  object-fit: contain;
+
+  mix-blend-mode: lighten;
+}
+
+
+/* ==========================================
+   SUBTITULO
+========================================== */
+
+.banner-subtitle {
+  display: block;
+
+  margin-top: 15px;
+
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  letter-spacing: 3px;
+
+  text-align: center;
+}
+
+
+/* ==========================================
+   LINEA DECORATIVA
+========================================== */
+
+.banner-divider {
+  width: 65px;
+  height: 2px;
+
+  margin: 25px 0 15px;
+
+  background:
+    rgba(255, 255, 255, .55);
+}
+
+
+/* ==========================================
+   DESCRIPCION CORPORATIVA
+========================================== */
+
+.register-card .auth-intro .banner-description {
+  margin: 0;
+
+  color: #dce6ff;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  letter-spacing: .5px;
+
+  text-align: center;
+}
+
+
+/* ==========================================
+   RESPONSIVE - TABLETS
+========================================== */
+
+@media (max-width: 1000px) {
+
+  .register-card .auth-intro {
+    padding: 35px;
+  }
+
+  .banner-logo {
+    max-width: 280px;
+  }
+
+}
+
+
+/* ==========================================
+   RESPONSIVE - CELULARES
+========================================== */
+
+@media (max-width: 800px) {
+
+  .register-card {
+    grid-template-columns: 1fr;
+  }
+
+  .register-card .auth-intro {
+    display: none;
+  }
+
+}
