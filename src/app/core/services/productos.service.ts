@@ -1,4 +1,7 @@
-
+import {
+  ProductCost,
+  ProductCostInput
+} from '../models/product-cost.model';
 import { Injectable, inject } from '@angular/core';
 
 import { SupabaseService } from './supabase.service';
@@ -208,6 +211,127 @@ export class ProductosService {
     }
 
   }
+
+// ==========================================
+// OBTENER COSTOS PRIVADOS DEL PRODUCTO
+// ==========================================
+
+async obtenerCosto(
+  productId: number
+): Promise<ProductCost | null> {
+
+  const { data, error } = await this.db
+
+    .from('product_costs')
+
+    .select('*')
+
+    .eq('product_id', productId)
+
+    .maybeSingle();
+
+  if (error) {
+
+    throw error;
+
+  }
+
+  return data as ProductCost | null;
+
+}
+
+
+// ==========================================
+// GUARDAR PRODUCTO CON COSTOS
+// ==========================================
+
+async guardarConCostos(
+
+  product: Product,
+
+  costo: ProductCostInput | null,
+
+  file: File | null = null
+
+): Promise<number> {
+
+  const {
+    id,
+    photo,
+    ...payload
+  } = product;
+
+
+  // VALIDAR COSTOS
+
+  if (costo !== null) {
+
+    if (
+
+      !Number.isFinite(costo.purchase_cost) ||
+
+      !Number.isFinite(costo.profit_percentage) ||
+
+      costo.purchase_cost < 0 ||
+
+      costo.profit_percentage < 0
+
+    ) {
+
+      throw new Error(
+        'Revisa el costo de compra y la ganancia.'
+      );
+
+    }
+
+  }
+
+
+  // SUBIR IMAGEN
+
+  let uploaded = '';
+
+  if (file) {
+
+    uploaded = await this.subirImagen(file);
+
+    payload.image = uploaded;
+
+  }
+
+
+  // GUARDAR PRODUCTO Y COSTOS
+
+  const { data, error } = await this.db.rpc(
+
+    'guardar_producto_con_costos',
+
+    {
+
+      p_id: id || 0,
+
+      p_producto: payload,
+
+      p_costo:
+        costo?.purchase_cost ?? null,
+
+      p_ganancia:
+        costo?.profit_percentage ?? null
+
+    }
+
+  );
+
+
+  if (error) {
+
+    throw error;
+
+  }
+
+  return Number(data);
+
+}
 
   // =====================================
   // ELIMINAR PRODUCTO

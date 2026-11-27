@@ -70,3 +70,66 @@ export function calcularDescuento(
   );
 
 }
+
+
+// ==========================================
+// CALCULAR PRECIO DE VENTA SIN IGV
+// ==========================================
+
+export function calcularPrecioVenta(
+
+  costoCompra: number,
+
+  porcentajeGanancia: number
+
+): number {
+
+  if (
+    !Number.isFinite(costoCompra) ||
+    !Number.isFinite(porcentajeGanancia) ||
+    costoCompra < 0 ||
+    porcentajeGanancia < 0
+  ) {
+
+    return 0;
+
+  }
+
+  return Math.round(
+
+    costoCompra *
+    (1 + porcentajeGanancia / 100) *
+    100
+
+  ) / 100;
+
+}
+
+
+// ==========================================
+// CALCULAR GANANCIA BRUTA
+// ==========================================
+
+export function calcularGanancia(
+
+  costoCompra: number,
+
+  porcentajeGanancia: number
+
+): number {
+
+  const precioVenta = calcularPrecioVenta(
+
+    costoCompra,
+
+    porcentajeGanancia
+
+  );
+
+  return Math.round(
+
+    (precioVenta - costoCompra) * 100
+
+  ) / 100;
+
+}

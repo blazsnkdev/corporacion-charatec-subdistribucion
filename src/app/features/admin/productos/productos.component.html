@@ -118,39 +118,153 @@
 
           </div>
 
+
           <div class="section-title">
+
             Información comercial
+
           </div>
+
+
+          <!-- MODO DE PRECIO -->
+
+          <div class="price-mode-selector">
+
+            <button type="button" [class.selected]="modoPrecio() === 'automatico'"
+              (click)="cambiarModoPrecio('automatico')">
+
+              Precio automático
+
+            </button>
+
+            <button type="button" [class.selected]="modoPrecio() === 'manual'" (click)="cambiarModoPrecio('manual')">
+
+              Precio manual
+
+            </button>
+
+          </div>
+
+
+          @if (cargandoCosto()) {
+
+          <div class="cost-loading">
+
+            Recuperando costos del producto...
+
+          </div>
+
+          } @else if (modoPrecio() === 'automatico') {
+
+
+          <!-- COSTO DE COMPRA -->
+
+          <div class="form-group">
+
+            <label for="purchaseCost">
+
+              Precio de compra (USD sin IGV)
+
+            </label>
+
+            <input id="purchaseCost" name="purchaseCost" type="number" min="0.01" max="999999999999.99" step="0.01"
+              placeholder="Ej. 1352.00" [ngModel]="costoCompra()" (ngModelChange)="cambiarCostoCompra($event)"
+              required />
+
+          </div>
+
+
+          <div class="form-row">
+
+            <!-- PORCENTAJE -->
+
+            <div class="form-group">
+
+              <label for="profitPercentage">
+
+                Ganancia (%)
+
+              </label>
+
+              <input id="profitPercentage" name="profitPercentage" type="number" min="0" max="999999.99" step="0.01"
+                [ngModel]="porcentajeGanancia()" (ngModelChange)="cambiarPorcentajeGanancia($event)" required />
+
+            </div>
+
+
+            <!-- PRECIO CALCULADO -->
+
+            <div class="form-group">
+
+              <label>
+
+                Precio final (USD)
+
+              </label>
+
+              <div class="calculated-price">
+
+                US$ {{ precioVentaCalculado()
+                | number:'1.2-2' }}
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          } @else {
+
+
+          <!-- PRECIO MANUAL -->
 
           <div class="form-row">
 
             <div class="form-group">
 
-              <label for="currency">Moneda base</label>
+              <label for="currency">
 
-              <select id="currency" name="currency" [(ngModel)]="form.currency" required>
+                Moneda base
+
+              </label>
+
+              <select id="currency" name="currency" [(ngModel)]="form.currency"
+                (ngModelChange)="form.reference_price = null" required>
 
                 <option value="USD">
-                  Dólares (USD) sin IGV
+
+                  Dólares sin IGV
+
                 </option>
 
                 <option value="PEN">
-                  Soles (PEN) incluido IGV
+
+                  Soles con IGV
+
                 </option>
 
               </select>
 
             </div>
 
+
             <div class="form-group">
 
-              <label for="price">Precio final</label>
+              <label for="price">
+
+                Precio final
+
+              </label>
 
               <input id="price" name="price" type="number" min="0" step="0.01" [(ngModel)]="form.price" required />
 
             </div>
 
           </div>
+
+          }
+
 
           <div class="conversion-card">
 
@@ -188,6 +302,59 @@
             </small>
 
           </div>
+
+          @if (
+          modoPrecio() === 'automatico' &&
+          !cargandoCosto()
+          ) {
+
+          <div class="profit-card">
+
+            <span class="profit-label">
+
+              GANANCIA BRUTA ESTIMADA
+
+            </span>
+
+            <div class="profit-values">
+
+              <div>
+
+                <small>Dólares sin IGV</small>
+
+                <strong>
+
+                  US$ {{ gananciaUSD()
+                  | number:'1.2-2' }}
+
+                </strong>
+
+              </div>
+
+              <div>
+
+                <small>Soles sin IGV</small>
+
+                <strong>
+
+                  S/ {{ gananciaPEN()
+                  | number:'1.2-2' }}
+
+                </strong>
+
+              </div>
+
+            </div>
+
+            <small class="profit-note">
+
+              Información exclusiva del administrador.
+
+            </small>
+
+          </div>
+
+          }
 
           <div class="reference-box">
 
@@ -316,7 +483,12 @@
 
           <div class="form-actions">
 
-            <button type="submit" class="btn-primary" [disabled]="busy() || productoForm.invalid">
+            <button type="submit" class="btn-primary" [disabled]="
+    busy() ||
+    cargandoCosto() ||
+    productoForm.invalid ||
+    !costosValidos()
+  ">
 
               {{ busy()
               ? 'Guardando...'
@@ -325,7 +497,6 @@
               : 'Guardar producto' }}
 
             </button>
-
             <button type="button" class="btn-secondary" (click)="nuevoProducto()">
 
               Limpiar
